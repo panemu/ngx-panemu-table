@@ -1,0 +1,16 @@
+<div class="flex flex-col h-[500px] gap-4">
+  <div class="flex justify-between items-baseline">
+    <panemu-query [controller]="controller"></panemu-query>
+    <panemu-pagination [controller]="controller"></panemu-pagination>
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>
+
+<ng-template #actionCellTemplate let-column="column" let-row="row">
+  <div class="flex justify-between">
+    <button class="button" (click)="edit(row)"><span class="material-symbols-outlined text-base leading-5 block">edit</span></button>
+    <button class="button" (click)="delete(row)"><span class="material-symbols-outlined text-base leading-5 block">delete</span></button>
+  </div>
+</ng-template>

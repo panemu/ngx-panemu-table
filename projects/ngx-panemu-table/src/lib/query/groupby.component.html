@@ -1,0 +1,61 @@
+<div class="panemu-groupby">
+  <div class="header">
+    <span class="material-symbols-outlined">
+      splitscreen_top
+    </span>
+    {{labelTranslation.groupBy}}
+  </div>
+  <div class="body">
+    <div *ngFor="let item of _columns()">
+      <div *ngIf="item.type != _columnType.DATE && item.type != _columnType.DATETIME else pnlDate"
+        class="menu-item"
+        (click)="toggleGroup(item)">
+        <span class="material-symbols-outlined" [class.invisible]="!isInGroup(item)">
+          check
+        </span>
+        {{item.label}}
+      </div>
+      <ng-template #pnlDate>
+        <div class="menu-item"
+          [matMenuTriggerFor]="pnlDateMenu" [matMenuTriggerData]="{column: item}">
+          <span class="material-symbols-outlined" [class.invisible]="!isInGroup(item)">
+            check
+          </span>
+          {{item.label}}
+        </div>
+
+      </ng-template>
+    </div>
+  </div>
+</div>
+<mat-menu #pnlDateMenu="matMenu" class="panemu-groupby">
+  <ng-template matMenuContent let-column="column" >
+
+    <div 
+      class="menu-item"
+      (click)="toggleGroup(column, 'year')">
+      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'year')">
+        check
+      </span>
+      {{labelTranslation.year}}
+    </div>
+
+    <div 
+      class="menu-item"
+      (click)="toggleGroup(column, 'month')">
+      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'month')">
+        check
+      </span>
+      {{labelTranslation.month}}
+    </div>
+
+    <div 
+      class="menu-item"
+      (click)="toggleGroup(column, 'day')">
+      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'day')">
+        check
+      </span>
+      {{labelTranslation.day}}
+    </div>
+  </ng-template>
+</mat-menu>

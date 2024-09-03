@@ -1,0 +1,16 @@
+<div class="panemu-pagination">
+  <input [(ngModel)]="value" (keyup.enter)="applyChange()" (blur)="applyChange()"
+    class="input-field"> / {{totalRows()}}
+  <div class="button-wrapper">
+    <button class="btn btn-left" (click)="prev()">
+      <span class="icon material-symbols-outlined">
+        west
+      </span>
+    </button>
+    <button class="btn btn-right" (click)="next()">
+      <span class="icon material-symbols-outlined">
+        east
+      </span>
+    </button>
+  </div>
+</div>

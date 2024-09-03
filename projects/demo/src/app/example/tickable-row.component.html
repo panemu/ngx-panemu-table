@@ -1,0 +1,16 @@
+<div class="flex flex-col h-[500px] gap-4">
+  <div class="flex gap-4">
+    <button (click)="tickAll()">Tick All</button>
+    <button (click)="untickAll()">Untick All</button>
+    <button (click)="getTickedRows()">Get Ticked Rows</button>
+  </div>
+  <div class="flex relative justify-center">
+    <panemu-query [controller]="controller"/>
+    <div class="absolute right-4">
+      <panemu-pagination [controller]="controller"/>
+    </div>
+  </div>
+  <div class="flex-grow overflow-auto">
+      <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>

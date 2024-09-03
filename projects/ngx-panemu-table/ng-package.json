@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-panemu-table",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "assets": [
+    { "input": "generated", "glob": "**/*.css", "output": "styles" }
+  ]
+}

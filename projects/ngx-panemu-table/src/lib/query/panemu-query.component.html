@@ -1,0 +1,46 @@
+<div class="panemu-query">
+  <div class="input-panel">
+    <div *ngIf="groupByLabel" class="group chip-panel">
+      <span class="material-symbols-outlined icon group-icon">
+        splitscreen_top
+      </span>
+      <div class="chip-label">{{groupByLabel}}</div>
+
+      <button class="close-button" (click)="clearGroup()">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
+    <div *ngFor="let item of _criteria;let i = index" class="filter chip-panel">
+      <span class="material-symbols-outlined icon filter-icon">
+        search
+      </span>
+      <div class="chip-label">{{item.field}}: {{item.value}}</div>
+
+      <button class="close-button" (click)="deleteCriteria(i)">
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
+    <input class="input-field" 
+    [placeholder]="labelTranslation.search"
+    [matAutocomplete]="auto" 
+    #txtCriteriaElement
+    [formControl]="txtCriteria">
+    <mat-autocomplete #auto="matAutocomplete" class="panemu-query-menu">
+      @for (option of _filterableColumns; track option) {
+        <mat-option class="panemu-query-field" [value]="option.field" >{{option.label}}</mat-option>
+      }
+     </mat-autocomplete>
+  </div>
+  <button class="group-button" [matMenuTriggerFor]="menu">
+    <span class="material-symbols-outlined">
+      splitscreen_top
+    </span>
+  </button>
+  <mat-menu #menu="matMenu">
+    <panemu-groupby [controller]="controller()" (click)="$event.stopPropagation();"></panemu-groupby>
+  </mat-menu>
+</div>

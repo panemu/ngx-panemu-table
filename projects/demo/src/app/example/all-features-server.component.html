@@ -1,0 +1,18 @@
+<div class="flex flex-col h-[500px]">
+  <div class="flex justify-between mb-2 items-end">
+    <panemu-query [controller]="controller"/>
+    <panemu-pagination [controller]="controller"/>
+  </div>
+  <div class="flex-grow overflow-auto">
+      <panemu-table [controller]="controller"></panemu-table>
+  </div>
+  <div class="min-h-16">
+    <div class="text-xs text-gray-500 mt-4 grid grid-cols-2">
+      <div>startIndex: {{startIndex}}</div>
+      <div>Result row type: {{resultRowType}}</div>
+      <div>maxRows: {{maxRows}}</div>
+      <div>Result row count: {{resultCount}}</div>
+      <div class="col-span-2">tableQuery: {{tableQuery}}</div>
+    </div>
+  </div>
+</div>

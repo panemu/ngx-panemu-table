@@ -1,0 +1,15 @@
+.dynamic-row-style {
+  .indonesia {
+    font-weight: 700;
+  }
+
+  tr.selected-row, tr.selected-row:nth-child(2n) {
+    background: inherit;
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      background-color: inherit;
+    }
+  }
+}
