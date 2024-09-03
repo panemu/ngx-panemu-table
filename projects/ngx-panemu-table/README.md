@@ -1,24 +1,22 @@
+<div align="center">
+  <a href="https://github.com/ng-doc/ng-doc">
+    <img src="https://ngx-panemu-table.panemu.com/assets/ngx-panemu-table_logo.png" alt="Logo" height="150px">
+  </a>
+<h1 align="center" style="margin-bottom: 0; border-bottom: 0">NgxPanemuTable</h1>
+  <p align="center">
+    Advanced table component for Angular framework. Highly customizable and provides a sane default.
+    <br />
+    <a href="https://ngx-panemu-table.panemu.com/">Documentation</a>
+    ·
+    <a href="https://github.com/panemu/ngx-panemu-table/issues">Request Feature</a>
+
+  </p>
+</div>
+
 # NgxPanemuTable
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.0.
+NgxPanemuTable is an Angular table component. It is designed to be easy to use. Most work will be in typescript file, while the html file only needs to have a very simple panemu-table tag.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name --project ngx-panemu-table` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-panemu-table`.
-> Note: Don't forget to add `--project ngx-panemu-table` or else it will be added to the default project in your `angular.json` file. 
-
-## Build
-
-Run `ng build ngx-panemu-table` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build ngx-panemu-table`, go to the dist folder `cd dist/ngx-panemu-table` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ngx-panemu-table` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+To know how to install and use NgxPanemuTable, please check our [documentation](https://ngx-panemu-table.panemu.com/).

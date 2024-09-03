@@ -10,7 +10,8 @@
     "lint": "ng lint",
     "serve:ssr:demo": "node dist/demo/server/server.mjs",
     "build:sass": "sass projects/ngx-panemu-table/src/lib/main.scss projects/ngx-panemu-table/generated/main.css",
-    "build:lib": "npm run build:sass && ng build ngx-panemu-table"
+    "build:lib": "npm run build:sass && ng build ngx-panemu-table",
+    "build:doc": "npm run build:lib && ng build --project=demo"
   },
   "private": true,
   "dependencies": {
