@@ -31,6 +31,8 @@ export class AllFeaturesServerComponent implements OnInit {
   constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
+
+    this.controller.groupByColumns = [{ field: 'enrolled', modifier:'month' }]
     this.controller.reloadData()
   }
 

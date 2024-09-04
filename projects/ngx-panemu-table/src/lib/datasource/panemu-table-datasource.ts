@@ -1,8 +1,11 @@
 import { Observable, of } from "rxjs";
 import { RowGroup } from "../row/row-group";
-import { GroupBy, SortingInfo, TableCriteria, TableQuery } from "../table-query";
 import { TableData } from "../table-data";
+import { GroupBy, SortingInfo, TableCriteria, TableQuery } from "../table-query";
 
+const BETWEEN_EQ_START_EQ_END = '..';
+const BETWEEN_EQ_START = '.,';
+const BETWEEN_EQ_END = ',.';
 /**
  * A convenience datasource class that handle client side sorting, filtering, grouping and pagination.
  */
@@ -130,7 +133,13 @@ export class PanemuTableDataSource<T> {
       let result = false;
       for (const crit of tableCriteria) {
         let value = a[crit.field] + '';
-        
+        if (crit.value.includes(BETWEEN_EQ_START_EQ_END)) {
+          return this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
+        } else if (crit.value.includes(BETWEEN_EQ_START)) {
+          return this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
+        } else if (crit.value.includes(BETWEEN_EQ_END)) {
+          return this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+        }
         if (typeof value == 'number') {
           result = value == (+crit.value)
         } else {
@@ -143,6 +152,15 @@ export class PanemuTableDataSource<T> {
       return true;
     })
     return result;
+  }
+
+  private betweenFilter(betweenOperator: string, value: string, criteriaValue: string) {
+    let startValue = criteriaValue.substring(0,criteriaValue.indexOf(betweenOperator)).trim();
+    let endValue = criteriaValue.substring(criteriaValue.indexOf(betweenOperator) + 2).trim();
+    let firstFunction = betweenOperator[0] == '.' ? (val: any) => val >= startValue : (val: any) => val > startValue;
+    let secondFunction = betweenOperator[1] == '.' ? (val: any) => val <= endValue : (val: any) => val < endValue;
+
+    return firstFunction(value) && secondFunction(value);
   }
 
   private sort(result: T[], sortings: SortingInfo[]) {

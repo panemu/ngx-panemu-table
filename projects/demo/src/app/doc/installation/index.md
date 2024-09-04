@@ -2,20 +2,47 @@
 keyword: InstallationPage
 ---
 
+Create a new angular project:
+
+```
+ng new test-ngx-panemu-table
+cd test-ngx-panemu-table
+```
+
+
 Install ngx-panemu-table with this command.
 
 ```
 npm i ngx-panemu-table
 ```
 
-Open `angular.json` file. Add `node_modules/ngx-panemu-table/styles/main.css` to the all `styles` properties.
+Open the main style file. Usually `src/styles.scss` or `src/styles.css`. Add these lines:
 
-<img class="panel-shadow" src="assets/doc_image/styles_angular_json.png" alt="Field autocompletion" height="128px" style="display:block;" />
+```css name="styles.scss"
+@import '../node_modules/ngx-panemu-table/styles/indigo-pink.css';
+@import '../node_modules/ngx-panemu-table/styles/main.css';
+```
 
-Let's assume the project is a newly created project and we will use it to test ngx-panemu-table. Copy the following code
-and paste it to `app.component.ts`
+> **Warning**
+> If your project uses Angular Material, you don't need to import `indigo-pink.css`
 
-```typescript
+Ensure `provideAnimations()` is in `app.config.ts` provider array. If it's not there, please add it.
+
+```typescript name="app.config.ts" {1,6}
+import { provideAnimations } from '@angular/platform-browser/animations';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    ...
+    provideAnimations()
+    ...
+  ]
+};
+```
+
+Replace the content of `app.component.ts` with the following code.
+
+```typescript name="app.component.ts"
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
@@ -78,7 +105,7 @@ export class AppComponent {
 
 And in `app.component.html`, put this code:
 
-```html
+```html name="app.component.ts"
 <div style="height: 90vh; display: flex; flex-direction: column;">
   <div style="display: flex; justify-content: space-between;">
     <panemu-query [controller]="controller" />
@@ -98,3 +125,6 @@ npm start
 
 Go ahead open a browser and access `http://localhost:4200`.
 
+Please report any problem to [our repository](https://github.com/panemu/ngx-panemu-table/issues).
+
+Thank you for using NgxPanemuTable. We'd appreciate a star in [github](https://github.com/panemu/ngx-panemu-table).

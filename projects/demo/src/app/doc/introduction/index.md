@@ -34,7 +34,11 @@ the html file only needs to have a very simple `panemu-table` tag.
 ## Features
 
 - Pagination. More flexible than common pagination.
-- Filtering
+- Filtering. Support `between` operator using dot and comma. Dot represent `greater/less and equal`. Comma represent `greater/less`.
+```
+amount: 1.,10 is translated to `amount >= 1 and amount < 10`
+amount: 1,.10 is translated to `amount > 1 and amount <= 10`
+```
 - Searching
 - Grouping
 - Column Resizable

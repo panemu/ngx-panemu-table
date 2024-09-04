@@ -5,6 +5,7 @@
     "entryFile": "src/public-api.ts"
   },
   "assets": [
-    { "input": "generated", "glob": "**/*.css", "output": "styles" }
+    { "input": "generated", "glob": "**/*.css", "output": "styles" },
+    { "input": "src/lib", "glob": "indigo-pink.css", "output": "styles" }
   ]
 }
