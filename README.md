@@ -13,10 +13,13 @@
   </p>
 </div>
 
-# NgxPanemuTable
 
 NgxPanemuTable is an Angular table component. It is designed to be easy to use. Most work will be in typescript file, while the html file only needs to have a very simple panemu-table tag.
 
 ## Installation
 
 To know how to install and use NgxPanemuTable, please check our [documentation](https://ngx-panemu-table.panemu.com/).
+
+## Demo Video
+
+[![NgxPanemuTable Demo](https://img.youtube.com/vi/jlIfy2vOcmU/0.jpg)](https://www.youtube.com/watch?v=jlIfy2vOcmU)
