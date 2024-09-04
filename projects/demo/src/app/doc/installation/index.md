@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Replace the content of `app.component.ts` with the following code.
+Delete the content of `app.component.ts` and paste the following code.
 
 ```typescript name="app.component.ts"
 import { Component, inject } from '@angular/core';
@@ -103,7 +103,7 @@ export class AppComponent {
 }
 ```
 
-And in `app.component.html`, put this code:
+Replace the content of `app.component.html` with this code:
 
 ```html name="app.component.ts"
 <div style="height: 90vh; display: flex; flex-direction: column;">

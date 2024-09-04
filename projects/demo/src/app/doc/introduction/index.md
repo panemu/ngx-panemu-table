@@ -29,7 +29,7 @@ the html file only needs to have a very simple `panemu-table` tag.
   allowfullscreen>
 </iframe>
 
-
+[See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
 
 ## Features
 
