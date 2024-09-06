@@ -103,7 +103,7 @@ export class AppComponent {
 }
 ```
 
-Replace the content of `app.component.html` with this code:
+Delete the content of `app.component.html` replace it with this template:
 
 ```html name="app.component.ts"
 <div style="height: 90vh; display: flex; flex-direction: column;">

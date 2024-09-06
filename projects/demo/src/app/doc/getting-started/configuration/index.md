@@ -11,9 +11,13 @@ import { CellFormatter, LabelTranslation, PanemuTableService } from 'ngx-panemu-
 
 @Injectable({providedIn: 'root'})
 export class CustomPanemuTableService extends PanemuTableService {
-  
+  labelTranslation: LabelTranslation;
+
 	constructor(@Inject(LOCALE_ID) locale: string) { 
-    super(locale)
+    super(locale);
+
+    this.labelTranslation = super.getLabelTranslation();
+    this.labelTranslation.loading = 'Retrieving data...';
   }
 
   override getDateCellFormatter(): CellFormatter {
@@ -22,11 +26,14 @@ export class CustomPanemuTableService extends PanemuTableService {
     }
   } 
 
-  override getLabelTranslation(labelKey: keyof LabelTranslation): string {
-    if (labelKey == 'loading') {
-      return 'Retrieving data...'
-    }
-    return super.getLabelTranslation(labelKey)
+  override getLabelTranslation()  {
+    return this.labelTranslation;
+  }
+
+  override getDefaultColumnOptions(): DefaultColumnOptions {
+      const options = super.getDefaultColumnOptions();
+      options.sortable = false;
+      return options;
   }
   
 }
