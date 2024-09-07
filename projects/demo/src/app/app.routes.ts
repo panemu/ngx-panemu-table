@@ -9,6 +9,7 @@ import { ColumnTypeComponent } from './example/column-type.component';
 import { DynamicRowStyleComponent } from './doc/advanced-usage/dynamic-row-style.component';
 import { DynamicCellStyleComponent } from './doc/advanced-usage/dynamic-cell-style.component';
 import { MultilineColumnnComponent } from './doc/columns/multiline-column/multiline-column.component';
+import { DelayedComponent } from './example/delayed.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -20,7 +21,7 @@ export const routes: Routes = [
 	{ path: 'all-features-client', component: AllFeaturesClientComponent },
 	{ path: 'tick', component: TickableRowComponent },
 	{ path: 'all-features-server', component: AllFeaturesServerComponent },
-	// { path: 'delayed', component: DelayedComponent },
+	{ path: 'delayed', component: DelayedComponent },
 	{ path: 'custom-cell', component: CustomCellComponent },
 	{ path: 'row-style', component: DynamicRowStyleComponent },
 	{ path: 'cell-style', component: DynamicCellStyleComponent },

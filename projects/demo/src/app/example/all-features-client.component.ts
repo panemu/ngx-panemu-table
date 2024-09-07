@@ -45,7 +45,7 @@ export class AllFeaturesClientComponent implements OnInit {
     this.controller.groupByColumns = [{ field: 'country' }]
 
     //set inital filtering
-    // this.controller.criteria = [{ field: 'verified', value: true }]
+    this.controller.criteria = [{ field: 'verified', value: true }]
 
     this.dataService.getPeople().subscribe(result => {
       this.datasource.setData(result);

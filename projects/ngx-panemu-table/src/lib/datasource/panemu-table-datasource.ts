@@ -133,12 +133,14 @@ export class PanemuTableDataSource<T> {
       let result = false;
       for (const crit of tableCriteria) {
         let value = a[crit.field] + '';
-        if (crit.value.includes(BETWEEN_EQ_START_EQ_END)) {
-          return this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
-        } else if (crit.value.includes(BETWEEN_EQ_START)) {
-          return this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
-        } else if (crit.value.includes(BETWEEN_EQ_END)) {
-          return this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+        if (typeof crit.value == 'string') {
+          if (crit.value.includes(BETWEEN_EQ_START_EQ_END)) {
+            return this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
+          } else if (crit.value.includes(BETWEEN_EQ_START)) {
+            return this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
+          } else if (crit.value.includes(BETWEEN_EQ_END)) {
+            return this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+          }
         }
         if (typeof value == 'number') {
           result = value == (+crit.value)
