@@ -25,3 +25,9 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 [See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
 
 [![NgxPanemuTable Demo](https://img.youtube.com/vi/jlIfy2vOcmU/0.jpg)](https://www.youtube.com/watch?v=jlIfy2vOcmU)
+
+## New Features:
+
+### v.0.0.5
+
+* Group multiple columns under one cell header ✨

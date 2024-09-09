@@ -4,9 +4,8 @@ import { CellFormatter } from './cell/cell';
 import { DefaultCellRenderer } from "./cell/default-cell-renderer";
 import { DefaultHeaderRenderer } from './cell/default-header-renderer';
 import { MapCellRenderer } from './cell/map-cell-renderer';
-import { BaseColumn, Column, ColumnDefinition, ColumnType, ComputedColumn, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
+import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
-import { TickColumnClass } from './column/tick-column-class';
 import { LabelTranslation } from './option/label-translation';
 
 const GROUP_KEY_PREFIX = 'group_';

@@ -42,7 +42,6 @@ export class ColumnGroupComponent {
   ngOnInit() {
     // this.noGroup();
     this.group1();
-    this.controller.reloadData();
   }
 
   noGroup() {
@@ -57,8 +56,9 @@ export class ColumnGroupComponent {
       { field: 'verified' },
       { field: 'amount' },
     ]);
-
+      
     this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller.reloadData();
   }
   group1() {
     this.columns = this.pts.buildColumns<People>([
@@ -83,7 +83,9 @@ export class ColumnGroupComponent {
     ]);
 
     this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller.reloadData();
   }
+  
   group2() {
     this.columns = this.pts.buildColumns<People>([
       { field: 'id' },
@@ -111,6 +113,7 @@ export class ColumnGroupComponent {
     ]);
 
     this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller.reloadData();
   }
 
 }

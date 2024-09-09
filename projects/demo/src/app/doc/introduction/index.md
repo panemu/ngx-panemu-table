@@ -14,6 +14,9 @@ keyword: IntroductionPage
 <br>
 <br>
 
+> **Note**
+> ✨ Group multiple columns under one cell header (v.0.0.5). See `*GroupedColumnPage` .
+
 NgxPanemuTable is an Angular table component. It is designed to be easy to use. Most work will be in typescript file, while
 the html file only needs to have a very simple `panemu-table` tag.
 
@@ -44,6 +47,8 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 - Column Resizable
 - Customizable table cell
 - Sticky column
+- Group multiple columns under one cell header ✨
+
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
 
@@ -55,7 +60,7 @@ These features are not developed yet. Please create a ticket in [our repository]
 - Global search
 - Table footer
 - Virtual scroll to display large data
-- Column grouping (nested column)
+- ~~Column grouping (nested column)~~ supported since v.0.0.5
 - Column reorder
 - Export
 - Save columns position, width and visibility

@@ -47,6 +47,9 @@ export enum ColumnType {
    */
   COMPUTED,
 
+  /**
+   * Groups several columns. Used by `GroupedColumn`.
+   */
   GROUP
 }
 
@@ -93,6 +96,7 @@ export interface BaseColumn<T> {
   
   /**
    * For internal use
+   * @internal
    */
   __data?: Signal<(T | RowGroup)[]>
 
@@ -119,11 +123,26 @@ export interface BaseColumn<T> {
 
   /**
    * Automatically generated. Must be unique. It allows table to have multiple columns with the same field.
+   * @internal
    */
   __key?: string
 
+  /**
+   * Header rowspan.
+   * @internal
+   */
   __rowSpan?: number
+
+  /**
+   * Header colSpan
+   * @internal
+   */
   __colSpan?: number
+
+  /**
+   * Indicates if table th is a group.
+   * @internal
+   */
   __isGroup?: boolean
 }
 
@@ -181,13 +200,19 @@ export interface TickColumn<T> extends BaseColumn<T> {
 
 export type NonGroupColumn<T> = Column<T> | MapColumn<T> | TickColumnClass<T> | ComputedColumn;
 
+/**
+ * Group several column headers. It works by incorporating `rowspan` and `colspan` th element attributes.
+ */
 export interface GroupedColumn {
   type: ColumnType.GROUP
   label: string
   children: (GroupedColumn | NonGroupColumn<any>)[]
 }
 
-
+/**
+ * Object returned by `PanemuTableService.buildColumns` method. It contains data to build
+ * table header and table body.
+ */
 export interface HeaderRow {
   cells: BaseColumn<any>[]
   keys: string[]

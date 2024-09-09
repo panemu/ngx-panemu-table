@@ -15,15 +15,19 @@ export class AllFeaturesClientComponent implements OnInit {
   genderMap = signal({})
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   columns = this.pts.buildColumns<People>([
-    new TickColumnClass<People>({width: 40}),
+    new TickColumnClass<People>({ width: 40 }),
     { field: 'id', type: ColumnType.INT, width: 50 },
-    { field: 'name', width: 150},
-    { field: 'email' , width: 230},
+    { field: 'name', width: 150 },
+    { field: 'email', width: 230 },
     { field: 'gender', width: 80, type: ColumnType.MAP, valueMap: this.genderMap },
     { field: 'country', width: 150, cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
     { field: 'amount', width: 100, type: ColumnType.DECIMAL },
-    { field: 'enrolled', width: 150, type: ColumnType.DATE },
-    { field: 'last_login', width: 180, type: ColumnType.DATETIME },
+    {
+      type: ColumnType.GROUP, label: 'Date Info', children: [
+        { field: 'enrolled', width: 150, type: ColumnType.DATE },
+        { field: 'last_login', width: 180, type: ColumnType.DATETIME },
+      ]
+    },
     { field: 'verified', width: 80, type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
     {
       type: ColumnType.COMPUTED,
@@ -33,7 +37,7 @@ export class AllFeaturesClientComponent implements OnInit {
       width: 80,
       cellStyle: (_) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
     },
-    ]
+  ]
   )
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
@@ -66,10 +70,10 @@ export class AllFeaturesClientComponent implements OnInit {
   edit(row: People) {
     alert('Edit ' + JSON.stringify(row))
   }
-  
+
   delete(row: People) {
     alert('Delete ' + JSON.stringify(row))
-    
+
   }
 
 }
