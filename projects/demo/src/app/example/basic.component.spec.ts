@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BasicComponent } from './basic.component';
 import { DebugElement } from '@angular/core';
 import { People } from '../model/people';

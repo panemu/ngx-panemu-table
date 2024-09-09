@@ -9,28 +9,33 @@ import { ResizableDirective } from "./resizable.directive";
 })
 export class ResizableComponent implements OnInit {
   @Input() @Optional() resizable: number | string = 0;
-
-  @HostBinding('style.width.px')
-  width: number | null = null;
-  @HostBinding('style.max-width.px')
-  maxWidth: number | null = null;
+  @Input({required: true}) columnId!: string;
   @Input() table!: ElementRef<HTMLElement>;
   originalColumnWidth: number = 0
   originalTableWidth: number = 0
-
+  colElement?: HTMLElement
   constructor(private myElement: ElementRef) { }
 
   ngOnInit(): void {
+    this.colElement = this.getColElement(this.columnId);
     if (+(this.resizable) > 0) {
-      this.width = +this.resizable;
-      this.maxWidth = this.width;
+      this.setWidth(+this.resizable, this.colElement);
     }
   }
 
   onResize(width: any) {
-    this.width = this.originalColumnWidth + width;
-    this.maxWidth = this.width;
+    this.setWidth(this.originalColumnWidth + width, this.colElement);
+
     this.resetTableWidth(width)
+  }
+
+  private getColElement(id: string) {
+    return this.table.nativeElement.querySelector(`col[data-col="${id}"]`) as HTMLElement;
+  }
+  private setWidth(w: number, element?: HTMLElement) {
+    if (element) {
+      element!.style.width = w + 'px';
+    }
   }
 
   onStart() {
@@ -44,11 +49,15 @@ export class ResizableComponent implements OnInit {
   }
 
   private initTableWidth() {
-    const thList = this.table.nativeElement.getElementsByTagName('th');
+    const thList = this.table.nativeElement.querySelectorAll('th[group="false"]');
     let totWidth = 0;
     for (let index = 0; index < thList.length; index++) {
-      const element: any = thList[index];
-      element.style.width = element.offsetWidth + 'px'
+      const element = thList[index] as HTMLElement;
+      const colId = element.getAttribute('data-col');
+      if (colId) {
+        const colEl = this.getColElement(colId);
+        this.setWidth(element.offsetWidth, colEl)
+      }
       totWidth += element.offsetWidth;
     }
     this.table.nativeElement.style.width = `${totWidth}px`;

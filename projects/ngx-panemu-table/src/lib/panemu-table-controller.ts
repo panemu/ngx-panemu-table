@@ -1,6 +1,6 @@
 import { Signal, signal } from "@angular/core";
 import { BehaviorSubject, catchError, finalize, Observable, of, Subject, switchMap } from "rxjs";
-import { BaseColumn, ColumnType } from "./column/column";
+import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
 import { RowGroup } from "./row/row-group";
@@ -42,7 +42,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Set biggest possible number for `DEFAULT_MAX_ROWS`. It is to avoid user entering very big number.
    */
   static MAX_ROWS_LIMIT = 500;
-
+  
   /**
    * @internal
    */
@@ -72,12 +72,13 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Force refresh the table.
    */
   refreshTable!: Function;
+  // columns: BaseColumn<T>[];
 
-  private constructor(public columns: BaseColumn<T>[], private retrieveDataFunction: RetrieveDataFunction<T>, public __rowOptions?: RowOptions<T>) {
+  private constructor(public columnDefinition: ColumnDefinition<T>, private retrieveDataFunction: RetrieveDataFunction<T>, public __rowOptions?: RowOptions<T>) {
     if (!__rowOptions) {
       this.__rowOptions = {}
     }
-
+    
     this.__rowOptions!.rowSelection = this.__rowOptions!.rowSelection ?? true;
     this.initReloadCueListener();
   }
@@ -88,7 +89,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @param datasource 
    * @returns 
    */
-  static create<T>(columns: BaseColumn<T>[],
+  static create<T>(columns: ColumnDefinition<T>,
     datasource: PanemuTableDataSource<T>,
     rowOptions?: RowOptions<T>) {
 
@@ -104,7 +105,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @param retrieveDataFunction 
    * @returns 
    */
-  static createWithCustomDataSource<T>(columns: BaseColumn<T>[], retrieveDataFunction: RetrieveDataFunction<T>, rowOptions?: RowOptions<T>) {
+  static createWithCustomDataSource<T>(columns: ColumnDefinition<T>, retrieveDataFunction: RetrieveDataFunction<T>, rowOptions?: RowOptions<T>) {
     return new PanemuTableController(columns, retrieveDataFunction, rowOptions)
   }
 
@@ -239,7 +240,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   private createGroupController(group: RowGroup) {
-    let groupController = new PanemuTableController([], this.retrieveDataFunction);
+    let groupController = new PanemuTableController({header: [], body: []}, this.retrieveDataFunction);
     let slicedGroupByColumn = group.parent ? group.parent.controller!.groupByColumns.slice(1) : this.groupByColumns.slice(1);
     groupController.groupByColumns = slicedGroupByColumn;
     groupController.createTableQuery = () => {

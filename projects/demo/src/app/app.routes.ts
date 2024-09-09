@@ -10,6 +10,7 @@ import { DynamicRowStyleComponent } from './doc/advanced-usage/dynamic-row-style
 import { DynamicCellStyleComponent } from './doc/advanced-usage/dynamic-cell-style.component';
 import { MultilineColumnnComponent } from './doc/columns/multiline-column/multiline-column.component';
 import { DelayedComponent } from './example/delayed.component';
+import { ColumnGroupComponent } from './example/column-group.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -26,5 +27,6 @@ export const routes: Routes = [
 	{ path: 'row-style', component: DynamicRowStyleComponent },
 	{ path: 'cell-style', component: DynamicCellStyleComponent },
 	{ path: 'multiline', component: MultilineColumnnComponent },
+	{ path: 'grouped-column', component: ColumnGroupComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

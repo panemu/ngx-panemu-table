@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { BaseColumn, ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 const DATA: People[] = [
@@ -17,7 +17,7 @@ const DATA: People[] = [
 })
 
 export class BasicComponent implements OnInit {
-
+  
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
@@ -25,8 +25,10 @@ export class BasicComponent implements OnInit {
     { field: 'gender' },
     { field: 'country' },
     { field: 'amount' },
-    { field: 'enrolled' },
-    { field: 'last_login' },
+    {type: ColumnType.GROUP, label: 'Date Info', children: [
+      { field: 'enrolled' },
+      { field: 'last_login' },
+    ]},
     { field: 'verified'}
   ])
 
@@ -36,6 +38,9 @@ export class BasicComponent implements OnInit {
 
   ngOnInit() {
     this.controller.reloadData();
+    this.controller.selectFirst();
+    setTimeout(() => {
+    });
   }
 
 }

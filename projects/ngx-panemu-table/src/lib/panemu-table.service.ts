@@ -1,13 +1,15 @@
 import { formatDate, formatNumber } from '@angular/common';
-import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal } from '@angular/core';
+import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, WritableSignal } from '@angular/core';
 import { CellFormatter } from './cell/cell';
 import { DefaultCellRenderer } from "./cell/default-cell-renderer";
 import { DefaultHeaderRenderer } from './cell/default-header-renderer';
 import { MapCellRenderer } from './cell/map-cell-renderer';
-import { BaseColumn, Column, ColumnType, ComputedColumn, MapColumn, PropertyColumn } from './column/column';
+import { BaseColumn, Column, ColumnDefinition, ColumnType, ComputedColumn, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
 import { TickColumnClass } from './column/tick-column-class';
 import { LabelTranslation } from './option/label-translation';
+
+const GROUP_KEY_PREFIX = 'group_';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,96 @@ export class PanemuTableService {
    * @param options 
    * @returns 
    */
-  buildColumns<T>(columns: (Column<T> | MapColumn<T> | TickColumnClass<T> | ComputedColumn)[], options?: DefaultColumnOptions): BaseColumn<T>[] {
+  buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T>{
+    let bodyColumns = this.buildBody(columns);
+    this.initColumns(bodyColumns);
+    let headerRows: HeaderRow[] = [];
+    this.buildHeaders(headerRows, columns, 0, this.getDepth(columns, 0), signal(0));
+    headerRows.forEach(item => {
+      item.keys = item.cells.map(cell => 'th_' + cell.__key!);
+    })
+    return {
+      header: headerRows,
+      body: bodyColumns
+    }
+  }
+
+  private buildBody<T>(headers: (GroupedColumn | NonGroupColumn<T>)[]) {
+    let columns: BaseColumn<T>[] = [];
+    for (const h of headers) {
+      if (h.type !== ColumnType.GROUP) {
+        columns.push(h)
+      } else {
+        columns = columns.concat(this.buildBody((h as GroupedColumn).children))
+      }
+    }
+
+    return columns;
+  }
+
+private buildHeaders<T>(wholeResult: HeaderRow[],headers: (GroupedColumn | NonGroupColumn<T>)[],
+  level: number,
+  totalDepth: number,
+  groupIndex: WritableSignal<number>
+) {
+
+  if (!wholeResult[level]) {
+    wholeResult[level] = {cells: [], keys: []};
+  }
+  let colSpan = 0;
+  
+  for (const h of headers) {
+    if (h.type == ColumnType.GROUP) {
+      const clmGroup = h as GroupedColumn;
+      let groupDepth = this.getDepth(clmGroup.children, 0);
+      let groupRowSpan = totalDepth - groupDepth - level;
+      let currentGroupIndex = groupIndex();
+      groupIndex.update(i => i + 1);
+      let childrenColSpan = this.buildHeaders(wholeResult, clmGroup.children, level + groupRowSpan, totalDepth, groupIndex);
+      
+      if (childrenColSpan) {
+        //{ colSpan: childrenColSpan, label: h.label!, rowSpan: groupRowSpan, headerRenderer: DefaultHeaderRenderer.create(), isGroup: true }
+        let groupHeader: BaseColumn<any> = {
+          __colSpan: childrenColSpan, 
+          label: clmGroup.label!, 
+          __rowSpan: groupRowSpan, 
+          headerRenderer: DefaultHeaderRenderer.create(), 
+          __isGroup: true,
+          __key: GROUP_KEY_PREFIX + currentGroupIndex,
+        }
+        wholeResult[level].cells.push(groupHeader)
+        colSpan += childrenColSpan;
+      }
+
+    } else {
+      if (h.visible) {
+        
+        let leafHeader = h as BaseColumn<any>;
+        leafHeader.__colSpan = 1;
+        leafHeader.__rowSpan = totalDepth - level;
+        leafHeader.__isGroup = false;
+        wholeResult[level].cells.push(leafHeader);
+        colSpan++;
+      }
+      
+    }
+  }
+  return colSpan;
+  // return result;
+}
+
+private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: number) {
+  let depth = level + 1;
+  for (const h of headers) {
+    if (h.type == ColumnType.GROUP) {
+      depth = Math.max(this.getDepth((h as GroupedColumn).children, level + 1), depth);
+    }
+  }
+  return depth;
+}
+
+  
+  private initColumns<T>(columns: BaseColumn<T>[], options?: DefaultColumnOptions): BaseColumn<T>[] {
     const defaultOptions = this.getDefaultColumnOptions();
     if (options) {
       Object.assign(defaultOptions, options);

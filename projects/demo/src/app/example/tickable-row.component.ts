@@ -41,6 +41,10 @@ export class TickableRowComponent implements OnInit {
   tickAll() {
     this.clmTick.setTickedAll(true);
   }
+  
+  toggleFirstRow() {
+    this.clmTick.setTicked(!this.clmTick.isTicked(this.datasource.getAllData()[0]), this.datasource.getAllData()[0]);
+  }
 
   untickAll() {
     this.clmTick.setTickedAll(false);

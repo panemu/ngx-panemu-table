@@ -56,7 +56,7 @@ export class PanemuQueryComponent implements OnDestroy, AfterViewInit {
 
   private onControllerChange(): void {
     if (!this.controller()) return;
-    this._columns = (this.controller().columns as PropertyColumn<any>[]).filter(item => !!item.field);
+    this._columns = (this.controller().columnDefinition.body as PropertyColumn<any>[]).filter(item => !!item.field);
     this._filterableColumns = this._columns.filter(item => item.filterable);
     this.$subscription.add(
       this.controller().__onReload().subscribe({

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, input, Signal, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, Input, input, OnChanges, Signal, signal, SimpleChanges, TemplateRef, viewChild, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -9,7 +9,7 @@ import { SpinningIconComponent } from './busy-indicator/spinning-icon.component'
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
-import { ColumnType, PropertyColumn } from './column/column';
+import { ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
 import { PanemuPaginationComponent } from './pagination/panemu-pagination.component';
 import { PanemuTableController } from './panemu-table-controller';
 import { PanemuTableService } from './panemu-table.service';
@@ -37,9 +37,10 @@ import { LabelTranslation } from './option/label-translation';
     RowStylingPipe,
     CellStylingPipe
   ],
-  templateUrl: './panemu-table.component.html',
+  templateUrl: './panemu-table.component.html'
 })
 export class PanemuTableComponent<T> {
+  // @Input({required: true})controller!:PanemuTableController<T>;
   controller = input.required<PanemuTableController<T>>();
   dataSource = new MatTableDataSource<T | RowGroup>([]);
   _allColumns!: PropertyColumn<T>[];
@@ -51,43 +52,66 @@ export class PanemuTableComponent<T> {
   _controllerSelectedRowSignal!: Signal<T | null>;
   rowOptions!: RowOptions<T>;
   labelTranslation: LabelTranslation;
-  private columnWidthInitialized = false;
+  columnDefinition!: ColumnDefinition<T>;
+  headers!:HeaderRow[];
+  ready = false;
   private data = signal<(T | RowGroup)[]>([]);
-
+  
   @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
-  @ViewChild(MatTable) table!: MatTable<any>;
+  table = viewChild(MatTable);
   constructor(private panemuTableService: PanemuTableService) {
     this.labelTranslation = this.panemuTableService.getLabelTranslation();
     effect(() => {
       this.onControllerChange()
     })
 
-    effect(() => {
-      if (this.controller().getSelectedRow()) {
-        if (!this.data().includes(this.controller().getSelectedRow()!)) {
-          this.controller().clearSelection();
-        }
-      }
-    }, { allowSignalWrites: true })
   }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['controller']) {
+  //     this.onControllerChange()
+  //   }
+  // }
 
   private onControllerChange() {
 
     if (this.controller()) {
-      this.columnWidthInitialized = false;
       this.controller().__tableDisplayData = this.displayData.bind(this);
       this.controller().__data = this.data.asReadonly();
       this._controllerSelectedRowSignal = this.controller().getSelectedRowSignal();
       this.loading = this.controller().loading;
-      this._allColumns = this.controller().columns as PropertyColumn<T>[];
+      
+      this.columnDefinition = this.controller().columnDefinition;
+      this.headers = this.columnDefinition.header;
+      this._allColumns = this.columnDefinition.body as PropertyColumn<T>[];
       this._allColumns.forEach(item => item.__data = this.data.asReadonly())
 
-      this._columns = (this.controller().columns as PropertyColumn<T>[]).filter(item => !!item.field);
+      this._columns = (this.controller().columnDefinition.body as PropertyColumn<T>[]);
+      this.initDefaultColumnWidthIfNeeded();
       this._displayedColumns = this._allColumns.filter(item => item.visible).map(item => item.__key!);
 
       this.controller().refreshTable = this.refresh.bind(this);
 
       this.rowOptions = this.controller().__rowOptions!;
+
+      this.matTable?.nativeElement?.removeAttribute('resized');
+      // setTimeout(() => {
+      //   this.ready = true;
+      // });
+    }
+  }
+
+  private initDefaultColumnWidthIfNeeded() {
+    const anyColumnHasSpecifiedWidth = !!this._columns.find(item => !!item.width);
+    if (anyColumnHasSpecifiedWidth) {
+      let totWidth = 0;
+      this._columns.filter(item => item.visible).forEach(item => {
+        if (!item.width || item.width < 10) {
+          item.width = 150
+        }
+        totWidth += item.width
+      })
+      this.matTable.nativeElement.style.width = `${totWidth}px`;
     }
   }
 
@@ -95,19 +119,6 @@ export class PanemuTableComponent<T> {
 
     const oriData = [...this.dataSource.data];
     
-    if (data?.length && !this.columnWidthInitialized) {
-      const anyColumnHasSpecifiedWidth = !!this._columns.find(item => !!item.width);
-      if (anyColumnHasSpecifiedWidth) {
-        let totWidth = 0;
-        this._columns.filter(item => item.visible).forEach(item => {
-          if (!item.width || item.width < 10) {
-            item.width = 150
-          }
-          totWidth += item.width
-        })
-        this.matTable.nativeElement.style.width = `${totWidth}px`;
-      }
-    }
     let finalData: T[] | RowGroup[] = data;
     if (groupField) {
       let clm = this._columns.find(item => item.field == groupField.field)!;
@@ -139,12 +150,15 @@ export class PanemuTableComponent<T> {
     } else {
       this.resetDataSourceData(finalData);
     }
-    this.table.renderRows();
+    this.table()?.renderRows();
   }
 
   private resetDataSourceData(data: (T | RowGroup)[]) {
     this.dataSource.data = data;
     this.data.set(data);
+    if (this.controller().getSelectedRow() && !this.data().includes(this.controller().getSelectedRow()!)) {
+      this.controller().clearSelection();
+    }
   }
 
   getDisplayedData() {
@@ -160,7 +174,7 @@ export class PanemuTableComponent<T> {
       const oriData = [...this.dataSource.data];
       this.clearGroupChild(oriData, row);
       this.resetDataSourceData(oriData);
-      this.table.renderRows();
+      this.table()?.renderRows();
     }
   }
 
@@ -218,10 +232,10 @@ export class PanemuTableComponent<T> {
   }
 
   private refresh() {
-    console.log('refresh');
     // const oriData = [...this.dataSource.data];
     // this.dataSource.data = [];
     // this.dataSource.data = oriData;
     this.onControllerChange();
   }
+
 }

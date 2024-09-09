@@ -18,7 +18,7 @@ export class GroupbyComponent {
   controller = input.required<PanemuTableController<any>>();
   _columns = computed(() => {
     if (this.controller()) {
-      return (this.controller().columns as PropertyColumn<any>[]).filter(item => !!item.groupable)
+      return (this.controller().columnDefinition.body as PropertyColumn<any>[]).filter(item => !!item.groupable)
     }
     return []
   });

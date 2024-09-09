@@ -41,6 +41,16 @@
     height: 32px;
   }
 
+  .mat-mdc-header-row {
+    height: 40px;
+
+    th {
+      // border-right: 1px solid red;
+      // border-bottom: 1px solid red;
+      padding-left: 0.5rem;
+    }
+  }
+
   .table {
     table-layout: fixed;
   }
@@ -184,7 +194,7 @@
       top: 0;
       bottom: 0;
       width: 6px;
-      margin: 0 -8px 0 8px;
+      margin: 0 0 0 6px;
       justify-self: flex-end;
       border-left: 2px solid transparent;
       border-right: 2px solid transparent;
