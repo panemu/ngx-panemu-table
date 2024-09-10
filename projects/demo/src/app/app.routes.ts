@@ -11,6 +11,7 @@ import { DynamicCellStyleComponent } from './doc/advanced-usage/dynamic-cell-sty
 import { MultilineColumnnComponent } from './doc/columns/multiline-column/multiline-column.component';
 import { DelayedComponent } from './example/delayed.component';
 import { ColumnGroupComponent } from './example/column-group.component';
+import { RowDetailComponent } from './example/row-detail.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -28,5 +29,6 @@ export const routes: Routes = [
 	{ path: 'cell-style', component: DynamicCellStyleComponent },
 	{ path: 'multiline', component: MultilineColumnnComponent },
 	{ path: 'grouped-column', component: ColumnGroupComponent },
+	{ path: 'row-detail', component: RowDetailComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

@@ -7,6 +7,7 @@ import { MapCellRenderer } from './cell/map-cell-renderer';
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
 import { LabelTranslation } from './option/label-translation';
+import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
 
 const GROUP_KEY_PREFIX = 'group_';
 
@@ -35,7 +36,7 @@ export class PanemuTableService {
    * @param options 
    * @returns 
    */
-  buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T>{
+  buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T> {
     let bodyColumns = this.buildBody(columns);
     this.initColumns(bodyColumns);
     let headerRows: HeaderRow[] = [];
@@ -62,68 +63,68 @@ export class PanemuTableService {
     return columns;
   }
 
-private buildHeaders<T>(wholeResult: HeaderRow[],headers: (GroupedColumn | NonGroupColumn<T>)[],
-  level: number,
-  totalDepth: number,
-  groupIndex: WritableSignal<number>
-) {
+  private buildHeaders<T>(wholeResult: HeaderRow[], headers: (GroupedColumn | NonGroupColumn<T>)[],
+    level: number,
+    totalDepth: number,
+    groupIndex: WritableSignal<number>
+  ) {
 
-  if (!wholeResult[level]) {
-    wholeResult[level] = {cells: [], keys: []};
-  }
-  let colSpan = 0;
-  
-  for (const h of headers) {
-    if (h.type == ColumnType.GROUP) {
-      const clmGroup = h as GroupedColumn;
-      let groupDepth = this.getDepth(clmGroup.children, 0);
-      let groupRowSpan = totalDepth - groupDepth - level;
-      let currentGroupIndex = groupIndex();
-      groupIndex.update(i => i + 1);
-      let childrenColSpan = this.buildHeaders(wholeResult, clmGroup.children, level + groupRowSpan, totalDepth, groupIndex);
-      
-      if (childrenColSpan) {
-        //{ colSpan: childrenColSpan, label: h.label!, rowSpan: groupRowSpan, headerRenderer: DefaultHeaderRenderer.create(), isGroup: true }
-        let groupHeader: BaseColumn<any> = {
-          __colSpan: childrenColSpan, 
-          label: clmGroup.label!, 
-          __rowSpan: groupRowSpan, 
-          headerRenderer: DefaultHeaderRenderer.create(), 
-          __isGroup: true,
-          __key: GROUP_KEY_PREFIX + currentGroupIndex,
+    if (!wholeResult[level]) {
+      wholeResult[level] = { cells: [], keys: [] };
+    }
+    let colSpan = 0;
+
+    for (const h of headers) {
+      if (h.type == ColumnType.GROUP) {
+        const clmGroup = h as GroupedColumn;
+        let groupDepth = this.getDepth(clmGroup.children, 0);
+        let groupRowSpan = totalDepth - groupDepth - level;
+        let currentGroupIndex = groupIndex();
+        groupIndex.update(i => i + 1);
+        let childrenColSpan = this.buildHeaders(wholeResult, clmGroup.children, level + groupRowSpan, totalDepth, groupIndex);
+
+        if (childrenColSpan) {
+          //{ colSpan: childrenColSpan, label: h.label!, rowSpan: groupRowSpan, headerRenderer: DefaultHeaderRenderer.create(), isGroup: true }
+          let groupHeader: BaseColumn<any> = {
+            __colSpan: childrenColSpan,
+            label: clmGroup.label!,
+            __rowSpan: groupRowSpan,
+            headerRenderer: DefaultHeaderRenderer.create(),
+            __isGroup: true,
+            __key: GROUP_KEY_PREFIX + currentGroupIndex,
+          }
+          wholeResult[level].cells.push(groupHeader)
+          colSpan += childrenColSpan;
         }
-        wholeResult[level].cells.push(groupHeader)
-        colSpan += childrenColSpan;
+
+      } else {
+        if (h.visible) {
+
+          let leafHeader = h as BaseColumn<any>;
+          leafHeader.__colSpan = 1;
+          leafHeader.__rowSpan = totalDepth - level;
+          leafHeader.__isGroup = false;
+          wholeResult[level].cells.push(leafHeader);
+          colSpan++;
+        }
+
       }
+    }
+    return colSpan;
+    // return result;
+  }
 
-    } else {
-      if (h.visible) {
-        
-        let leafHeader = h as BaseColumn<any>;
-        leafHeader.__colSpan = 1;
-        leafHeader.__rowSpan = totalDepth - level;
-        leafHeader.__isGroup = false;
-        wholeResult[level].cells.push(leafHeader);
-        colSpan++;
+  private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: number) {
+    let depth = level + 1;
+    for (const h of headers) {
+      if (h.type == ColumnType.GROUP) {
+        depth = Math.max(this.getDepth((h as GroupedColumn).children, level + 1), depth);
       }
-      
     }
+    return depth;
   }
-  return colSpan;
-  // return result;
-}
 
-private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: number) {
-  let depth = level + 1;
-  for (const h of headers) {
-    if (h.type == ColumnType.GROUP) {
-      depth = Math.max(this.getDepth((h as GroupedColumn).children, level + 1), depth);
-    }
-  }
-  return depth;
-}
 
-  
   private initColumns<T>(columns: BaseColumn<T>[], options?: DefaultColumnOptions): BaseColumn<T>[] {
     const defaultOptions = this.getDefaultColumnOptions();
     if (options) {
@@ -131,7 +132,7 @@ private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: numbe
     }
 
     columns.forEach((item, index) => this.initColumn(item, index, defaultOptions))
-    
+
     const indexMap: Record<string, number> = {};
     columns.forEach((item: any) => {
       const propColumn = item as PropertyColumn<any>;
@@ -179,7 +180,7 @@ private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: numbe
             }
             column.formatter = this.getMapFormatter(mapColumn.valueMap as Signal<any>);
             if (!column.cellRenderer) {
-              column.cellRenderer = {component: MapCellRenderer}
+              column.cellRenderer = { component: MapCellRenderer }
             }
             break;
           default:
@@ -188,10 +189,10 @@ private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: numbe
       } else {
         column.formatter = column.formatter;
       }
-      
+
     } else if (baseColumn.type == ColumnType.TICK) {
-      
-      
+
+
       (baseColumn as any).field = '__tick_' + index;
       baseColumn.sticky = baseColumn.sticky === undefined ? 'start' : null;
     } else if (baseColumn.type == ColumnType.COMPUTED) {
@@ -201,9 +202,18 @@ private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: numbe
     baseColumn.width = baseColumn.width || 0;
     baseColumn.visible = baseColumn.visible === undefined ? defaultOptions.visible : baseColumn.visible;
     baseColumn.headerRenderer = baseColumn.headerRenderer || DefaultHeaderRenderer.create();
-    
-    baseColumn.cellRenderer = baseColumn.cellRenderer || DefaultCellRenderer.create();
-    
+
+    if (!baseColumn.cellRenderer) {
+      if (baseColumn.expansion) {
+        baseColumn.cellRenderer = {
+          component: ExpansionCellRenderer,
+          parameter: baseColumn.expansion
+        };
+      } else {
+        baseColumn.cellRenderer = DefaultCellRenderer.create();
+      }
+    }
+
   }
 
   private toTitleCase(str: string) {
@@ -245,7 +255,7 @@ private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: numbe
    */
   getDateTimeCellFormatter(): CellFormatter {
     return (val) => {
-      
+
       return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) || ''
     }
   }

@@ -3,12 +3,13 @@ import GettingStartedCategory from '../getting-started/ng-doc.category';
 import { BasicComponent } from '../../example/basic.component';
 import { PaginationComponent } from '../../example/pagination.component';
 import { AllFeaturesClientComponent } from '../../example/all-features-client.component';
+import UsagesCategory from '../usages/ng-doc.category';
 
 const BasicUsagePage: NgDocPage = {
 	title: `Basic Usage`,
 	mdFile: './index.md',
-	category: GettingStartedCategory,
-	order: 20,
+	category: UsagesCategory,
+	order: 10,
 	demos: {BasicComponent, PaginationComponent, AllFeaturesClientComponent}
 };
 

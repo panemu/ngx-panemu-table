@@ -18,4 +18,6 @@ export * from './lib/column/tick-column-class';
 export * from './lib/option/label-translation';
 export * from './lib/row/row-options';
 export * from './lib/row/row-group';
+export * from './lib/row/expansion-row';
 export * from './lib/column/default-column-options';
+export * from './lib/busy-indicator/panemu-busy-indicator.component';

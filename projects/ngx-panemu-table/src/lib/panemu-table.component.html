@@ -7,7 +7,7 @@
   </div>
 </ng-template>
 <div class="panemu-table">
-  <pnm-busy-indicator *ngIf="loading | async"></pnm-busy-indicator>
+  <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
   
   <div class="" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: auto;">
     <table #panemuTable mat-table [dataSource]="dataSource" class="table" [fixedLayout]="false" >
@@ -89,8 +89,18 @@
           </div>
         </td>
       </ng-container>
-      <tr mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup">
-      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
+
+      <ng-container matColumnDef="detailRow">
+        <td mat-cell [attr.colspan]="_displayedColumns.length" *matCellDef="let detail">
+          @if(detail.isTemplateRef()) {
+            <ng-container [ngTemplateOutlet]="detail.component()" [ngTemplateOutletContext]="{row: detail.row, column: detail.column, close: detail.close.bind(detail)}"></ng-container>
+          } @else {
+            <ng-container *ngComponentOutlet="detail.component; inputs: {row: detail.row, column: detail.column, close: detail.close.bind(detail)}" ></ng-container>
+          }
+        </td>
+      </ng-container>
+      <tr mat-row *matRowDef="let row; columns: ['detailRow']; when: isExpansionRow"></tr>
     </table>
   </div>
   <div class="no-data" *ngIf="controller() && !dataSource.data?.length"> {{labelTranslation.noData}} </div>
