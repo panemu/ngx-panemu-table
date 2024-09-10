@@ -359,6 +359,16 @@
 }
 
 .panemu-query-menu {
+  min-width: 300px;
+  
+  .mat-mdc-optgroup {
+    font-size: 0.75rem;
+    color: #6b7280;
+
+    .mat-mdc-optgroup-label {
+      min-height: 2rem;
+    }
+  }
   .mat-mdc-option {
     min-height: 32px;
   }

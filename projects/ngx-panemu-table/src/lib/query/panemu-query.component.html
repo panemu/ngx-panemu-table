@@ -17,7 +17,7 @@
         search
       </span>
       <div class="chip-label">{{item.field}}: {{item.value}}</div>
-
+      <div class="text-xs text-gr"></div>
       <button class="close-button" (click)="deleteCriteria(i)">
         <span class="material-symbols-outlined">
           close
@@ -30,7 +30,8 @@
     #txtCriteriaElement
     [formControl]="txtCriteria">
     <mat-autocomplete #auto="matAutocomplete" class="panemu-query-menu">
-      @for (option of _filterableColumns; track option) {
+      <mat-optgroup [label]="searchTitle"></mat-optgroup>
+      @for (option of _searchableColumn; track option) {
         <mat-option class="panemu-query-field" [value]="option.field" >{{option.label}}</mat-option>
       }
      </mat-autocomplete>

@@ -3,7 +3,7 @@ import { input, AfterViewInit, Component, OnDestroy, OnInit, ViewChild, effect, 
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
-import { Subscription } from 'rxjs';
+import { debounce, distinctUntilChanged, Subscription } from 'rxjs';
 import { ColumnType, MapColumn, PropertyColumn } from '../column/column';
 import { PanemuTableController } from '../panemu-table-controller';
 import { GroupbyComponent } from './groupby.component';
@@ -17,14 +17,16 @@ import { LabelTranslation } from '../option/label-translation';
   imports: [CommonModule, MatMenuModule, GroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
   templateUrl: './panemu-query.component.html',
 })
-export class PanemuQueryComponent implements OnDestroy, AfterViewInit {
+export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   controller = input.required<PanemuTableController<any>>();
   groupByLabel = '';
   _columns!: PropertyColumn<any>[];
   _filterableColumns!: PropertyColumn<any>[];
+  _searchableColumn!: PropertyColumn<any>[];
   txtCriteria = new FormControl('');
   _criteria: TableCriteria[] = [];
   labelTranslation: LabelTranslation;
+  searchTitle = '';
   @ViewChild('txtCriteriaElement', {read: MatAutocompleteTrigger}) txtCriteriaElement!: MatAutocompleteTrigger;
 
 
@@ -32,6 +34,21 @@ export class PanemuQueryComponent implements OnDestroy, AfterViewInit {
     this.labelTranslation = service.getLabelTranslation();
 
     effect(() => this.onControllerChange())
+  }
+
+  ngOnInit(): void {
+      this.txtCriteria.valueChanges.pipe(
+        distinctUntilChanged(),
+      ).subscribe({
+        next: val => {
+          if (val) {
+            this.searchTitle = `Search for "${val}" in:`
+            this._searchableColumn = [...this._filterableColumns]
+          } else {
+            this._searchableColumn = []
+          }
+        }
+      })
   }
   ngAfterViewInit(): void {
     this.txtCriteriaElement.optionSelections.subscribe(val => {
