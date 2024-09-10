@@ -20,6 +20,7 @@ import { RowStylingPipe } from './row/row-styling.pipe';
 import { GroupBy } from './table-query';
 import { LabelTranslation } from './option/label-translation';
 import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
+import { GroupCellPipe } from './cell/group-cell.pipe';
 
 @Component({
   selector: 'panemu-table',
@@ -36,7 +37,8 @@ import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
     PanemuPaginationComponent,
     SpinningIconComponent,
     RowStylingPipe,
-    CellStylingPipe
+    CellStylingPipe,
+    GroupCellPipe
   ],
   templateUrl: './panemu-table.component.html'
 })

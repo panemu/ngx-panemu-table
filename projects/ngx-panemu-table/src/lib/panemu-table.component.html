@@ -78,7 +78,7 @@
             <div class="group-cell" (click)="groupHeaderClick(group)">
               <span class="material-symbols-outlined" *ngIf="group.expanded">arrow_drop_down</span>
               <span class="material-symbols-outlined" *ngIf="!group.expanded">arrow_right</span>
-              <span class="group-label">{{group.valueFormatted()}} ({{group.count}})</span>
+              <span class="group-label">{{group.value | groupCell:group.formatter}} ({{group.count}})</span>
               <span *ngIf="group.controller?.loading | async" style="margin-left: 12px;">
                 <pnm-spinning-icon/>
               </span>

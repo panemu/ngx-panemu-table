@@ -18,8 +18,4 @@ export class RowGroup {
     return !this.parent || (this.parent.visible && this.parent.expanded);
   }
 
-  valueFormatted() {
-    return this.formatter(this.value);
-  }
-
 }
