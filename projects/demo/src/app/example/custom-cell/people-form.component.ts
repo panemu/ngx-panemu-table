@@ -12,7 +12,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People> {
   @Input() row!: People;
   @Input() column!: PropertyColumn<People>;
-  @Input() close!: (row: People) => void;
+  @Input() close!: Function;
   ready = false;
 
   form = this.fb.group({
@@ -36,6 +36,6 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
     this.row.name = this.form.controls.name.value || ''    
     this.row.email = this.form.controls.email.value || ''
 
-    this.close(this.row)
+    this.close()
   }
 }

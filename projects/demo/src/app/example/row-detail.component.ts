@@ -27,7 +27,6 @@ export class RowDetailComponent {
   };
 
   columns = this.pts.buildColumns<People>([
-    { field: 'id' },
     { field: 'name', },
     {
       field: 'email', expansion: {
@@ -38,19 +37,12 @@ export class RowDetailComponent {
         },
       }
     },
-    { field: 'gender' },
     { field: 'country', expansion: {
-      component: NestedTableComponent,
-      buttonPosition: 'end'
-    } },
-    { field: 'amount' },
-    {
-      type: ColumnType.GROUP, label: 'Date Info', children: [
-        { field: 'enrolled' },
-        { field: 'last_login' },
-      ]
+        component: NestedTableComponent,
+        buttonPosition: 'end',
+      }
     },
-    { field: 'verified' },
+    
     this.clmEditInExpansion,
   ])
   datasource = new PanemuTableDataSource<People>();

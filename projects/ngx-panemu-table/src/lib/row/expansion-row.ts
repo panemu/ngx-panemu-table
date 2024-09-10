@@ -24,5 +24,5 @@ export class ExpansionRow<T> {
 export interface ExpansionRowRenderer<T> {
   row: T;
   column: PropertyColumn<T>
-  close: (row: T) => void
+  close: Function
 }

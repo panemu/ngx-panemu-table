@@ -12,7 +12,7 @@ import { DataService } from "../../service/data.service";
 export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People> {
   @Input() row!: People;
   @Input() column!: PropertyColumn<People>;
-  @Input() close!: (row: People) => void;
+  @Input() close!: Function;
 
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
