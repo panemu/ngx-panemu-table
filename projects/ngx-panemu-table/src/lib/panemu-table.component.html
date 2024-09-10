@@ -12,7 +12,7 @@
   <div class="" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: auto;">
     <table #panemuTable mat-table [dataSource]="dataSource" class="table" [fixedLayout]="false" >
       <colgroup>
-        @for (column of _allColumns; track $index) {
+        @for (column of _visibleColumns; track $index) {
           <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
         }
       </colgroup>
@@ -47,7 +47,7 @@
         <tr mat-header-row *matHeaderRowDef="header.keys; sticky: true" class="row-header"></tr>
       }
 
-      @for (column of _allColumns; track $index) {
+      @for (column of _visibleColumns; track $index) {
         <ng-container [matColumnDef]="column.__key!" [sticky]="column.sticky == 'start'" [stickyEnd]="column.sticky == 'end'">
           <!-- This is a hack to support Grouped Column feature. Without it , the header won't show -->
           <th *matHeaderCellDef style="display: none; height: 0;"></th>

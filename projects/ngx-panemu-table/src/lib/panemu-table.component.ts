@@ -44,7 +44,7 @@ export class PanemuTableComponent<T> {
   controller = input.required<PanemuTableController<T>>();
   dataSource = new MatTableDataSource<T | RowGroup | ExpansionRow<T>>([]);
   _allColumns!: PropertyColumn<T>[];
-  _columns!: PropertyColumn<T>[];
+  _visibleColumns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
   loading!: Observable<boolean>
   _columnType = ColumnType;
@@ -84,14 +84,17 @@ export class PanemuTableComponent<T> {
       this.columnDefinition = this.controller().columnDefinition;
       this.headers = this.columnDefinition.header;
       this._allColumns = this.columnDefinition.body as PropertyColumn<T>[];
+      this._visibleColumns = [];
       this._allColumns.forEach(item => {
         item.__data = this.controller().__data.asReadonly();
         item.__expandHook = this.expandCell.bind(this)
+        if (item.visible) {
+          this._visibleColumns.push(item);
+        }
       })
 
-      this._columns = (this.controller().columnDefinition.body as PropertyColumn<T>[]);
       this.initDefaultColumnWidthIfNeeded();
-      this._displayedColumns = this._allColumns.filter(item => item.visible).map(item => item.__key!);
+      this._displayedColumns = this._visibleColumns.map(item => item.__key!);
 
       this.controller().refreshTable = this.refresh.bind(this);
 
@@ -105,10 +108,10 @@ export class PanemuTableComponent<T> {
   }
 
   private initDefaultColumnWidthIfNeeded() {
-    const anyColumnHasSpecifiedWidth = !!this._columns.find(item => !!item.width);
+    const anyColumnHasSpecifiedWidth = !!this._visibleColumns.find(item => !!item.width);
     if (anyColumnHasSpecifiedWidth) {
       let totWidth = 0;
-      this._columns.filter(item => item.visible).forEach(item => {
+      this._visibleColumns.filter(item => item.visible).forEach(item => {
         if (!item.width || item.width < 10) {
           item.width = 150
         }
@@ -124,7 +127,7 @@ export class PanemuTableComponent<T> {
     
     let finalData: T[] | RowGroup[] = data;
     if (groupField) {
-      let clm = this._columns.find(item => item.field == groupField.field)!;
+      let clm = this._allColumns.find(item => item.field == groupField.field)!;
       if (!clm) {
         throw new Error('Unknown column to group: ' + groupField.field);
       }
