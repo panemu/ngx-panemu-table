@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -11,7 +11,8 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
   standalone: true,
   imports: [PanemuTableComponent, CommonModule],
   templateUrl: 'row-detail.component.html',
-  styleUrl: 'row-detail.component.scss'
+  styleUrl: 'row-detail.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RowDetailComponent {
   rowDetail1 = viewChild<TemplateRef<any>>('rowDetail1');
@@ -49,7 +50,10 @@ export class RowDetailComponent {
 
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
-  constructor(private pts: PanemuTableService, private dataService: DataService) { }
+  constructor(private pts: PanemuTableService, 
+    private dataService: DataService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe({
@@ -66,6 +70,7 @@ export class RowDetailComponent {
 
   edit(row: People) {
     this.controller.expand(row, this.clmEditInExpansion)
+    this.cdr.markForCheck();
   }
 
   editFirstRow() {

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { BaseColumn, PanemuBusyIndicatorComponent, PropertyColumn, ExpansionRowRenderer } from 'ngx-panemu-table';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { PanemuBusyIndicatorComponent, PropertyColumn, ExpansionRowRenderer } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -7,7 +7,10 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-people-form',
   templateUrl: 'people-form.component.html',
   standalone: true,
-  imports: [PanemuBusyIndicatorComponent, ReactiveFormsModule]
+  imports: [PanemuBusyIndicatorComponent, ReactiveFormsModule],
+
+  //OnPush change detection is normally not needed. It is here due to interference from NgDoc lib
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People> {
   @Input() row!: People;
@@ -20,7 +23,7 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
     email: ['']
   })
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     setTimeout(() => {
@@ -29,6 +32,10 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
         name: this.row.name,
         email: this.row.email || ''
       })
+
+      //OnPush change detection is normally not needed. It is here due to interference from NgDoc lib.
+      // The interefence only happens when this component is put in NgDocPage
+      this.cdr.markForCheck();
     }, 500);
   }
 
