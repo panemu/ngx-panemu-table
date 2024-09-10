@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, Input, input, OnChanges, Signal, signal, SimpleChanges, TemplateRef, viewChild, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, Input, input, OnChanges, Signal, signal, SimpleChanges, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { BusyIndicatorComponent } from './busy-indicator/busy-indicator.component';
+import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indicator.component';
 import { SpinningIconComponent } from './busy-indicator/spinning-icon.component';
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
-import { ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
+import { BaseColumn, ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
 import { PanemuPaginationComponent } from './pagination/panemu-pagination.component';
 import { PanemuTableController } from './panemu-table-controller';
 import { PanemuTableService } from './panemu-table.service';
@@ -19,6 +19,7 @@ import { RowOptions } from './row/row-options';
 import { RowStylingPipe } from './row/row-styling.pipe';
 import { GroupBy } from './table-query';
 import { LabelTranslation } from './option/label-translation';
+import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
 
 @Component({
   selector: 'panemu-table',
@@ -31,7 +32,7 @@ import { LabelTranslation } from './option/label-translation';
     ResizableComponent,
     CellRendererDirective,
     HeaderRendererDirective,
-    BusyIndicatorComponent,
+    PanemuBusyIndicatorComponent,
     PanemuPaginationComponent,
     SpinningIconComponent,
     RowStylingPipe,
@@ -40,14 +41,12 @@ import { LabelTranslation } from './option/label-translation';
   templateUrl: './panemu-table.component.html'
 })
 export class PanemuTableComponent<T> {
-  // @Input({required: true})controller!:PanemuTableController<T>;
   controller = input.required<PanemuTableController<T>>();
-  dataSource = new MatTableDataSource<T | RowGroup>([]);
+  dataSource = new MatTableDataSource<T | RowGroup | ExpansionRow<T>>([]);
   _allColumns!: PropertyColumn<T>[];
   _columns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
   loading!: Observable<boolean>
-  // sortingInfo: SortingInfo = { field: '', direction: 'asc' };
   _columnType = ColumnType;
   _controllerSelectedRowSignal!: Signal<T | null>;
   rowOptions!: RowOptions<T>;
@@ -55,7 +54,6 @@ export class PanemuTableComponent<T> {
   columnDefinition!: ColumnDefinition<T>;
   headers!:HeaderRow[];
   ready = false;
-  private data = signal<(T | RowGroup)[]>([]);
   
   @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
   table = viewChild(MatTable);
@@ -76,15 +74,20 @@ export class PanemuTableComponent<T> {
   private onControllerChange() {
 
     if (this.controller()) {
+      
       this.controller().__tableDisplayData = this.displayData.bind(this);
-      this.controller().__data = this.data.asReadonly();
+      // this.controller().__data = this.data.asReadonly();
+      this.controller().__expandCell = this.expandCell.bind(this)
       this._controllerSelectedRowSignal = this.controller().getSelectedRowSignal();
       this.loading = this.controller().loading;
       
       this.columnDefinition = this.controller().columnDefinition;
       this.headers = this.columnDefinition.header;
       this._allColumns = this.columnDefinition.body as PropertyColumn<T>[];
-      this._allColumns.forEach(item => item.__data = this.data.asReadonly())
+      this._allColumns.forEach(item => {
+        item.__data = this.controller().__data.asReadonly();
+        item.__expandHook = this.expandCell.bind(this)
+      })
 
       this._columns = (this.controller().columnDefinition.body as PropertyColumn<T>[]);
       this.initDefaultColumnWidthIfNeeded();
@@ -153,10 +156,10 @@ export class PanemuTableComponent<T> {
     this.table()?.renderRows();
   }
 
-  private resetDataSourceData(data: (T | RowGroup)[]) {
+  private resetDataSourceData(data: (T | RowGroup | ExpansionRow<T>)[]) {
     this.dataSource.data = data;
-    this.data.set(data);
-    if (this.controller().getSelectedRow() && !this.data().includes(this.controller().getSelectedRow()!)) {
+    this.controller().__data.set(data);
+    if (this.controller().getSelectedRow() && !this.controller().__data().includes(this.controller().getSelectedRow()!)) {
       this.controller().clearSelection();
     }
   }
@@ -178,7 +181,7 @@ export class PanemuTableComponent<T> {
     }
   }
 
-  private clearGroupChild(oriData: (T | RowGroup)[], row: RowGroup) {
+  private clearGroupChild(oriData: (T | RowGroup | ExpansionRow<T>)[], row: RowGroup) {
     let groupIndex = oriData.indexOf(row);
     if (groupIndex > -1) {
       let nextId = -1;
@@ -236,6 +239,47 @@ export class PanemuTableComponent<T> {
     // this.dataSource.data = [];
     // this.dataSource.data = oriData;
     this.onControllerChange();
+  }
+
+  isExpansionRow(index: any, item: any) {
+    return item instanceof ExpansionRow
+  }
+
+  private collapseExpansion(row: T) {
+    const existingDetail = this.dataSource.data.findIndex( item => (item instanceof ExpansionRow) && item.row == row);
+    if (existingDetail >= 0) {
+      (this.dataSource.data[existingDetail] as ExpansionRow<T>).expanded?.set(false);
+      const oriData = [...this.dataSource.data];
+      oriData.splice(existingDetail, 1);
+      this.resetDataSourceData(oriData);  
+    }
+  }
+
+  private expandCell(row: T, rowExpansionComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
+    const existingRowExp = this.dataSource.data.find( item => (item instanceof ExpansionRow) && (item.row == row)) as ExpansionRow<T>;
+    const oriData = [...this.dataSource.data];
+    
+    if (existingRowExp) {
+      const existingIndex = this.dataSource.data.indexOf(existingRowExp);
+      if (existingRowExp.column != column) {
+        // the column is different. Replace the row detail
+        existingRowExp.expanded?.set(false);
+        oriData[existingIndex] = new ExpansionRow(row, rowExpansionComponent, column as PropertyColumn<T>, this.collapseExpansion.bind(this), expanded);
+        expanded?.set(true);
+      } else {
+        // same column. It must be a close action
+        existingRowExp.expanded?.set(false);
+        oriData.splice(existingIndex, 1);
+      }
+    } else {
+      const newRowExp = new ExpansionRow<T>(row, rowExpansionComponent, column as PropertyColumn<T>, this.collapseExpansion.bind(this), expanded);
+      expanded?.set(true);
+      const idx = oriData.indexOf(row);
+      if (idx >= 0) {
+        oriData.splice(idx + 1, 0, newRowExp);
+      }
+    }
+    this.resetDataSourceData(oriData);
   }
 
 }

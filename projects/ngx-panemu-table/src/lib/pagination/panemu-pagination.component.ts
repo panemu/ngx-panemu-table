@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, input, Input, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { RowGroup } from '../row/row-group';
 import { PanemuPaginationController } from './panemu-pagination-controller';
 
@@ -17,7 +17,7 @@ export class PanemuPaginationComponent {
   value = signal('');
   totalRows = signal(0);
   prevValue = '';
-  constructor(private fb: FormBuilder) {
+  constructor() {
     effect(() => {
       if (this.controller()) {
         this.controller().__refreshPagination = this.refresh.bind(this);

@@ -1,0 +1,27 @@
+<div class="h-[500px] flex flex-col gap-4">
+  <div class="flex gap-4">
+    <button data-test-id="btn1" (click)="editFirstRow()">Edit First Row</button>
+    <button data-test-id="btn2" >Group 1</button>
+    <button data-test-id="btn3" >Group 2</button>
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>
+
+<ng-template #rowDetail1 let-row="row" let-close="close">
+  <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px]">
+    <div class="col-span-2">Send email to {{row.email}}</div>
+    <label>Message</label>
+    <textarea rows="5" class="w-80"></textarea>
+    <div></div>
+    <button (click)=close()>Send</button>
+  </div>
+  
+</ng-template>
+
+<ng-template #actionCellTemplate let-column="column" let-row="row">
+  <div class="flex justify-between">
+    <button class="action-button" (click)="edit(row)"><span class="material-symbols-outlined text-base leading-5 block">edit</span></button>
+  </div>
+</ng-template>

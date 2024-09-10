@@ -1,0 +1,14 @@
+<div class="relative p-4">
+  @if(!ready) {
+    <panemu-busy-indicator></panemu-busy-indicator>
+  }
+  <div class="grid grid-cols-2 gap-4 w-[300px]" [class.invisible]="!ready">
+    <label class="text-right">Name</label>
+    <input [formControl]="form.controls.name">
+    <label class="text-right">Email</label>
+    <input class="w-80" [formControl]="form.controls.email">
+    <div></div>
+    <button class="" (click)="save()">Save</button>
+  </div>
+  
+</div>

@@ -72,6 +72,28 @@
     background-color: #f1f5f9;
   }
 
+  .detail-cell {
+    display: flex;
+    align-items: center;
+
+    button {
+      padding: 0 3px;
+      border: none;
+      background: none;
+      border-radius: 2px;
+      
+      &:hover:enabled {
+        background-color: rgba(0, 0, 0, 0.12);
+      }
+    }
+    
+  }
+
+  .detail-cell.end {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
   .group-row {
     display: flex;
     justify-content: space-between;
@@ -102,6 +124,7 @@
   }
 
   .selected-row,
+  .selected-row button,
   .selected-row:nth-child(2n) {
     background-color: rgb(51, 104, 178);
     color: white;
@@ -124,9 +147,10 @@
   .busy-indicator {
     display: flex;
     position: absolute;
-    top: 150px;
+    top: 0px;
     right: 0;
     left: 0;
+    bottom: 0;
     justify-content: center;
     align-items: center;
     z-index: 1;

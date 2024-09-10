@@ -43,7 +43,7 @@ describe('AllFeaturesClientComponent', () => {
     expect(groupChip?.textContent).toBe('Country');
     expect(filterChip?.textContent).toBe('Verified: true');
     const countries = new Set(data.filter(item => item.verified).map(item => item.country));
-    expect(component.controller.getData().length).toBe(countries.size);
+    expect(component.controller.getAllData().length).toBe(countries.size);
 
     //=== Remove grouping
     const button = componentEl.querySelector('.panemu-query .group.chip-panel button') as HTMLElement;
@@ -55,7 +55,7 @@ describe('AllFeaturesClientComponent', () => {
     expect(groupChip).toBeFalsy();
 
     //displayed data should be 100
-    expect(component.controller.getData().length).toBe(100);
+    expect(component.controller.getAllData().length).toBe(100);
     expect(componentEl.querySelectorAll('table tbody tr').length).toBe(100);
 	})
 })

@@ -1,4 +1,4 @@
-import { Signal, signal } from "@angular/core";
+import { computed, Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { BehaviorSubject, catchError, finalize, Observable, of, Subject, switchMap } from "rxjs";
 import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
@@ -7,6 +7,7 @@ import { RowGroup } from "./row/row-group";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { RowOptions } from "./row/row-options";
+import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -21,6 +22,8 @@ import { RowOptions } from "./row/row-options";
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
 
 type DisplayDataFunction<T> = (data: T[] | RowGroup[], parent?: RowGroup, groupField?: GroupBy) => void;
+
+type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) => void
 
 /**
  * This class provide a way to interact with `PanemuTableComponent`. It requires columns information and a way
@@ -46,7 +49,16 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   /**
    * @internal
    */
-  __data?: Signal<(T | RowGroup)[]>;
+  __data = signal<(T | RowGroup | ExpansionRow<T>)[]>([]);
+
+  __regularData = computed(() => {
+    if (this.__data?.()) {
+      const result = this.__data().filter(item => !(item instanceof ExpansionRow) && !(item instanceof RowGroup)) as T[]
+      return result;
+    }
+    return []
+  })
+  
   private __selectedRow = signal<T | null>(null)
   groupByColumns: GroupBy[] = [];
   criteria: TableCriteria[] = [];
@@ -57,6 +69,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @internal
    */
   __tableDisplayData?: DisplayDataFunction<T>;
+
+  __expandCell?: ExpandCell<T>
 
   /**
    * @internal
@@ -173,21 +187,36 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   // }
 
   /**
-   * Get data being displayed in table. It doesn't returns all data in datasource.
+   * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup` and `ExpansionRow`. 
+   * It doesn't returns all data in datasource.
+   * 
+   * To get all date from table including of type `RowGroup` and `ExpansionRow` see `getAllData` method.
+   * 
    * @returns 
    */
   getData() {
     if (this.__data?.()) {
-      return [...this.__data()];
+      const result = this.__data().filter(item => !(item instanceof ExpansionRow) && !(item instanceof RowGroup)) as T[]
+      return result;
     }
     return [];
   }
 
   /**
-   * Get data being displayed in table as signal.
+   * Get data being displayed in table including `ExpansionRow` and `RowGroup`. If a `RowGroup` is collapsed, its children
+   * are not included because they aren't visible in the table.
+   * 
    * @returns 
    */
-  getDataAsSignal() {
+  getAllData() {
+    return this.__data?.() ? [...this.__data()] : []
+  }
+
+  /**
+   * Get data being displayed in table as signal. See also `getAllData` method.
+   * @returns 
+   */
+  getAllDataAsSignal() {
     return this.__data
   }
 
@@ -352,7 +381,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
 
     if (typeof rowOrIndex == 'number') {
       const row = this.__data!()[rowOrIndex as number];
-      if (row && !(row instanceof RowGroup)) {
+      if (row && !(row instanceof RowGroup) && !(row instanceof ExpansionRow)) {
         this.__selectedRow.set(row);
         return true;
       }
@@ -371,7 +400,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   selectFirst() {
     if (this.__data) {
       for (const aRow of this.__data()) {
-        if (!(aRow instanceof RowGroup)) {
+        if (!(aRow instanceof RowGroup) && !(aRow instanceof ExpansionRow)) {
           this.__selectedRow.set(aRow);
           return true;
         }
@@ -385,5 +414,9 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   clearSelection() {
     this.__selectedRow.set(null)
+  }
+
+  expand(row: T, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
+    this.__expandCell?.(row, column.expansion!.component, column, expanded)
   }
 }

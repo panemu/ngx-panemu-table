@@ -1,46 +1,52 @@
-import { Signal, WritableSignal } from "@angular/core";
+import { Signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { CellFormatter, CellRenderer } from "../cell/cell";
 import { HeaderRenderer } from "../cell/header";
+import { ExpansionRow, ExpansionRowRenderer } from "../row/expansion-row";
 import { RowGroup } from "../row/row-group";
 import { TickColumnClass } from "./tick-column-class";
 
+export interface Expansion<T> {
+  component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
+  isDisabled?: (row: T) => boolean,
+  buttonPosition?: 'start' | 'end'
+}
 
 export enum ColumnType {
   /**
    * Default type. Value is displayed as is.
    */
-  STRING, 
-  
+  STRING,
+
   /**
    * Value is displayed right-aligned 
    */
-  INT, 
-  
+  INT,
+
   /**
    * Value is displayed right-aligned and formatted as local number incorporating angular LOCALE_ID
    */
-  DECIMAL, 
-  
+  DECIMAL,
+
   /**
    * Value is displayed in 'EEE, d MMM yyyy' format.
    */
-  DATE, 
-  
+  DATE,
+
   /**
    * Value is displayed in 'd MMM yyyy H:mm:ss' format.
    */
-  DATETIME, 
-  
+  DATETIME,
+
   /**
    * Used specifically by `MapColumn`. The value is displayed as configured in `valueMap` parameter.
    */
-  MAP, 
-  
+  MAP,
+
   /**
    * Used specifically by `TickColumnClass`
    */
-  TICK, 
-  
+  TICK,
+
   /**
    * Used specifically by `ComputedColumn`. It doesn't have field parameter. The value to render
    * is specified by the `formatter` argument.
@@ -50,7 +56,7 @@ export enum ColumnType {
   /**
    * Groups several columns. Used by `GroupedColumn`.
    */
-  GROUP
+  GROUP,
 }
 
 type StickyType = 'start' | 'end' | null;
@@ -93,12 +99,12 @@ export interface BaseColumn<T> {
    * Column header renderer.
    */
   headerRenderer?: HeaderRenderer;
-  
+
   /**
    * For internal use
    * @internal
    */
-  __data?: Signal<(T | RowGroup)[]>
+  __data?: Signal<(T | RowGroup | ExpansionRow<T>)[]>
 
   /**
    * Allow the column to be resized. Default true
@@ -144,16 +150,32 @@ export interface BaseColumn<T> {
    * @internal
    */
   __isGroup?: boolean
+
+  expansion?: Expansion<T>
+
+  /**
+   * @internal
+   * @param row 
+   * @param rowComponent 
+   * @param column 
+   * @param expanded 
+   * @returns 
+   */
+  __expandHook?: (row: T,
+    rowComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
+    column: BaseColumn<T>,
+    expanded: WritableSignal<boolean>
+  ) => void
 }
 
 export interface PropertyColumn<T> extends BaseColumn<T> {
   field: keyof T
-  
+
   /**
    * Allow the column to be grouped. Default true.
    */
   groupable?: boolean
-  
+
   /**
    * Allow the column to be sorted. Default true.
    */
@@ -180,7 +202,7 @@ export interface MapColumn<T> extends PropertyColumn<T> {
   /**
    * Key-Value pair to format the cell value as key, into it's corresponding value.
    */
-  valueMap: WritableSignal<{[key: string]: any}> | {[key: string]: any}
+  valueMap: WritableSignal<{ [key: string]: any }> | { [key: string]: any }
 }
 
 export interface ComputedColumn extends BaseColumn<any> {
@@ -208,6 +230,12 @@ export interface GroupedColumn {
   label: string
   children: (GroupedColumn | NonGroupColumn<any>)[]
 }
+
+// export interface DetailColumn {
+//   type: ColumnType.DETAIL
+//   label?: string
+//   renderer: Signal<TemplateRef<any> | undefined> | Type<any>
+// }
 
 /**
  * Object returned by `PanemuTableService.buildColumns` method. It contains data to build

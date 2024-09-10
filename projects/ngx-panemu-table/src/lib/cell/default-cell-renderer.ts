@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Signal, TemplateRef } from '@angular/core';
-import { PropertyColumn } from '../column/column';
+import { Component, OnInit, Signal, TemplateRef, Type } from '@angular/core';
+import { Expansion, PropertyColumn } from '../column/column';
 import { CellComponent, CellRenderer } from './cell';
 import { GenericCellPipe } from './generic-cell.pipe';
+import { ExpansionRowRenderer } from '../row/expansion-row';
+import { ExpansionCellRenderer } from './expansion-cell-renderer';
 
 @Component({
   templateUrl: 'default-cell-renderer.html',
@@ -25,4 +27,5 @@ export class DefaultCellRenderer implements CellComponent<any>, OnInit {
       parameter: {templateRef}
     }
   }
+
 }
