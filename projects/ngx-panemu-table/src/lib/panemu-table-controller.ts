@@ -419,4 +419,56 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   expand(row: T, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
     this.__expandCell?.(row, column.expansion!.component, column, expanded)
   }
+
+  private escapeCsvText(text: string) {
+    console.log('text', text)
+    if (typeof text == 'string') {
+      if (text.replace(/ /g, '').match(/[\s,"]/)) {
+        return '"' + text.replace(/"/g, '""') + '"';
+      }
+      return text;
+    } else return text + '';
+  }
+
+  getCsvData(options?: {includeHeader?: boolean, includeRowGroup?: boolean}) {
+    const csvOption = {includeHeader: true, includeRowGroup: true};
+    if (options) {
+      Object.assign(csvOption, options);
+    }
+    const csv: string[] = [];
+    
+    const visibleCols = this.columnDefinition.body.filter(item => item.visible && item.type != ColumnType.TICK);
+
+    if (csvOption.includeHeader) {
+      csv.push(visibleCols.map(item => this.escapeCsvText(item.label || '')).join(','));
+    }
+
+    for (const row of this.__data()) {
+      if (row instanceof ExpansionRow) {
+        continue;
+      }
+      const csvRow: string[] = [];
+      
+      if (row instanceof RowGroup) {
+        if (csvOption.includeRowGroup) {
+          csvRow.push(this.escapeCsvText(row.formatter(row.value) + ` (${row.count})`));
+          for (let index = 1; index < visibleCols.length; index++) {
+            csvRow.push('');
+          }
+          csv.push(csvRow.join(','));
+        }
+      } else {
+        for (const col of visibleCols) {
+          if (col.formatter) {
+            csvRow.push(this.escapeCsvText(col.formatter(row[col.field])))
+          } else {
+            csvRow.push(this.escapeCsvText(row[col.field] + ''))
+          }
+        }
+        csv.push(csvRow.join(','));
+      }
+    }
+
+    return csv.join('\n');
+  }
 }

@@ -76,4 +76,15 @@ export class AllFeaturesClientComponent implements OnInit {
 
   }
 
+  exportCsv() {
+    /**
+     * The getCsvData() can accept parameter to exclude header or row group.
+     * {includeRowGroup: false, includeHeader: false}
+     */
+    const csvString = this.controller.getCsvData();
+
+    const dl = "data:text/csv;charset=utf-8," + csvString;
+    window.open(encodeURI(dl))
+  }
+
 }

@@ -23,7 +23,8 @@ export class PanemuTableService {
     month: 'Month',
     year: 'Year',
     groupBy: 'Group By',
-    noData: 'No data to display'
+    noData: 'No data to display',
+    searcForValueInColumn: 'Search for "{par0}" in:'
   };
 
   constructor(@Inject(LOCALE_ID) protected locale: string) { }
@@ -46,7 +47,7 @@ export class PanemuTableService {
     })
     return {
       header: headerRows,
-      body: bodyColumns
+      body: bodyColumns as PropertyColumn<T>[]
     }
   }
 

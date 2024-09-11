@@ -37,18 +37,19 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-      this.txtCriteria.valueChanges.pipe(
-        distinctUntilChanged(),
-      ).subscribe({
-        next: val => {
-          if (val) {
-            this.searchTitle = `Search for "${val}" in:`
-            this._searchableColumn = [...this._filterableColumns]
-          } else {
-            this._searchableColumn = []
-          }
+    const searcForLabelTemplate = this.service.getLabelTranslation().searcForValueInColumn;
+    this.txtCriteria.valueChanges.pipe(
+      distinctUntilChanged(),
+    ).subscribe({
+      next: val => {
+        if (val) {
+          this.searchTitle = searcForLabelTemplate.replace('{par0}', val)
+          this._searchableColumn = [...this._filterableColumns]
+        } else {
+          this._searchableColumn = []
         }
-      })
+      }
+    })
   }
   ngAfterViewInit(): void {
     this.txtCriteriaElement.optionSelections.subscribe(val => {

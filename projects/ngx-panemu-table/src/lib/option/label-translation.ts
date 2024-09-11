@@ -6,4 +6,5 @@ export interface LabelTranslation {
   year: string,
   groupBy: string,
   noData: string
+  searcForValueInColumn: string
 }

@@ -253,6 +253,6 @@ export interface HeaderRow {
  */
 export interface ColumnDefinition<T> {
   header: HeaderRow[]
-  body: BaseColumn<T>[]
+  body: PropertyColumn<T>[]
 }
 
