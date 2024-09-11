@@ -421,7 +421,6 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   private escapeCsvText(text: string) {
-    console.log('text', text)
     if (typeof text == 'string') {
       if (text.replace(/ /g, '').match(/[\s,"]/)) {
         return '"' + text.replace(/"/g, '""') + '"';

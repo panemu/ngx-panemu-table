@@ -1,5 +1,5 @@
 import { Component, computed, Input, OnInit, Signal } from "@angular/core";
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn, ExpansionRowRenderer, TableQuery } from "ngx-panemu-table";
+import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn, ExpansionRowRenderer, TableQuery } from "ngx-panemu-table";
 import { People } from "../../model/people";
 import { DataService } from "../../service/data.service";
 
