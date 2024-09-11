@@ -59,7 +59,14 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (selectedColumn?.type == ColumnType.MAP && (selectedColumn as MapColumn<any>).valueMap) {
           const valueMap = (selectedColumn as MapColumn<any>).valueMap;
           const map: {[key: string] : any} = isSignal(valueMap) ? (valueMap as Signal<any>)() : valueMap;
-          criteriaValue = Object.keys(map).find(key => map[key].toLowerCase() == criteriaValue!.toLowerCase()) || criteriaValue;
+          let mapValue = Object.keys(map).find(key => map[key].toLowerCase() == criteriaValue!.toLowerCase());
+          if (!mapValue) {
+            mapValue = Object.keys(map).find(key => (map[key] as string).toLowerCase().startsWith(criteriaValue!.toLowerCase()));
+            if (!mapValue) {
+              mapValue = Object.keys(map).find(key => (map[key] as string).toLowerCase().includes(criteriaValue!.toLowerCase()))
+            }
+          }
+          criteriaValue = mapValue || criteriaValue;
         }
 
         this.controller().criteria.push({field: val.source.value, value: criteriaValue});
