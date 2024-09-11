@@ -82,6 +82,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
 
   sortedColumn: { [key: string]: 'asc' | 'desc' } = {};
 
+  private hasPagination = false;
   /**
    * Force refresh the table.
    */
@@ -148,7 +149,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         let tq = this.createTableQuery();
         let start = this._startIndex;
         let rowsToLoad = this._maxRows;
-        if (!this.__refreshPagination) {
+        if (!this.__refreshPagination && !this.hasPagination) {
+          console.log('no pagination control')
           start = 0;
           rowsToLoad = 0;
         }
@@ -265,6 +267,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     if (!group.controller) {
       group.controller = this.createGroupController(group);
     }
+    group.controller.hasPagination = true;
     group.controller.reloadCurrentPage();
   }
 
@@ -286,7 +289,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     groupController.__tableDisplayData = (data: T[] | RowGroup[], parent?: RowGroup, groupField?: GroupBy) => {
       this.__tableDisplayData!(data, group, groupField);
     };
-
+    
     return groupController;
   }
 
