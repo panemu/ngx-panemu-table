@@ -11,6 +11,8 @@ export * from './lib/table-data';
 export * from './lib/datasource/panemu-table-datasource';
 export * from './lib/query/panemu-query.component';
 export * from './lib/cell/cell';
+export * from './lib/cell/generic-cell.pipe';
+export * from './lib/cell/map-cell.pipe';
 export * from './lib/cell/cell-renderer.directive';
 export * from './lib/cell/default-cell-renderer';
 export * from './lib/table-query';
