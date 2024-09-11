@@ -1,6 +1,6 @@
 <div class="panemu-pagination">
   <input [(ngModel)]="value" (keyup.enter)="applyChange()" (blur)="applyChange()"
-    class="input-field"> / {{totalRows()}}
+    class="input-field"><span> / {{totalRows()}}</span>
   <div class="button-wrapper">
     <button class="btn btn-left" (click)="prev()">
       <span class="icon material-symbols-outlined">
