@@ -1,12 +1,12 @@
 {
   "name": "ngx-panemu-table",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test --project=demo",
     "lint": "ng lint",
     "serve:ssr:demo": "node dist/demo/server/server.mjs",
     "build:sass": "sass projects/ngx-panemu-table/src/lib/main.scss projects/ngx-panemu-table/generated/main.css",

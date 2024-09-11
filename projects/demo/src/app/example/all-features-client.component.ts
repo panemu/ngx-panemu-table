@@ -1,8 +1,9 @@
 import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { ColumnType, ComputedColumn, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.component';
+import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
   templateUrl: 'all-features-client.component.html',
@@ -12,13 +13,29 @@ import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.co
 })
 
 export class AllFeaturesClientComponent implements OnInit {
-  genderMap = signal({})
+  genderMap = signal({});
+  sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
+  clmAction: ComputedColumn = {
+    type: ColumnType.COMPUTED,
+    formatter: (val: any) => '',
+    cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
+    expansion: { component: PeopleFormComponent },
+    sticky: 'end',
+    width: 80,
+    cellStyle: (_: string) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
+  };
+
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>({ width: 40 }),
     { field: 'id', type: ColumnType.INT, width: 50 },
     { field: 'name', width: 150 },
-    { field: 'email', width: 230 },
+    { field: 'email', width: 230, expansion: {
+      component: this.sendEmailTemplate, 
+      isDisabled: (row) => {
+        return row.country == 'Indonesia'
+      },
+    } },
     { field: 'gender', width: 80, type: ColumnType.MAP, valueMap: this.genderMap },
     { field: 'country', width: 150, cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
     { field: 'amount', width: 100, type: ColumnType.DECIMAL },
@@ -29,14 +46,7 @@ export class AllFeaturesClientComponent implements OnInit {
       ]
     },
     { field: 'verified', width: 80, type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
-    {
-      type: ColumnType.COMPUTED,
-      formatter: (val: any) => '',
-      cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
-      sticky: 'end',
-      width: 80,
-      cellStyle: (_) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
-    },
+    this.clmAction,
   ]
   )
   datasource = new PanemuTableDataSource<People>;
@@ -68,7 +78,7 @@ export class AllFeaturesClientComponent implements OnInit {
   }
 
   edit(row: People) {
-    alert('Edit ' + JSON.stringify(row))
+    this.controller.expand(row, this.clmAction)
   }
 
   delete(row: People) {

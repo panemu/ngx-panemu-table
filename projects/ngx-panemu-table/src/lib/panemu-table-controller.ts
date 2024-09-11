@@ -430,6 +430,12 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     } else return text + '';
   }
 
+  /**
+   * Get data as comma separated string. By default it includes the header and `RowGroup`s.
+   * 
+   * @param options provide a way to exclude header or `RowGroup` rows.
+   * @returns csv string
+   */
   getCsvData(options?: {includeHeader?: boolean, includeRowGroup?: boolean}) {
     const csvOption = {includeHeader: true, includeRowGroup: true};
     if (options) {

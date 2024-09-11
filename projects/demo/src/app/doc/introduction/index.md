@@ -15,7 +15,8 @@ keyword: IntroductionPage
 <br>
 
 > **Note**
-> ✨ Group multiple columns under one cell header (v.0.0.5). See `*GroupedColumnPage` .
+> ✨ Cell Expansion (v.0.0.6).See `*CellExpansionPage`.
+> <br>✨ Export to CSV (v.0.0.6). See `PanemuTableController.getcsvdata`
 
 NgxPanemuTable is an Angular table component. It is designed to be easy to use. Most work will be in typescript file, while
 the html file only needs to have a very simple `panemu-table` tag.
@@ -24,7 +25,7 @@ the html file only needs to have a very simple `panemu-table` tag.
 <iframe
   width="560px"
   height="315px"
-  src="https://www.youtube.com/embed/jlIfy2vOcmU"
+  src="https://www.youtube.com/embed/Qs4VbpteiRk"
   title="NgxPanemuTable demo"
   frameborder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -48,6 +49,8 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 - Customizable table cell
 - Sticky column
 - Group multiple columns under one cell header ✨
+- Cell Expansion (v.0.0.6). See `*CellExpansionPage`. ✨ 
+- Export to CSV (v.0.0.6). See `PanemuTableController.getcsvdata` . ✨ 
 
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
@@ -62,7 +65,7 @@ These features are not developed yet. Please create a ticket in [our repository]
 - Virtual scroll to display large data
 - ~~Column grouping (nested column)~~ supported since v.0.0.5
 - Column reorder
-- Export
+- ~~Export~~ csv export is supported since v.0.0.6
 - Save columns position, width and visibility
 
 ## About Panemu

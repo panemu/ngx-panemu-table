@@ -2,7 +2,7 @@
 keyword: CellExpansionPage
 ---
 
-Cell Expansion is a feature to display any component or template under a row. The trigger is from a cell in which the column definition has `expansion` property defined. Below is the way to define an expansion:
+Cell Expansion is a feature to display any component or template under a row. The strigger is from a cell in which the column definition has `expansion` property defined. It is a small button in the left hand side or right of the cell. Below is the way to define an expansion:
 
 ```typescript
 { field: 'country', expansion: {
@@ -47,7 +47,27 @@ If using angular component, the component should implements `ExpansionRowRendere
 
 ```
 
-Below is the code of the Edit People expansion:
+The Edit People expansion is a bit different. It doesn't have the default button to trigger the expansion. Instead the button is a custom one with pencil icon. This is achieved by providing `cellRenderer` to the column defintion. Then the pencil button click event is bound to `PanemuTableController.expand` method.
+
+Below is the `ng-template` for the pencil button:
+
+```html
+<ng-template #actionCellTemplate let-column="column" let-row="row">
+  <div class="flex justify-between">
+    <button class="action-button" (click)="edit(row)"><span class="material-symbols-outlined text-base leading-5 block">edit</span></button>
+  </div>
+</ng-template>
+```
+
+Below is the `edit` function in the .ts file
+
+```typescript
+edit(row: People) {
+  this.controller.expand(row, this.clmEditInExpansion)
+}
+```
+
+And finally here is the `PeopleFormComponent` rendered inside the expansion.
 
 ```typescript name="people-form.component.ts" file="../../example/custom-cell/people-form.component.ts" group="people-form" 
 

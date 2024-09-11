@@ -4,21 +4,24 @@ import { CellFormatter, DefaultColumnOptions, LabelTranslation, PanemuTableServi
 
 @Injectable({providedIn: 'root'})
 export class CustomPanemuTableService extends PanemuTableService {
+  
   labelTranslation: LabelTranslation;
+
   constructor(@Inject(LOCALE_ID) locale: string) { 
     super(locale)
+    
     this.labelTranslation = super.getLabelTranslation();
-    this.labelTranslation.loading = 'Retrieving data...'
+    this.labelTranslation.searcForValueInColumn = 'Filter "{par0}" on column:'
+  }
+
+  override getLabelTranslation()  {
+    return this.labelTranslation;
   }
 
   override getDateCellFormatter(): CellFormatter {
     return (val) => {
       return formatDate(val, 'd MMM yyyy', this.locale) || ''
     }
-  } 
-
-  override getLabelTranslation()  {
-    return this.labelTranslation;
   }
 
   override getDefaultColumnOptions(): DefaultColumnOptions {

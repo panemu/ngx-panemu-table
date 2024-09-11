@@ -24,10 +24,15 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 [See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
 
-[![NgxPanemuTable Demo](https://img.youtube.com/vi/jlIfy2vOcmU/0.jpg)](https://www.youtube.com/watch?v=jlIfy2vOcmU)
+[![NgxPanemuTable Demo](https://img.youtube.com/vi/Qs4VbpteiRk/0.jpg)](https://www.youtube.com/watch?v=Qs4VbpteiRk)
 
 ## New Features:
 
+### v.0.0.6
+
+* Cell expansion ✨
+* Export to CSV ✨
+
 ### v.0.0.5
 
-* Group multiple columns under one cell header ✨
+* Group multiple columns under one cell header

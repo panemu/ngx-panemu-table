@@ -13,7 +13,7 @@ import { CellFormatter, LabelTranslation, PanemuTableService } from 'ngx-panemu-
 export class CustomPanemuTableService extends PanemuTableService {
   labelTranslation: LabelTranslation;
 
-	constructor(@Inject(LOCALE_ID) locale: string) { 
+  constructor(@Inject(LOCALE_ID) locale: string) { 
     super(locale);
 
     this.labelTranslation = super.getLabelTranslation();

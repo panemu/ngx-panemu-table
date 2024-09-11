@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { NestedTableComponent } from './custom-cell/nested-table.component';
@@ -12,16 +12,16 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
   imports: [PanemuTableComponent, CommonModule],
   templateUrl: 'row-detail.component.html',
   styleUrl: 'row-detail.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RowDetailComponent {
-  rowDetail1 = viewChild<TemplateRef<any>>('rowDetail1');
+  sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
 
-  private readonly clmEditInExpansion: import("ngx-panemu-table").GroupedColumn | import("ngx-panemu-table").NonGroupColumn<People> = {
+  private readonly clmEditInExpansion: ComputedColumn = {
     type: ColumnType.COMPUTED,
     formatter: (val: any) => '',
-    expansion: { component: PeopleFormComponent, buttonPosition: 'end' },
+    expansion: { component: PeopleFormComponent },
     cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
     sticky: 'end',
     cellStyle: (_) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
@@ -31,9 +31,8 @@ export class RowDetailComponent {
     { field: 'name', },
     {
       field: 'email', expansion: {
-        component: this.rowDetail1, 
+        component: this.sendEmailTemplate, 
         isDisabled: (row) => {
-          console.log(`check if disable`)
           return row.country == 'Indonesia'
         },
       }
@@ -70,11 +69,10 @@ export class RowDetailComponent {
 
   edit(row: People) {
     this.controller.expand(row, this.clmEditInExpansion)
-    this.cdr.markForCheck();
+    // this.cdr.markForCheck();
   }
 
   editFirstRow() {
-    console.log('is people', )
     this.edit(this.controller.getData()[0])
   }
 }

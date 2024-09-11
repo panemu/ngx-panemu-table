@@ -129,6 +129,10 @@
     background-color: rgb(51, 104, 178);
     color: white;
 
+    &:disabled {
+      color: rgba(255,255,255, 0.2);
+    }
+
     &:hover {
       background-color: rgb(64, 128, 218);
     }
