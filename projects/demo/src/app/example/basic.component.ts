@@ -39,8 +39,6 @@ export class BasicComponent implements OnInit {
   ngOnInit() {
     this.controller.reloadData();
     this.controller.selectFirst();
-    setTimeout(() => {
-    });
   }
 
 }

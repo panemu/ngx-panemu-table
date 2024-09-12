@@ -1,0 +1,16 @@
+<div class="h-96">
+  <panemu-table [controller]="controller"></panemu-table>
+</div>
+
+<ng-template #customHeader let-column="column">
+  <div>
+    <div>Select Column To Display</div>
+    <div>
+      <select [formControl]="cmbColumnHeader">
+        @for (item of customColumns.body; track $index) {
+          <option [value]="item.__key">{{item.label}}</option>
+        }
+      </select>
+    </div>
+  </div>
+</ng-template>

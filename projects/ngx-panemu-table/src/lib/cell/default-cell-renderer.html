@@ -3,6 +3,6 @@
 </ng-container>
 <ng-template #defaultDescriptionTemplate >
     <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
-    {{row[column.field] | genericCell:row:column}}
+    {{row[column.field] | genericCell:row:column:column.formatter}}
     <!-- {{column.formatter!(row[column.field], row, column)}} -->
 </ng-template>

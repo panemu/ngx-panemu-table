@@ -8,4 +8,5 @@ export interface HeaderRenderer {
 
 export interface HeaderComponent<T> {
   column: PropertyColumn<T>
+  parameter?: any;
 }

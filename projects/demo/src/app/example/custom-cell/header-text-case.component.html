@@ -1,0 +1,14 @@
+<div>
+  {{column.label}}
+  <label (click)="$event.stopPropagation()">
+    <input type="radio" [formControl]="rdbCase" value="normal"> Normal
+  </label>
+
+  <label (click)="$event.stopPropagation()">
+    <input type="radio" [formControl]="rdbCase" value="upper"> Upper
+  </label>
+
+  <label (click)="$event.stopPropagation()">
+    <input type="radio" [formControl]="rdbCase" value="lower"> Lower
+  </label>
+</div>

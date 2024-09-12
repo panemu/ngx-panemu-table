@@ -15,6 +15,8 @@ export * from './lib/cell/generic-cell.pipe';
 export * from './lib/cell/map-cell.pipe';
 export * from './lib/cell/cell-renderer.directive';
 export * from './lib/cell/default-cell-renderer';
+export * from './lib/cell/default-header-renderer';
+export * from './lib/cell/header';
 export * from './lib/table-query';
 export * from './lib/column/tick-column-class';
 export * from './lib/option/label-translation';

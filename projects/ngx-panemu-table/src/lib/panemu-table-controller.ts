@@ -150,7 +150,6 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         let start = this._startIndex;
         let rowsToLoad = this._maxRows;
         if (!this.__refreshPagination && !this.hasPagination) {
-          console.log('no pagination control')
           start = 0;
           rowsToLoad = 0;
         }
