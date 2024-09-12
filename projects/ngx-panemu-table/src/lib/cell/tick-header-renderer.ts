@@ -1,13 +1,14 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, ElementRef, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TickColumnClass } from '../column/tick-column-class';
 import { PropertyColumn } from '../column/column';
 import { HeaderComponent } from './header';
+import { isDataRow } from '../util';
 
 @Component({
    template: `
    <div class="tick-header">
-      <input type="checkbox" [indeterminate]="partialChecked" [checked]="allChecked" (change)="toggle($event)"><span class="label"> {{column.label}}</span>
+      <input #checkbox type="checkbox" [indeterminate]="partialChecked" (change)="toggle($event)"><span class="label"> {{column.label}} </span>
    </div>`,
    imports: [FormsModule],
    standalone: true,
@@ -22,6 +23,7 @@ import { HeaderComponent } from './header';
 })
 
 export class TickHeaderRenderer implements HeaderComponent<any> {
+   checkbox = viewChild<ElementRef<HTMLInputElement>>('checkbox');
    column!: PropertyColumn<any>
    partialChecked = false
    allChecked = false;
@@ -29,8 +31,11 @@ export class TickHeaderRenderer implements HeaderComponent<any> {
       effect(() => {
          const asTickColumn = this.column as TickColumnClass<any>;
          const selectedCount = asTickColumn.selections?.().length;
-         this.allChecked = !!selectedCount && selectedCount == asTickColumn?.__data().length
+         this.allChecked = !!selectedCount && selectedCount == asTickColumn?.__data().filter(item => isDataRow(item)).length;
          this.partialChecked = selectedCount > 0 && !this.allChecked;
+         if (this.checkbox()) {
+            this.checkbox()!.nativeElement.checked = this.allChecked;
+         }
       })
    }
 

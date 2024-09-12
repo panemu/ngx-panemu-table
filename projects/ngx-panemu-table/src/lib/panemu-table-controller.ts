@@ -8,6 +8,7 @@ import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { RowOptions } from "./row/row-options";
 import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
+import { isDataRow } from "./util";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -53,7 +54,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
 
   __regularData = computed(() => {
     if (this.__data?.()) {
-      const result = this.__data().filter(item => !(item instanceof ExpansionRow) && !(item instanceof RowGroup)) as T[]
+      const result = this.__data().filter(item => isDataRow(item)) as T[]
       return result;
     }
     return []
@@ -197,7 +198,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   getData() {
     if (this.__data?.()) {
-      const result = this.__data().filter(item => !(item instanceof ExpansionRow) && !(item instanceof RowGroup)) as T[]
+      const result = this.__data().filter(item => isDataRow(item)) as T[]
       return result;
     }
     return [];
@@ -383,8 +384,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
 
     if (typeof rowOrIndex == 'number') {
       const row = this.__data!()[rowOrIndex as number];
-      if (row && !(row instanceof RowGroup) && !(row instanceof ExpansionRow)) {
-        this.__selectedRow.set(row);
+      if (row && isDataRow(row)) {
+        this.__selectedRow.set(row as T);
         return true;
       }
     } else if (this.__data().includes(rowOrIndex)) {
@@ -402,8 +403,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   selectFirst() {
     if (this.__data) {
       for (const aRow of this.__data()) {
-        if (!(aRow instanceof RowGroup) && !(aRow instanceof ExpansionRow)) {
-          this.__selectedRow.set(aRow);
+        if (isDataRow(aRow)) {
+          this.__selectedRow.set(aRow as T);
           return true;
         }
       }

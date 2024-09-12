@@ -25,3 +25,4 @@ export * from './lib/row/row-group';
 export * from './lib/row/expansion-row';
 export * from './lib/column/default-column-options';
 export * from './lib/busy-indicator/panemu-busy-indicator.component';
+export * from './lib/util';

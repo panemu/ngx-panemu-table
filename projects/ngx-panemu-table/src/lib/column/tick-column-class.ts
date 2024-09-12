@@ -4,7 +4,7 @@ import { CellRenderer } from "../cell/cell";
 import { TickCellComponent } from "../cell/tick-cell-renderer";
 import { HeaderRenderer } from "../cell/header";
 import { TickHeaderRenderer } from "../cell/tick-header-renderer";
-import { RowGroup } from "../row/row-group";
+import { isDataRow } from "../util";
 
 /**
  * 
@@ -64,7 +64,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
       return;
     }
     const row = this.__data()[index];
-    if (!(row instanceof RowGroup)) {
+    if (isDataRow(row)) {
       this.setTicked(ticked, row);
     }
   }
@@ -79,7 +79,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
       const indexes = [];
       for (let index = 0; index < this.__data().length; index++) {
         const item = this.__data()[index];
-        if (!(item instanceof RowGroup)) {
+        if (isDataRow(item)) {
           indexes.push(item);
         }
       }
