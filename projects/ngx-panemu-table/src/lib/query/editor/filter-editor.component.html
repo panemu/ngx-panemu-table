@@ -1,0 +1,18 @@
+<div class="panemu-query-editor">
+	<h3>Query Editor</h3>
+	<div class="column-selection">
+		<label>Column</label>
+		<select [formControl]="field">
+			@for (clm of columns; track $index) {
+				<option [value]="clm.field"> {{clm.label}} </option>
+			}
+		</select>
+	</div>
+	<div *ngIf="editorComponent" >
+		<ng-container #editor *ngComponentOutlet="editorComponent; inputs: {column, filter, value}"></ng-container>
+	</div>
+	<div style="display: flex; gap: 1rem; justify-content: flex-end;">
+		<button (click)="cancel()">Cancel</button>
+		<button (click)="apply()">Apply</button>
+	</div>
+</div>

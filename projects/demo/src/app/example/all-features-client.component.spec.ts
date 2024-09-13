@@ -42,7 +42,7 @@ describe('AllFeaturesClientComponent', () => {
 
     
     expect(groupChip?.textContent).toBe('Country');
-    expect(filterChip?.textContent).toBe('Verified: true');
+    expect(filterChip?.textContent).toBe('true');
     const countries = new Set(data.filter(item => item.verified).map(item => item.country));
     expect(component.controller.getAllData().length).toBe(countries.size);
 

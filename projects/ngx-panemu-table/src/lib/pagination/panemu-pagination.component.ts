@@ -1,6 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect, input, Input, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, effect, input, Input, model, signal } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RowGroup } from '../row/row-group';
 import { PanemuPaginationController } from './panemu-pagination-controller';
 
@@ -8,13 +7,13 @@ import { PanemuPaginationController } from './panemu-pagination-controller';
   selector: 'panemu-pagination',
   templateUrl: 'panemu-pagination.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [ReactiveFormsModule],
 })
 
 export class PanemuPaginationComponent {
   controller = input.required<PanemuPaginationController>();
   @Input() group!: RowGroup;
-  value = signal('');
+  txt = new FormControl('');
   totalRows = signal(0);
   prevValue = '';
   constructor() {
@@ -28,16 +27,16 @@ export class PanemuPaginationComponent {
   private refresh(start: number, maxRows: number, totalRows: number) {
     this.totalRows.set(totalRows);
     let end = Math.min(start + maxRows, totalRows)
-    this.value.set((start + 1) + '-' + end);
-    this.prevValue = this.value();
+    this.txt.setValue((start + 1) + '-' + end);
+    this.prevValue = this.txt.value || '';
   }
 
   applyChange() {
-    if (this.prevValue == this.value()) return;
+    if (this.prevValue == this.txt.value) return;
 
-    let parts: string[] = this.value().split('-');
+    let parts: string[] = this.txt.value?.split('-') || [];
     if (parts.length != 2) {
-      this.value.set(this.prevValue);
+      this.txt.setValue(this.prevValue);
       return;
     }
 
@@ -45,7 +44,7 @@ export class PanemuPaginationComponent {
     let end = Number(parts[1]);
 
     if (isNaN(start) || isNaN(end) || start > end || start < 1) {
-      this.value.set(this.prevValue);
+      this.txt.setValue(this.prevValue);
       return;
     }
 
@@ -68,7 +67,7 @@ export class PanemuPaginationComponent {
     } else if (start < 0) {
       start = 0;
     }
-    this.value.set((start + 1) + '-' + (start + this.controller().maxRows));
+    this.txt.setValue((start + 1) + '-' + (start + this.controller().maxRows));
 
     this.applyChange();
   }
@@ -78,7 +77,7 @@ export class PanemuPaginationComponent {
     if (start >= this.totalRows()) {
       start = 0;
     }
-    this.value.set((start + 1) + '-' + (start + this.controller().maxRows));
+    this.txt.setValue((start + 1) + '-' + (start + this.controller().maxRows));
 
     this.applyChange();
   }

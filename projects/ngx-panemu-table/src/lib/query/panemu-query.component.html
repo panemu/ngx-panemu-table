@@ -12,11 +12,16 @@
         </span>
       </button>
     </div>
-    <div *ngFor="let item of _criteria;let i = index" class="filter chip-panel">
-      <span class="material-symbols-outlined icon filter-icon">
-        search
-      </span>
-      <div class="chip-label">{{item.field}}: {{item.value}}</div>
+    <div *ngFor="let item of _criteria;let i = index" class="filter chip-panel hover-parent">
+      <div class="filter-chip" (click)="editQuery(item)">
+        <div class="icon filter-label hover-child-inverse">
+          {{item.label}}
+        </div>
+        <span class="material-symbols-outlined icon filter-icon hover-child">
+          search
+        </span>
+      </div>
+      <div class="chip-label">{{item.value}}</div>
       <button class="close-button" (click)="deleteCriteria(i)">
         <span class="material-symbols-outlined">
           close
@@ -26,6 +31,7 @@
     <input class="input-field" 
     [placeholder]="labelTranslation.search"
     [matAutocomplete]="auto" 
+    (dblclick)="forceQueryMenu()"
     #txtCriteriaElement
     [formControl]="txtCriteria">
     <mat-autocomplete #auto="matAutocomplete" class="panemu-query-menu">

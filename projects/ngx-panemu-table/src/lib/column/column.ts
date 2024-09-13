@@ -4,6 +4,7 @@ import { HeaderRenderer } from "../cell/header";
 import { ExpansionRow, ExpansionRowRenderer } from "../row/expansion-row";
 import { RowGroup } from "../row/row-group";
 import { TickColumnClass } from "./tick-column-class";
+import { FilterEditor } from "../query/editor/filter-editor";
 
 export interface Expansion<T> {
   component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
@@ -172,7 +173,7 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
   field: keyof T
 
   /**
-   * Allow the column to be grouped. Default true.
+   * Allow the column to be grouped. Default true. This property is read by `PanemuQueryComponent`.
    */
   groupable?: boolean
 
@@ -187,9 +188,14 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
   formatter?: CellFormatter;
 
   /**
-   * Allow the column to be filtered. Default true.
+   * Allow the column to be filtered. Default true. This property is read by `PanemuQueryComponent`.
    */
   filterable?: boolean;
+
+  /**
+   * Custom component to edit filter. Only relevant if `filterable` property is true.
+   */
+  filterEditor?: Type<FilterEditor>
 }
 
 export interface Column<T> extends PropertyColumn<T> {

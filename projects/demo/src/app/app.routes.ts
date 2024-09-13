@@ -13,6 +13,7 @@ import { DelayedComponent } from './example/delayed.component';
 import { ColumnGroupComponent } from './example/column-group.component';
 import { RowDetailComponent } from './example/row-detail.component';
 import { CustomHeaderComponent } from './example/custom-header.component';
+import { CustomFilterEditorComponent } from './example/custom-filter-editor.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -32,5 +33,6 @@ export const routes: Routes = [
 	{ path: 'grouped-column', component: ColumnGroupComponent },
 	{ path: 'row-detail', component: RowDetailComponent },
 	{ path: 'custom-header', component: CustomHeaderComponent },
+	{ path: 'custom-filter-editor', component: CustomFilterEditorComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

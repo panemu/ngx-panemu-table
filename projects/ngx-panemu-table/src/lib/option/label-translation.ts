@@ -7,4 +7,5 @@ export interface LabelTranslation {
   groupBy: string,
   noData: string
   searcForValueInColumn: string
+  selectColumnToSearchOn: string
 }

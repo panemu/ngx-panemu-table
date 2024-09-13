@@ -1,5 +1,5 @@
 <div class="panemu-pagination">
-  <input [(ngModel)]="value" (keyup.enter)="applyChange()" (blur)="applyChange()"
+  <input [formControl]="txt" (keyup.enter)="applyChange()" (blur)="applyChange()"
     class="input-field"><span> / {{totalRows()}}</span>
   <div class="button-wrapper">
     <button class="btn btn-left" (click)="prev()">

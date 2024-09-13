@@ -10,6 +10,9 @@ import { GroupbyComponent } from './groupby.component';
 import { TableCriteria } from '../table-query';
 import { PanemuTableService } from '../panemu-table.service';
 import { LabelTranslation } from '../option/label-translation';
+import { MatDialog } from '@angular/material/dialog';
+import { FilterEditorComponent } from './editor/filter-editor.component';
+import { Filter } from './filter';
 
 @Component({
   selector: 'panemu-query',
@@ -24,13 +27,13 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _filterableColumns!: PropertyColumn<any>[];
   _searchableColumn!: PropertyColumn<any>[];
   txtCriteria = new FormControl('');
-  _criteria: TableCriteria[] = [];
+  _criteria: Filter[] = [];
   labelTranslation: LabelTranslation;
   searchTitle = '';
   @ViewChild('txtCriteriaElement', {read: MatAutocompleteTrigger}) txtCriteriaElement!: MatAutocompleteTrigger;
 
 
-  constructor(public service: PanemuTableService) {
+  constructor(public service: PanemuTableService, private dialog: MatDialog) {
     this.labelTranslation = service.getLabelTranslation();
 
     effect(() => this.onControllerChange())
@@ -46,11 +49,17 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
           this.searchTitle = searcForLabelTemplate.replace('{par0}', val)
           this._searchableColumn = [...this._filterableColumns]
         } else {
-          this._searchableColumn = []
+          this._searchableColumn = [];
         }
       }
     })
   }
+
+  forceQueryMenu() {
+    this.searchTitle = this.labelTranslation.selectColumnToSearchOn;
+    this._searchableColumn = [...this._filterableColumns]
+  }
+
   ngAfterViewInit(): void {
     this.txtCriteriaElement.optionSelections.subscribe(val => {
       let criteriaValue = this.txtCriteria.value;
@@ -71,9 +80,12 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.controller().criteria.push({field: val.source.value, value: criteriaValue});
         this.controller().reloadData();
+      } else {
+        this.editQuery({field: val.source.value, label: '', value: ''})
       }
       setTimeout(() => {
-        this.txtCriteria.reset();
+        this.txtCriteria.reset('');
+        // this.txtCriteriaElement.op
       });
     })
   }
@@ -88,7 +100,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
         next: _ => {
           this._criteria = this.controller().criteria.map(item => {
             let column = this._columns.find(clm => clm.field == item.field);
-            return {field: column?.label || '', value: item.value}
+            return {field: column?.field.toString() || '', label: column!.label!, value: item.value}
           })
           this.groupByLabel = '';
           this.controller().groupByColumns.forEach(g => {
@@ -122,5 +134,19 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.$subscription.unsubscribe();
   }
-  
+
+  editQuery(item: Filter) {
+    const criteria = this.controller().criteria[this._criteria.indexOf(item)]!;
+    FilterEditorComponent.show(this.dialog, this.controller().columnDefinition.body, criteria).then(result => {
+      if (result) {
+        const idx = this._criteria.indexOf(item);
+        if (idx >=0) {
+          this.controller().criteria[idx] = result;
+        } else {
+          this.controller().criteria.push(result);
+        }
+        this.controller().reloadData();
+      }
+    })
+  }
 }

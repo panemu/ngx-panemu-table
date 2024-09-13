@@ -8,7 +8,7 @@ import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { RowOptions } from "./row/row-options";
 import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
-import { isDataRow } from "./util";
+import { formatDateToIso, isDataRow, toDate } from "./util";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -302,39 +302,13 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       let nextYear = +(group.value) + 1;
       val = `${group.value}-01-01.,${nextYear}-01-01`;
     } else if (group.modifier == 'month') {
-      let endMonth = this.toDate(group.value + '-01');
+      let endMonth = toDate(group.value + '-01');
       endMonth.setMonth(endMonth.getMonth() + 1);
-      val = group.value + '-01' + '.,' + this.formatDateToIso(endMonth);
+      val = group.value + '-01' + '.,' + formatDateToIso(endMonth);
 
     }
     tableCriteria.push({ field: group.field, value: val });
     return tableCriteria;
-  }
-
-  private toDate(val: string) {
-    let parts = val.split('-');
-    return new Date(+parts[0], +parts[1] - 1, +parts[2])
-  }
-
-  private formatDateToIso(d?: Date): string | undefined {
-    if (!d) {
-      return undefined
-    }
-
-    if (typeof d == 'string') {
-      return d;
-    }
-
-    var month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2)
-      month = '0' + month;
-    if (day.length < 2)
-      day = '0' + day;
-
-    return [year, month, day].join('-');
   }
 
   /**

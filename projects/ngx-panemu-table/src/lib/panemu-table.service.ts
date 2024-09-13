@@ -8,6 +8,8 @@ import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, Map
 import { DefaultColumnOptions } from './column/default-column-options';
 import { LabelTranslation } from './option/label-translation';
 import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
+import { DateFilterComponent } from './query/editor/date-filter.component';
+import { MapFilterComponent } from './query/editor/map-filter.component';
 
 const GROUP_KEY_PREFIX = 'group_';
 
@@ -17,14 +19,15 @@ const GROUP_KEY_PREFIX = 'group_';
 export class PanemuTableService {
 
   DEFAULT_LABEL_TRANSLATION: LabelTranslation = {
-    search: 'Search',
+    search: 'Type here or double click to search',
     loading: 'Loading...',
     day: 'Day',
     month: 'Month',
     year: 'Year',
     groupBy: 'Group By',
     noData: 'No data to display',
-    searcForValueInColumn: 'Search for "{par0}" in:'
+    searcForValueInColumn: 'Search for "{par0}" in:',
+    selectColumnToSearchOn: 'Select a column to search on'
   };
 
   constructor(@Inject(LOCALE_ID) protected locale: string) { }
@@ -170,9 +173,11 @@ export class PanemuTableService {
             break;
           case ColumnType.DATETIME:
             column.formatter = this.getDateTimeCellFormatter();
+            column.filterEditor = column.filterEditor || DateFilterComponent
             break;
           case ColumnType.DATE:
             column.formatter = this.getDateCellFormatter();
+            column.filterEditor = column.filterEditor || DateFilterComponent
             break;
           case ColumnType.MAP:
             const mapColumn = (<MapColumn<any>>column);
@@ -183,6 +188,7 @@ export class PanemuTableService {
             if (!column.cellRenderer) {
               column.cellRenderer = { component: MapCellRenderer }
             }
+            column.filterEditor = column.filterEditor || MapFilterComponent
             break;
           default:
             column.formatter = this.getDefaultCellFormatter();
