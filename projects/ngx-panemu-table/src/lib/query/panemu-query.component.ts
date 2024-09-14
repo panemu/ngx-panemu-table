@@ -136,8 +136,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   editQuery(item: Filter) {
-    const criteria = this.controller().criteria[this._criteria.indexOf(item)]!;
-    FilterEditorComponent.show(this.dialog, this.controller().columnDefinition.body, criteria).then(result => {
+    FilterEditorComponent.show(this.dialog, this.controller().columnDefinition.body, {field: item.field, value: item.value}).then(result => {
       if (result) {
         const idx = this._criteria.indexOf(item);
         if (idx >=0) {

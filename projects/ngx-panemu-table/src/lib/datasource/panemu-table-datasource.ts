@@ -1,5 +1,5 @@
 import { Observable, of } from "rxjs";
-import { RowGroup } from "../row/row-group";
+import { RowGroupModel } from "../row/row-group";
 import { TableData } from "../table-data";
 import { GroupBy, SortingInfo, TableCriteria, TableQuery } from "../table-query";
 
@@ -56,7 +56,7 @@ export class PanemuTableDataSource<T> {
     }
     // const startTime = new Date()
     //filter
-    let result: T[] | RowGroup[] = this.filter(this._data, tableQuery.tableCriteria);
+    let result: T[] | RowGroupModel[] = this.filter(this._data, tableQuery.tableCriteria);
 
     //sort
     this.sort(result, tableQuery.sortingInfos)
@@ -77,7 +77,7 @@ export class PanemuTableDataSource<T> {
     } as any);
   }
 
-  private group(result: T[], groupBy?: GroupBy) {
+  private group(result: T[], groupBy?: GroupBy): RowGroupModel[] | null {
     if (!groupBy) {
       return null;
     }
@@ -104,7 +104,7 @@ export class PanemuTableDataSource<T> {
     return Object.keys(groupMap).map(key => ({
       value: key,
       count: groupMap[key].length
-    } as RowGroup))
+    }))
   }
 
   private toYear(value: string) {

@@ -3,8 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {MatSlideToggle
 
 } from '@angular/material/slide-toggle';
-import { BaseColumn, FilterEditor } from 'ngx-panemu-table';
-import { Filter } from '../../../../../../dist/ngx-panemu-table/lib/query/filter';
+import { BaseColumn, FilterEditor, TableCriteria } from 'ngx-panemu-table';
 
 @Component({
   standalone: true,
@@ -13,7 +12,7 @@ import { Filter } from '../../../../../../dist/ngx-panemu-table/lib/query/filter
 })
 export class BooleanFilterComponent implements OnInit, FilterEditor{
   @Input() column!: BaseColumn<any>;
-  @Input() filter!: Filter;
+  @Input() filter!: TableCriteria;
   @Input() value!: WritableSignal<string | null | undefined>;
 
   txt = new FormControl('');
@@ -23,6 +22,6 @@ export class BooleanFilterComponent implements OnInit, FilterEditor{
       console.log(`slide ${val} `, typeof val);
       this.value.set(val)
     }})
-    this.txt.setValue(this.filter.value)
+    this.txt.setValue(this.filter.value || false)
   }
 }

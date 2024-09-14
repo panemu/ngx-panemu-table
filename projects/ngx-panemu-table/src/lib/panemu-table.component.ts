@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, Input, input, OnChanges, Signal, signal, SimpleChanges, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
+import { Component, effect, ElementRef, input, Signal, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -8,19 +8,19 @@ import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indic
 import { SpinningIconComponent } from './busy-indicator/spinning-icon.component';
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
+import { GroupCellPipe } from './cell/group-cell.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
 import { BaseColumn, ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
+import { LabelTranslation } from './option/label-translation';
 import { PanemuPaginationComponent } from './pagination/panemu-pagination.component';
 import { PanemuTableController } from './panemu-table-controller';
 import { PanemuTableService } from './panemu-table.service';
 import { ResizableComponent } from './resizable.component';
-import { RowGroup } from './row/row-group';
+import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
+import { RowGroup, RowGroupModel } from './row/row-group';
 import { RowOptions } from './row/row-options';
 import { RowStylingPipe } from './row/row-styling.pipe';
 import { GroupBy } from './table-query';
-import { LabelTranslation } from './option/label-translation';
-import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
-import { GroupCellPipe } from './cell/group-cell.pipe';
 
 @Component({
   selector: 'panemu-table',
@@ -123,17 +123,19 @@ export class PanemuTableComponent<T> {
     }
   }
 
-  private displayData(data: T[] | RowGroup[], parent?: RowGroup, groupField?: GroupBy) {
+  private displayData(data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) {
 
-    const oriData = [...this.dataSource.data];
+    const oriData: (T | RowGroup | ExpansionRow<T>)[] = [...this.dataSource.data];
     
-    let finalData: T[] | RowGroup[] = data;
+    let finalData: T[] | RowGroupModel[] = data;
     if (groupField) {
+      //the data contains RowGroupModel
       let clm = this._allColumns.find(item => item.field == groupField.field)!;
       if (!clm) {
         throw new Error('Unknown column to group: ' + groupField.field);
       }
-      finalData = data.map((item: any) => {
+      finalData = data.map((i: any) => {
+        const item = i as RowGroupModel;
         let rg = new RowGroup();
         rg.field = groupField.field;
         rg.count = item.count;
@@ -146,17 +148,20 @@ export class PanemuTableComponent<T> {
         return rg;
       });
     }
+
     if (parent) {
+      //the data is a group child. It could be inner group or of type T
       let idx = oriData.indexOf(parent);
       if (idx > -1) {
         this.clearGroupChild(oriData, parent);
-        oriData.splice(idx + 1, 0, ...finalData);
+        oriData.splice(idx + 1, 0, ...(finalData as (T[] | RowGroup[])));
         this.resetDataSourceData([...oriData]);
       } else {
         console.warn('Unable to find index to insert data');
       }
     } else {
-      this.resetDataSourceData(finalData);
+      //the data is of type T or RowGroup
+      this.resetDataSourceData(finalData as (T[] | RowGroup[]));
     }
     this.table()?.renderRows();
   }

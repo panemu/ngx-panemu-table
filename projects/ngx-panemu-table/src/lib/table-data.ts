@@ -1,4 +1,4 @@
-import { RowGroup } from "./row/row-group";
+import { RowGroupModel } from "./row/row-group";
 
 /**
  * Wrapper for rows to be displayed in a table. It also has total rows information.
@@ -6,11 +6,11 @@ import { RowGroup } from "./row/row-group";
 export class TableData<T> {
 
   /**
-   * Data rows to display in table. It could by of T type or RowGroup.
-   * If the request to datasource is about grouping data, this property will contains RowGroup instead of T type.
+   * Data rows to display in table. It could by of T type or RowGroupModel.
+   * If the request to datasource is about grouping data, this property will contains RowGroupModel instead of T type.
    * If pagination is applied, this property doesn't contain all data row.
    */
-  rows: T[] | RowGroup[] = [];
+  rows: T[] | RowGroupModel[] = [];
 
   /**
    * Total of all row data. Used for pagination.

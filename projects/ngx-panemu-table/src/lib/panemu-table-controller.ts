@@ -3,7 +3,7 @@ import { BehaviorSubject, catchError, finalize, Observable, of, Subject, switchM
 import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
-import { RowGroup } from "./row/row-group";
+import { RowGroup, RowGroupModel } from "./row/row-group";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { RowOptions } from "./row/row-options";
@@ -22,7 +22,7 @@ import { formatDateToIso, isDataRow, toDate } from "./util";
  */
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
 
-type DisplayDataFunction<T> = (data: T[] | RowGroup[], parent?: RowGroup, groupField?: GroupBy) => void;
+type DisplayDataFunction<T> = (data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) => void;
 
 type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) => void
 
@@ -286,7 +286,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       return tq;
     }
 
-    groupController.__tableDisplayData = (data: T[] | RowGroup[], parent?: RowGroup, groupField?: GroupBy) => {
+    groupController.__tableDisplayData = (data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) => {
       this.__tableDisplayData!(data, group, groupField);
     };
     
@@ -370,7 +370,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   /**
-   * Select the first non RowGroup row. If the table is groupped and none of the group is expanded, this function
+   * Select the first data row (not RowGroup nor ExpansionRow). If the table is groupped and none of the group is expanded, this function
    * will always return false because none will be selected.
    * @returns true if succesful in which there is a non RowGroup to select.
    */

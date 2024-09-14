@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TableCriteria } from 'ngx-panemu-table';
 import { PropertyColumn } from '../../column/column';
 import { FilterEditor } from './filter-editor';
+import { TableCriteria } from '../../table-query';
 
 @Component({
   standalone: true,

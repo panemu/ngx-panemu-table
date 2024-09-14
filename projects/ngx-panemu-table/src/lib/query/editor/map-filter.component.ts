@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, isSignal, OnChanges, OnInit, SimpleChanges, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TableCriteria } from 'ngx-panemu-table';
 import { MapColumn } from '../../column/column';
 import { FilterEditor } from './filter-editor';
+import { TableCriteria } from '../../table-query';
 
 @Component({
   standalone: true,
