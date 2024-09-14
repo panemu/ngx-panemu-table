@@ -103,5 +103,5 @@
       <tr mat-row *matRowDef="let row; columns: ['detailRow']; when: isExpansionRow"></tr>
     </table>
   </div>
-  <div class="no-data" *ngIf="controller() && !dataSource.data?.length"> {{labelTranslation.noData}} </div>
+  <div class="no-data" *ngIf="controller() && !dataSource?.length"> {{labelTranslation.noData}} </div>
 </div>

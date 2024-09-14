@@ -44,7 +44,7 @@ import { GroupBy } from './table-query';
 })
 export class PanemuTableComponent<T> {
   controller = input.required<PanemuTableController<T>>();
-  dataSource = new MatTableDataSource<T | RowGroup | ExpansionRow<T>>([]);
+  dataSource: (T | RowGroup | ExpansionRow<T>)[] = [];
   _allColumns!: PropertyColumn<T>[];
   _visibleColumns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
@@ -125,7 +125,7 @@ export class PanemuTableComponent<T> {
 
   private displayData(data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) {
 
-    const oriData: (T | RowGroup | ExpansionRow<T>)[] = [...this.dataSource.data];
+    const oriData: (T | RowGroup | ExpansionRow<T>)[] = [...this.dataSource];
     
     let finalData: T[] | RowGroupModel[] = data;
     if (groupField) {
@@ -163,11 +163,11 @@ export class PanemuTableComponent<T> {
       //the data is of type T or RowGroup
       this.resetDataSourceData(finalData as (T[] | RowGroup[]));
     }
-    this.table()?.renderRows();
+    // this.table()?.renderRows();
   }
 
   private resetDataSourceData(data: (T | RowGroup | ExpansionRow<T>)[]) {
-    this.dataSource.data = data;
+    this.dataSource = data;
     this.controller().__data.set(data);
     if (this.controller().getSelectedRow() && !this.controller().__data().includes(this.controller().getSelectedRow()!)) {
       this.controller().clearSelection();
@@ -175,7 +175,7 @@ export class PanemuTableComponent<T> {
   }
 
   getDisplayedData() {
-    return [...this.dataSource.data]
+    return [...this.dataSource]
   }
 
 
@@ -184,10 +184,10 @@ export class PanemuTableComponent<T> {
     if (row.expanded) {
       this.controller().__reloadGroup(row);
     } else {
-      const oriData = [...this.dataSource.data];
+      const oriData = [...this.dataSource];
       this.clearGroupChild(oriData, row);
       this.resetDataSourceData(oriData);
-      this.table()?.renderRows();
+      // this.table()?.renderRows();
     }
   }
 
@@ -256,21 +256,21 @@ export class PanemuTableComponent<T> {
   }
 
   private collapseExpansion(row: T) {
-    const existingDetail = this.dataSource.data.findIndex( item => (item instanceof ExpansionRow) && item.row == row);
+    const existingDetail = this.dataSource.findIndex( item => (item instanceof ExpansionRow) && item.row == row);
     if (existingDetail >= 0) {
-      (this.dataSource.data[existingDetail] as ExpansionRow<T>).expanded?.set(false);
-      const oriData = [...this.dataSource.data];
+      (this.dataSource[existingDetail] as ExpansionRow<T>).expanded?.set(false);
+      const oriData = [...this.dataSource];
       oriData.splice(existingDetail, 1);
       this.resetDataSourceData(oriData);  
     }
   }
 
   private expandCell(row: T, rowExpansionComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
-    const existingRowExp = this.dataSource.data.find( item => (item instanceof ExpansionRow) && (item.row == row)) as ExpansionRow<T>;
-    const oriData = [...this.dataSource.data];
+    const existingRowExp = this.dataSource.find( item => (item instanceof ExpansionRow) && (item.row == row)) as ExpansionRow<T>;
+    const oriData = [...this.dataSource];
     
     if (existingRowExp) {
-      const existingIndex = this.dataSource.data.indexOf(existingRowExp);
+      const existingIndex = this.dataSource.indexOf(existingRowExp);
       if (existingRowExp.column != column) {
         // the column is different. Replace the row detail
         existingRowExp.expanded?.set(false);

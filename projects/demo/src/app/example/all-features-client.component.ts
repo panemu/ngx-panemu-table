@@ -56,7 +56,7 @@ export class AllFeaturesClientComponent implements OnInit {
 
   ngOnInit() {
     //set initial grouping
-    // this.controller.groupByColumns = [{ field: 'country' }]
+    this.controller.groupByColumns = [{ field: 'country' }]
 
     //set inital filtering
     this.controller.criteria = [{ field: 'verified', value: true }]
