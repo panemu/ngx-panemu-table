@@ -4,7 +4,7 @@
     <panemu-pagination [controller]="controller"/>
   </div>
   <div class="flex-grow overflow-auto">
-      <panemu-table [controller]="controller"></panemu-table>
+      <panemu-table [controller]="controller"/>
   </div>
   <div class="min-h-16">
     <div class="text-xs text-gray-500 mt-4 grid grid-cols-2">
@@ -16,3 +16,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #countryCell let-row="row" let-column="column">
+  <div class="flex items-center gap-2">
+    <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
+    <img width="24px" src="assets/flags/{{row[column.field].toLowerCase()}}.svg">
+    <span>{{row[column.field] | genericCell:row:column:column.formatter}}</span>
+  </div>
+</ng-template>

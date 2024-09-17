@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseColumn, ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 const DATA: People[] = [

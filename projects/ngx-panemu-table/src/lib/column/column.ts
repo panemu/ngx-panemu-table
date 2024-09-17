@@ -5,6 +5,7 @@ import { ExpansionRow, ExpansionRowRenderer } from "../row/expansion-row";
 import { RowGroup } from "../row/row-group";
 import { TickColumnClass } from "./tick-column-class";
 import { FilterEditor } from "../query/editor/filter-editor";
+import { RowGroupRenderer } from "../row/default-row-group-renderer";
 
 export interface Expansion<T> {
   component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
@@ -196,6 +197,8 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
    * Custom component to edit filter. Only relevant if `filterable` property is true.
    */
   filterEditor?: Type<FilterEditor>
+
+  rowGroupRenderer?: RowGroupRenderer
 }
 
 export interface Column<T> extends PropertyColumn<T> {

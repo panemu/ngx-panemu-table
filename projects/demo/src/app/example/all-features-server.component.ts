@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
+import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
+import { ColumnType, DefaultCellRenderer, GenericCellPipe, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { tap } from 'rxjs';
+import { CountryCode } from '../model/country-code';
 
 @Component({
   templateUrl: 'all-features-server.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, GenericCellPipe],
   standalone: true,
 })
 
 export class AllFeaturesServerComponent implements OnInit {
+  countryMap = signal({});
+  countryCell = viewChild<TemplateRef<any>>('countryCell')
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country' },
+    { field: 'country', type: ColumnType.MAP, valueMap :  this.countryMap, cellRenderer: DefaultCellRenderer.create(this.countryCell)},
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
@@ -31,7 +34,9 @@ export class AllFeaturesServerComponent implements OnInit {
   constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
-
+    const map: any = {}
+    CountryCode.forEach(item => map[item.code] = item.name);
+    this.countryMap.set(map);
     this.controller.groupByColumns = [{ field: 'enrolled', modifier:'month' }]
     this.controller.reloadData()
   }

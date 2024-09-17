@@ -14,6 +14,7 @@ import { ColumnGroupComponent } from './example/column-group.component';
 import { RowDetailComponent } from './example/row-detail.component';
 import { CustomHeaderComponent } from './example/custom-header.component';
 import { CustomFilterEditorComponent } from './example/custom-filter-editor.component';
+import { CustomRowGroupComponent } from './example/custom-row-group/custom-row-group.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -34,5 +35,6 @@ export const routes: Routes = [
 	{ path: 'row-detail', component: RowDetailComponent },
 	{ path: 'custom-header', component: CustomHeaderComponent },
 	{ path: 'custom-filter-editor', component: CustomFilterEditorComponent },
+	{ path: 'custom-row-group', component: CustomRowGroupComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

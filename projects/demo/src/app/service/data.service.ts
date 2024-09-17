@@ -1,47 +1,53 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { People } from '../model/people';
+import { Injectable } from '@angular/core';
 import { PanemuTableDataSource, TableQuery } from 'ngx-panemu-table';
 import { delay, mergeMap, of, tap } from 'rxjs';
+import { People } from '../model/people';
+import { CountryCode } from '../model/country-code';
 
 export interface Car {
-	id: number;
-	vin: string;
-	brand: string;
-	production_year: number;
-	color: string;
- }
+  id: number;
+  vin: string;
+  brand: string;
+  production_year: number;
+  color: string;
+}
 
 @Injectable({
-	providedIn: 'root'
- })
- export class DataService {
-	mockedServerDatasource = new PanemuTableDataSource<People>()
+  providedIn: 'root'
+})
+export class DataService {
+  mockedServerDatasource = new PanemuTableDataSource<People>()
 
-	constructor(
-	  private http: HttpClient,
-	) {
-	}
- 
-	getCars() {
-	  return this.http.get<Car[]>('./data/cars-large.json');
-	}
+  constructor(
+    private http: HttpClient,
+  ) {
+  }
 
-	getPeople() {
-		return this.http.get<People[]>('./data/people.json');
-	}
+  getCars() {
+    return this.http.get<Car[]>('./data/cars-large.json');
+  }
 
-	getMockedServerData(start: number, maxRows: number, tableQuery: TableQuery) {
-		const observable = this.mockedServerDatasource.getAllData().length ? of({}) : this.getPeople().pipe(
-			tap(result => this.mockedServerDatasource.setData(result))
-		);
+  getPeople() {
+    return this.http.get<People[]>('./data/people.json');
+  }
 
-		return observable.pipe(
-			delay(500),
-			
-			mergeMap(_ => this.mockedServerDatasource.getData(start, maxRows, tableQuery))
-		)
-		
-	}
- }
- 
+  getMockedServerData(start: number, maxRows: number, tableQuery: TableQuery) {
+    const observable = this.mockedServerDatasource.getAllData().length ? of({}) : this.getPeople().pipe(
+      tap(result => this.mockedServerDatasource.setData(result))
+    );
+
+    return observable.pipe(
+      delay(500),
+
+      mergeMap(_ => this.mockedServerDatasource.getData(start, maxRows, tableQuery))
+    )
+
+  }
+
+  getCountryMap() {
+    const map: any = {}
+    CountryCode.forEach(item => map[item.code] = item.name);
+    return map;
+  }
+}

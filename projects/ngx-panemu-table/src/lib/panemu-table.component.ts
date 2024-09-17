@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, input, Signal, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indicator.component';
 import { SpinningIconComponent } from './busy-indicator/spinning-icon.component';
@@ -17,28 +16,29 @@ import { PanemuTableController } from './panemu-table-controller';
 import { PanemuTableService } from './panemu-table.service';
 import { ResizableComponent } from './resizable.component';
 import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
-import { RowGroup, RowGroupModel } from './row/row-group';
+import { RowGroup, RowGroupData } from './row/row-group';
 import { RowOptions } from './row/row-options';
 import { RowStylingPipe } from './row/row-styling.pipe';
 import { GroupBy } from './table-query';
+import { RowGroupRendererDirective } from './row/row-group-renderer.directive';
 
 @Component({
   selector: 'panemu-table',
   standalone: true,
   imports: [
-    MatTableModule,
     MatMenuModule,
     CommonModule,
     MatButtonModule,
     ResizableComponent,
     CellRendererDirective,
     HeaderRendererDirective,
+    RowGroupRendererDirective,
     PanemuBusyIndicatorComponent,
     PanemuPaginationComponent,
     SpinningIconComponent,
     RowStylingPipe,
     CellStylingPipe,
-    GroupCellPipe
+    GroupCellPipe,
   ],
   templateUrl: './panemu-table.component.html'
 })
@@ -58,7 +58,6 @@ export class PanemuTableComponent<T> {
   ready = false;
   
   @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
-  table = viewChild(MatTable);
   constructor(private panemuTableService: PanemuTableService) {
     this.labelTranslation = this.panemuTableService.getLabelTranslation();
     effect(() => {
@@ -123,11 +122,11 @@ export class PanemuTableComponent<T> {
     }
   }
 
-  private displayData(data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) {
+  private displayData(data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) {
 
     const oriData: (T | RowGroup | ExpansionRow<T>)[] = [...this.dataSource];
     
-    let finalData: T[] | RowGroupModel[] = data;
+    let finalData: T[] | RowGroupData[] | RowGroup[] = data;
     if (groupField) {
       //the data contains RowGroupModel
       let clm = this._allColumns.find(item => item.field == groupField.field)!;
@@ -135,11 +134,10 @@ export class PanemuTableComponent<T> {
         throw new Error('Unknown column to group: ' + groupField.field);
       }
       finalData = data.map((i: any) => {
-        const item = i as RowGroupModel;
+        const item = i as RowGroupData;
         let rg = new RowGroup();
         rg.field = groupField.field;
-        rg.count = item.count;
-        rg.value = item.value;
+        rg.data = item;
         rg.parent = parent;
         rg.level = parent ? parent.level + 1 : 0;
         rg.column = clm;

@@ -1,0 +1,26 @@
+<td mat-cell [attr.colspan]="colSpan" [style]="'padding-left: '+(rowGroup.level * 20) + 'px;'">
+  <div class="group-row">
+    <div class="group-cell" (click)="expandAction(rowGroup)">
+      <span class="material-symbols-outlined" *ngIf="rowGroup.expanded">arrow_drop_down</span>
+      <span class="material-symbols-outlined" *ngIf="!rowGroup.expanded">arrow_right</span>
+      @if (contentComponent) {
+        <ng-container *ngComponentOutlet="contentComponent; inputs: {colSpan, rowGroup}" ></ng-container>
+      } @else {
+        <ng-container
+          *ngTemplateOutlet="contentTemplate()!; context:{colSpan, rowGroup}">
+        </ng-container>
+      }
+      <span *ngIf="rowGroup.controller?.loading | async" style="margin-left: 12px;">
+        <pnm-spinning-icon />
+      </span>
+    </div>
+    <ng-container *ngIf="rowGroup.expanded && rowGroup.controller && showPagination">
+      <panemu-pagination [controller]="rowGroup.controller" [group]="rowGroup"
+        class="row-group-pagination"></panemu-pagination>
+    </ng-container>
+  </div>
+</td>
+
+<ng-template #defaultContent>
+  <span class="group-label">{{rowGroup.data.value | groupCell:rowGroup.formatter}} ({{rowGroup.data.count}})</span>
+</ng-template>

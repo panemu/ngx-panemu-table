@@ -1,0 +1,8 @@
+<td colspan="5" (click)="expandAction(rowGroup)">
+	<div class="flex justify-between items-center">
+		<span class="group-label">{{rowGroup.data.value | groupCell:rowGroup.formatter}} - ({{rowGroup.data.count}}) - click to expand</span>
+		<span class="text-xs font-semibold text-gray-400">Average Amount:</span>
+	</div>
+</td>
+<td class="text-right">{{$any(rowGroup.data).average | number:'.2'}}</td>
+<td colspan="2"></td>
