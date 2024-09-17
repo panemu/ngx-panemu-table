@@ -3,6 +3,8 @@ import { BasicComponent } from './basic.component';
 import { DebugElement } from '@angular/core';
 import { People } from '../model/people';
 
+//ng test demo --include="projects/demo/src/app/example/basic.component.spec.ts"
+
 describe('BasicComponent', () => {
   let component: BasicComponent;
   let fixture: ComponentFixture<BasicComponent>;
