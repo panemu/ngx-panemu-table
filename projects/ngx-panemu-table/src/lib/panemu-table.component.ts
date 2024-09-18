@@ -60,6 +60,10 @@ export class PanemuTableComponent<T> {
   columnDefinition: ColumnDefinition<T> = {header:[], body: []};
   headers!:HeaderRow[];
   ready = false;
+  /**
+   * Default is true. The table will take its container vertical space.
+   * If false, the table will display all rows thus the height is adjusted automatically.
+   */
   @Input() verticalScroll = true;
   cdr = inject(ChangeDetectorRef);
 

@@ -17,7 +17,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
   __data!: Signal<T[]>;
   selections = signal<T[]>([]);
   visible?: boolean;
-
+  cellClass?: (value: any, row?: T) => string;
   constructor(tickColumn?: TickColumn<T>) {
     if (tickColumn) {
       Object.assign(this, tickColumn);
@@ -26,6 +26,10 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
     this.cellRenderer = tickColumn?.cellRenderer ||  {
       component: TickCellComponent,
     };
+    
+    if (!this.cellClass) {
+      this.cellClass = (_) => 'tick-cell'
+    }
     const showCheckboxHeader = tickColumn?.checkBoxHeader === undefined ? true : tickColumn?.checkBoxHeader;
     this.headerRenderer = this.headerRenderer ? this.headerRenderer : showCheckboxHeader ? {component: TickHeaderRenderer} : undefined;
 

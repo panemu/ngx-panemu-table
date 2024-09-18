@@ -229,7 +229,9 @@ panemu-groupby,
     text-align: right;
   }
 
-
+  .default-cell.tick-cell {
+    text-overflow: unset;
+  }
 
   .no-data {
     position: absolute;
