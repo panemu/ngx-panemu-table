@@ -10,6 +10,7 @@ const DATA: People[] = [
   {"id":5,"name":"Kliment Sprowle","email":"ksprowle4@alexa.com","gender":"M","enrolled":"2023-12-25","country":"Indonesia","amount":6459.93,"last_login":"2024-04-24 03:46:26","verified":true},
 ]
 
+
 @Component({
   templateUrl: 'basic.component.html',
   imports: [PanemuTableComponent],

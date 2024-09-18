@@ -1,14 +1,14 @@
 <div class="panemu-table">
   <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
   
-  <div class="" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: auto;">
+  <div [class.v-scrollable]="verticalScroll" style="overflow: auto;">
     <table #panemuTable class="table">
       <colgroup>
         @for (column of _visibleColumns; track $index) {
           <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
         }
       </colgroup>
-      <thead  *ngIf="columnDefinition">
+      <thead >
         @for (header of columnDefinition.header; track header) {
           <tr>
             @for (cell of header.cells; track cell.__key; let idx = $index) {
@@ -54,9 +54,18 @@
             <tr>
               <td [attr.colspan]="_displayedColumns.length">
                 @if($any(row).isTemplateRef()) {
-                  <ng-container [ngTemplateOutlet]="$any(row).component()" [ngTemplateOutletContext]="{row: $any(row).row, column: $any(row).column, close: $any(row).close.bind($any(row))}"></ng-container>
+                  <ng-container 
+                  [ngTemplateOutlet]="$any(row).component()" 
+                  [ngTemplateOutletContext]="{row: $any(row).row, column: $any(row).column, close: $any(row).close.bind($any(row))}">
+
+                  </ng-container>
                 } @else {
-                  <ng-container *ngComponentOutlet="$any(row).component; inputs: {row: $any(row).row, column: $any(row).column, close: $any(row).close.bind($any(row))}" ></ng-container>
+                  <ng-template 
+                    [expansionRowRenderer]="$any(row).component" 
+                    [row]="$any(row).row" 
+                    [column]="$any(row).column" 
+                    [close]="$any(row).close.bind($any(row))">
+                  </ng-template>
                 }
               </td>
             </tr>

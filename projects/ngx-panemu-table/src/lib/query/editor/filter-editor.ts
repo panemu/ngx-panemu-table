@@ -5,7 +5,6 @@ import { TableCriteria } from "../../table-query";
 
 /**
  * Interface for `PanemuQueryComponent` filter editor. Custom filter editor should implements this interface.
- * Each properties should have Angular `@Input()` annotation.
  */
 export interface FilterEditor {
   /**

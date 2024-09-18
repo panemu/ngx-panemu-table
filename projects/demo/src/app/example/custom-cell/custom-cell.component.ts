@@ -19,7 +19,12 @@ export class CustomCellComponent implements OnInit {
     { field: 'id'},
     { field: 'name' },
     { field: 'gender', cellRenderer: DefaultCellRenderer.create(this.genderCellTemplate) },
-    { field: 'country', cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
+    { 
+      field: 'country', 
+      cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
+      type: ColumnType.MAP,
+      valueMap: this.dataService.getCountryMap()
+    },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'email' },
     { field: 'enrolled', type: ColumnType.DATE },

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { GroupCellPipe, RowGroup, RowGroupComponent } from 'ngx-panemu-table';
+import { GroupCellPipe, PanemuPaginationComponent, RowGroup, RowGroupComponent } from 'ngx-panemu-table';
 
 @Component({
   templateUrl: 'country-row-group.component.html',
   standalone: true,
-  imports: [CommonModule, GroupCellPipe],
+  imports: [CommonModule, GroupCellPipe, PanemuPaginationComponent],
   styles: `
   :host {
     display: contents;
@@ -14,10 +14,10 @@ import { GroupCellPipe, RowGroup, RowGroupComponent } from 'ngx-panemu-table';
 })
 
 export class CountryRowGroup implements OnInit, RowGroupComponent {
-  @Input() colSpan!: number;
-  @Input() rowGroup!: RowGroup;
-  @Input() expandAction!: (group: RowGroup) => void;
-  @Input() parameter?: any;
+  colSpan!: number;
+  rowGroup!: RowGroup;
+  expandAction!: (group: RowGroup) => void;
+  parameter?: any;
   constructor() { }
 
   ngOnInit() { }

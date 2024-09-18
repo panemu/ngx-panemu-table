@@ -8,19 +8,18 @@ import { DefaultRowGroupRenderer, RowGroupRenderer } from './default-row-group-r
 })
 export class RowGroupRendererDirective implements OnInit {
   @Input() rowGroupRenderer?: RowGroupRenderer;
-  @Input({required: true}) colSpan!: number;
-  @Input({required: true}) rowGroup!: RowGroup;
-  @Input({required: true}) expandAction!: (group: RowGroup) => void;
-  @Input() parameter?: any;
+  @Input() colSpan!: number;
+  @Input() rowGroup!: RowGroup;
+  @Input() expandAction!: (group: RowGroup) => void;
 
   constructor(private container: ViewContainerRef) { }
 
   ngOnInit(): void {
     let componentRef = this.container.createComponent(this.rowGroupRenderer?.component || DefaultRowGroupRenderer);
-    componentRef.setInput('colSpan', this.colSpan);
-    componentRef.setInput('rowGroup', this.rowGroup);
-    componentRef.setInput('expandAction', this.expandAction);
-    componentRef.setInput('parameter', this.rowGroupRenderer?.parameter)
+    componentRef.instance.colSpan = this.colSpan;
+    componentRef.instance.rowGroup = this.rowGroup;
+    componentRef.instance.expandAction = this.expandAction;
+    componentRef.instance.parameter = this.rowGroupRenderer?.parameter;
   }
 
 }

@@ -55,6 +55,8 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
 
+{{ NgDocActions.demo("BasicComponent") }}
+
 ## More In The Future
 
 These features are not developed yet. Please create a ticket in [our repository](https://github.com/panemu/ngx-panemu-table) if you need them so we know what to prioritize.

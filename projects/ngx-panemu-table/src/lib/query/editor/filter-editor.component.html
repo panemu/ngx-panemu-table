@@ -9,7 +9,7 @@
 		</select>
 	</div>
 	<div *ngIf="editorComponent" >
-		<ng-container #editor *ngComponentOutlet="editorComponent; inputs: {column, filter, value}"></ng-container>
+		<ng-template #editor [filterEditor]="editorComponent" [column]="column" [filter]="filter" [value]="value"></ng-template>
 	</div>
 	<div style="display: flex; gap: 1rem; justify-content: flex-end;">
 		<button (click)="cancel()">Cancel</button>

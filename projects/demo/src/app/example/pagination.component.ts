@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ColumnType, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
-import { CustomPanemuTableService } from '../service/custom-panemu-table.service';
 import { DataService } from '../service/data.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class PaginationComponent implements OnInit {
     { field: 'name' },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country' },
+    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },

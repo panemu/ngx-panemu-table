@@ -24,7 +24,7 @@ Then call `PanemuTableController.reloadData` preferably in `ngOnInit` to render 
 > **Warning**
 > Always call `PanemuTableController.reloadData` after setting data to datasource, or after changing controller's `criteria` and `groupByColumns` properties.
 
-{{ NgDocActions.demo("BasicComponent") }}
+{{ NgDocActions.demo("CustomHeaderComponent") }}
 
 When user click a column header, the sorting is handled by the datasource.
 

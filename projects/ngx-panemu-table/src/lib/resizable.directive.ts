@@ -25,7 +25,7 @@ export class ResizableDirective {
 
       return fromEvent<MouseEvent>(this.documentRef, 'mousemove').pipe(
         map(({ clientX }) => {
-          return clientX - right + 22; //16 is the th padding + 6 .bar margin
+          return clientX - right + 6; //6 is .bar margin
         }),
         distinctUntilChanged(),
         takeUntil(fromEvent(this.documentRef, 'mouseup'))

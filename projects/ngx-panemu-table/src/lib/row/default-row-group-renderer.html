@@ -4,20 +4,19 @@
       <span class="material-symbols-outlined" *ngIf="rowGroup.expanded">arrow_drop_down</span>
       <span class="material-symbols-outlined" *ngIf="!rowGroup.expanded">arrow_right</span>
       @if (contentComponent) {
-        <ng-container *ngComponentOutlet="contentComponent; inputs: {colSpan, rowGroup}" ></ng-container>
+        <ng-container [rowGroupContentRenderer]="contentComponent" [rowGroup]="rowGroup" ></ng-container>
       } @else {
         <ng-container
-          *ngTemplateOutlet="contentTemplate()!; context:{colSpan, rowGroup}">
+          *ngTemplateOutlet="contentTemplate()!; context:{$implicit: rowGroup}">
         </ng-container>
       }
       <span *ngIf="rowGroup.controller?.loading | async" style="margin-left: 12px;">
         <pnm-spinning-icon />
       </span>
     </div>
-    <ng-container *ngIf="rowGroup.expanded && rowGroup.controller && showPagination">
-      <panemu-pagination [controller]="rowGroup.controller" [group]="rowGroup"
-        class="row-group-pagination"></panemu-pagination>
-    </ng-container>
+    <panemu-pagination *ngIf="rowGroup.expanded && rowGroup.controller && showPagination"
+      [controller]="rowGroup.controller" [group]="rowGroup"
+      class="row-group-pagination"></panemu-pagination>
   </div>
 </td>
 

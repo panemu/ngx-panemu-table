@@ -13,7 +13,7 @@ export class CellRendererDirective implements OnInit {
 
   ngOnInit(): void {
     let componentRef = this.container.createComponent(this.column.cellRenderer!.component);
-    componentRef.instance.column = this.column!;
+    componentRef.instance.column = this.column;
     componentRef.instance.row = this.row;
     componentRef.instance.parameter = this.column.cellRenderer!.parameter;
   }

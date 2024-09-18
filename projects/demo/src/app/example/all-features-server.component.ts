@@ -1,13 +1,14 @@
 import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, GenericCellPipe, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
+import { ColumnType, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { tap } from 'rxjs';
 import { CountryCode } from '../model/country-code';
+import { CellFormatterPipe } from '../../../../ngx-panemu-table/src/public-api';
 
 @Component({
   templateUrl: 'all-features-server.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, GenericCellPipe],
+  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, CellFormatterPipe],
   standalone: true,
 })
 

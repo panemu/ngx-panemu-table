@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { CellComponent, CellRenderer, CellRendererDirective, PropertyColumn } from 'ngx-panemu-table';
+import { Component, Input } from '@angular/core';
+import { CellComponent, CellFormatterPipe, CellRenderer, PropertyColumn } from 'ngx-panemu-table';
 
 type onClick<T> = (value: any, field: string, row?: T) => void;
 
 @Component({
   templateUrl: 'filter-country-cell.component.html',
-  standalone: true
+  standalone: true,
+  imports: [CellFormatterPipe]
 })
 
 export class FilterCountryCellComponent<T> implements CellComponent<T> {
   row!: T;
-  rowIndex!: number;
   column!: PropertyColumn<T>;
   parameter?: { onClick: onClick<T> };
 

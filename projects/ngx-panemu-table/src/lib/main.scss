@@ -33,6 +33,13 @@ panemu-groupby,
   overflow: hidden;
   height: 100%;
 
+  .v-scrollable {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+  }
   table {
     border-spacing: 0;
     -moz-osx-font-smoothing: grayscale;
@@ -89,7 +96,7 @@ panemu-groupby,
           bottom: 0.5rem;
           width: 6px;
           border-radius: 4px;
-          margin: 0 0 0 6px;
+          margin: 0 -16px 0 6px;
           justify-self: flex-end;
           border-left: 2px solid transparent;
           border-right: 2px solid transparent;

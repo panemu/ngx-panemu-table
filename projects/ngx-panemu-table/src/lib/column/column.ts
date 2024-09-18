@@ -81,7 +81,7 @@ export interface BaseColumn<T> {
   label?: string
 
   /**
-   * Component to render in table cell
+   * Component to render in table cell. If unspecified, `DefaultCellRenderer` is used.
    */
   cellRenderer?: CellRenderer
 

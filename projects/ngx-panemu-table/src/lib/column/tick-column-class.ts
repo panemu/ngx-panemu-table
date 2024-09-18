@@ -1,4 +1,4 @@
-import { effect, Signal, signal } from "@angular/core";
+import { ChangeDetectorRef, effect, inject, Signal, signal } from "@angular/core";
 import { ColumnType, PropertyColumn, TickColumn } from "./column";
 import { CellRenderer } from "../cell/cell";
 import { TickCellComponent } from "../cell/tick-cell-renderer";
@@ -17,7 +17,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
   __data!: Signal<T[]>;
   selections = signal<T[]>([]);
   visible?: boolean;
-  
+
   constructor(tickColumn?: TickColumn<T>) {
     if (tickColumn) {
       Object.assign(this, tickColumn);

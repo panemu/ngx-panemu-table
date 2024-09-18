@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, input, Signal, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, input, Signal, TemplateRef, Type, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { Observable } from 'rxjs';
@@ -17,10 +17,12 @@ import { PanemuTableService } from './panemu-table.service';
 import { ResizableComponent } from './resizable.component';
 import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
 import { RowGroup, RowGroupData } from './row/row-group';
-import { RowOptions } from './row/row-options';
 import { RowStylingPipe } from './row/row-styling.pipe';
 import { GroupBy } from './table-query';
 import { RowGroupRendererDirective } from './row/row-group-renderer.directive';
+import { RowOptions } from '../public-api';
+import { initTableWidth } from './util';
+import { ExpansionRowRendererDirective } from './row/expansion-row-renderer.directive';
 
 @Component({
   selector: 'panemu-table',
@@ -39,8 +41,10 @@ import { RowGroupRendererDirective } from './row/row-group-renderer.directive';
     RowStylingPipe,
     CellStylingPipe,
     GroupCellPipe,
+    ExpansionRowRendererDirective    
   ],
-  templateUrl: './panemu-table.component.html'
+  templateUrl: './panemu-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PanemuTableComponent<T> {
   controller = input.required<PanemuTableController<T>>();
@@ -53,10 +57,12 @@ export class PanemuTableComponent<T> {
   _controllerSelectedRowSignal!: Signal<T | null>;
   rowOptions!: RowOptions<T>;
   labelTranslation: LabelTranslation;
-  columnDefinition!: ColumnDefinition<T>;
+  columnDefinition: ColumnDefinition<T> = {header:[], body: []};
   headers!:HeaderRow[];
   ready = false;
-  
+  @Input() verticalScroll = true;
+  cdr = inject(ChangeDetectorRef);
+
   @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
   constructor(private panemuTableService: PanemuTableService) {
     this.labelTranslation = this.panemuTableService.getLabelTranslation();
@@ -105,6 +111,7 @@ export class PanemuTableComponent<T> {
       // setTimeout(() => {
       //   this.ready = true;
       // });
+      this.cdr.markForCheck();
     }
   }
 
@@ -161,7 +168,6 @@ export class PanemuTableComponent<T> {
       //the data is of type T or RowGroup
       this.resetDataSourceData(finalData as (T[] | RowGroup[]));
     }
-    // this.table()?.renderRows();
   }
 
   private resetDataSourceData(data: (T | RowGroup | ExpansionRow<T>)[]) {
@@ -182,11 +188,22 @@ export class PanemuTableComponent<T> {
     if (row.expanded) {
       this.controller().__reloadGroup(row);
     } else {
+      this.keepColumnWidth();
+
       const oriData = [...this.dataSource];
       this.clearGroupChild(oriData, row);
       this.resetDataSourceData(oriData);
-      // this.table()?.renderRows();
     }
+  }
+
+  /**
+   * To avoid columns resizing when collapsing a group, let's keep the column width
+   */
+  private keepColumnWidth() {
+    if (!this.matTable.nativeElement.hasAttribute('resized')) {
+      initTableWidth(this.matTable.nativeElement)
+    }
+    this.matTable.nativeElement.setAttribute('resized','');
   }
 
   private clearGroupChild(oriData: (T | RowGroup | ExpansionRow<T>)[], row: RowGroup) {
@@ -288,6 +305,7 @@ export class PanemuTableComponent<T> {
       }
     }
     this.resetDataSourceData(oriData);
+    this.cdr.markForCheck();
   }
 
 }

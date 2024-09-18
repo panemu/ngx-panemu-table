@@ -15,6 +15,7 @@ import { RowDetailComponent } from './example/row-detail.component';
 import { CustomHeaderComponent } from './example/custom-header.component';
 import { CustomFilterEditorComponent } from './example/custom-filter-editor.component';
 import { CustomRowGroupComponent } from './example/custom-row-group/custom-row-group.component';
+import { DateColumnComponent } from './doc/columns/date-column/date-column.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -22,7 +23,7 @@ export const routes: Routes = [
 	{ path: 'column-type', component: ColumnTypeComponent },
 	// { path: 'column-width', component: ColumnWidthComponent },
 	{ path: 'computed', component: ComputedComponent },
-	// { path: 'pagination', component: PaginationComponent },
+	{ path: 'date-column', component: DateColumnComponent },
 	{ path: 'all-features-client', component: AllFeaturesClientComponent },
 	{ path: 'tick', component: TickableRowComponent },
 	{ path: 'all-features-server', component: AllFeaturesServerComponent },

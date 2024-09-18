@@ -37,7 +37,7 @@ The email is using `ng-template`. We can specify variables binding to relevant r
 </ng-template>
 ```
 
-If using angular component, the component should implements `ExpansionRowRenderer` interface. The angular `@Input()` annotation is needed for `column`, `row` and `close` properties. Below is the source code of the Country cell expansion:
+If using angular component, the component should implements `ExpansionRowRenderer` interface. Below is the source code of the Country cell expansion:
 
 ```typescript name="nested-table.component.ts" file="../../example/custom-cell/nested-table.component.ts" group="nested-table"
 

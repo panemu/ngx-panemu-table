@@ -10,10 +10,10 @@ import { CellFormatter } from './cell';
  * parameters are changed.
  */
 @Pipe({
-  name: 'genericCell',
+  name: 'cellFormatter',
   standalone: true
 })
-export class GenericCellPipe implements PipeTransform {
+export class CellFormatterPipe implements PipeTransform {
 
   /**
    * The content of the cell will only be updated if any of the value, row, column or formatter

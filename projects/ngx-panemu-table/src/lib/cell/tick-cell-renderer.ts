@@ -1,4 +1,4 @@
-import { Component, effect, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PropertyColumn, TickColumn } from '../column/column';
 import { TickColumnClass } from '../column/tick-column-class';
@@ -17,9 +17,10 @@ export class TickCellComponent implements CellComponent<any>, OnInit {
 
   ticked = false
   
-  constructor() {
+  constructor(cdr: ChangeDetectorRef) {
     effect(() => {
-      this.ticked = (this.column as TickColumnClass<any>).getTickedRowsAsSignal()().includes(this.row)
+      this.ticked = (this.column as TickColumnClass<any>).getTickedRowsAsSignal()().includes(this.row);
+      cdr.markForCheck();
     })
   }
 

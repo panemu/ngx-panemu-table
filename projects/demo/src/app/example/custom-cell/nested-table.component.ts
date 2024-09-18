@@ -10,9 +10,9 @@ import { DataService } from "../../service/data.service";
 })
 
 export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People> {
-  @Input() row!: People;
-  @Input() column!: PropertyColumn<People>;
-  @Input() close!: Function;
+  row!: People;
+  column!: PropertyColumn<People>;
+  close!: Function;
 
   columns = this.pts.buildColumns<People>([
     { field: 'id' },

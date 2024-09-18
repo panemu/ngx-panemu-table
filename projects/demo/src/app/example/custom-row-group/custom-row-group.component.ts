@@ -12,6 +12,7 @@ import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { CountryRowGroup } from './country-row-group.component';
 import { tap } from 'rxjs';
+import { BooleanRowGroupContentComponent } from './boolean-row-group-content.component';
 
 @Component({
   selector: 'app-custom-row-group',
@@ -27,14 +28,15 @@ export class CustomRowGroupComponent implements OnInit {
 
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id', },
+    { field: 'id' },
     { field: 'name' },
-    { field: 'email' },
     { field: 'gender', rowGroupRenderer: DefaultRowGroupRenderer.create({contentRenderer: this.genderGroupTemplate, showPagination: false})},
     { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), rowGroupRenderer: {component: CountryRowGroup} },
+    { field: 'verified', rowGroupRenderer: DefaultRowGroupRenderer.create({contentRenderer: BooleanRowGroupContentComponent}) },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'email' },
   ])
 
   datasource = new PanemuTableDataSource<People>;
@@ -72,8 +74,13 @@ export class CustomRowGroupComponent implements OnInit {
     this.controller.reloadData()
   }
 
-  defaultRowGroupNoPagination() {
+  customRowGroupTemplate() {
     this.controller.groupByColumns = [{ field: 'gender' }]
+    this.controller.reloadData()
+  }
+
+  customRowGroupComponent() {
+    this.controller.groupByColumns = [{ field: 'verified' }]
     this.controller.reloadData()
   }
 

@@ -30,3 +30,7 @@ export interface DefaultColumnOptions {
    */
   filterable?: boolean
 }
+
+export interface DefaultOptions {
+  column?: DefaultColumnOptions
+}

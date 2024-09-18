@@ -13,9 +13,9 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People> {
-  @Input() row!: People;
-  @Input() column!: PropertyColumn<People>;
-  @Input() close!: Function;
+  row!: People;
+  column!: PropertyColumn<People>;
+  close!: Function;
   ready = false;
 
   form = this.fb.group({
