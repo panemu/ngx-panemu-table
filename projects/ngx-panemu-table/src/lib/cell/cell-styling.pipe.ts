@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Used to wrap `RowOptions.rowClass()` and `RowOptions.rowStyle` methods to get the benefit of angular pipe memoization.
+ * Used to wrap `BaseColumn.cellClass` and `BaseColumn.cellStyle` methods to get the benefit of angular pipe memoization.
  * It increase the table rendering performance 
  */
 @Pipe({

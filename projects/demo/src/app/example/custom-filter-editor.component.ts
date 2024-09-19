@@ -8,7 +8,6 @@ import { BooleanFilterComponent } from './custom-filter/boolean-filter.component
   standalone: true,
   imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
   templateUrl: './custom-filter-editor.component.html',
-  styleUrl: './custom-filter-editor.component.scss'
 })
 export class CustomFilterEditorComponent {
 

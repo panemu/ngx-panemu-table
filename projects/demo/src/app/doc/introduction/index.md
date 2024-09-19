@@ -46,7 +46,7 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 - Searching
 - Grouping
 - Column Resizable
-- Customizable table cell
+- Customizable table cell, header, row group, filter editor, css styles and classes etc.
 - Sticky column
 - Group multiple columns under one cell header ✨
 - Cell Expansion (v.0.0.6). See `*CellExpansionPage`. ✨ 
@@ -54,6 +54,8 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
+
+{{ NgDocActions.demo("BasicComponent") }}
 
 ## More In The Future
 

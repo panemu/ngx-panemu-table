@@ -16,9 +16,15 @@ export class CustomCellComponent implements OnInit {
   genderCellTemplate = viewChild<TemplateRef<any>>('genderCellTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   columns = this.pts.buildColumns<People>([
+    { field: 'id'},
     { field: 'name' },
     { field: 'gender', cellRenderer: DefaultCellRenderer.create(this.genderCellTemplate) },
-    { field: 'country', cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
+    { 
+      field: 'country', 
+      cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
+      type: ColumnType.MAP,
+      valueMap: this.dataService.getCountryMap()
+    },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'email' },
     { field: 'enrolled', type: ColumnType.DATE },
@@ -27,7 +33,8 @@ export class CustomCellComponent implements OnInit {
       type: ColumnType.COMPUTED,
       formatter: (val: any) => '',
       cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
-      sticky: 'end'
+      sticky: 'end',
+      resizable: false
     },
   ])
   datasource = new PanemuTableDataSource<People>;
@@ -36,6 +43,7 @@ export class CustomCellComponent implements OnInit {
   constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
+    // this.controller.groupByColumns = [{field: 'country'}]
     this.dataService.getPeople().subscribe(result => {
       this.datasource.setData(result);
       this.controller.reloadData();

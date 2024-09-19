@@ -1,7 +1,7 @@
 import { Observable, of } from "rxjs";
-import { RowGroupModel } from "../row/row-group";
 import { TableData } from "../table-data";
 import { GroupBy, SortingInfo, TableCriteria, TableQuery } from "../table-query";
+import { RowGroupData } from "../row/row-group";
 
 const BETWEEN_EQ_START_EQ_END = '..';
 const BETWEEN_EQ_START = '.,';
@@ -56,7 +56,7 @@ export class PanemuTableDataSource<T> {
     }
     // const startTime = new Date()
     //filter
-    let result: T[] | RowGroupModel[] = this.filter(this._data, tableQuery.tableCriteria);
+    let result: T[] | RowGroupData[] = this.filter(this._data, tableQuery.tableCriteria);
 
     //sort
     this.sort(result, tableQuery.sortingInfos)
@@ -74,10 +74,10 @@ export class PanemuTableDataSource<T> {
     return of({
       rows: result,
       totalRows
-    } as any);
+    });
   }
 
-  private group(result: T[], groupBy?: GroupBy): RowGroupModel[] | null {
+  private group(result: T[], groupBy?: GroupBy): RowGroupData[] | null {
     if (!groupBy) {
       return null;
     }

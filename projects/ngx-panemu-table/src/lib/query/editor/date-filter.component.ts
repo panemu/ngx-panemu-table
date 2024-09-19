@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, WritableSignal } from '@angular/core';
-import { FilterEditor } from './filter-editor';
-import { PropertyColumn } from '../../column/column';
-import { Filter } from '../filter';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { formatDateToIso } from '../../util';
+import { PropertyColumn } from '../../column/column';
 import { TableCriteria } from '../../table-query';
+import { formatDateToIso } from '../../util';
+import { FilterEditor } from './filter-editor';
 
 @Component({
   standalone: true,
@@ -13,9 +12,9 @@ import { TableCriteria } from '../../table-query';
 })
 export class DateFilterComponent implements OnInit, FilterEditor {
 
-  @Input({ required: true }) column!: PropertyColumn<any>;
-  @Input({ required: true }) filter!: TableCriteria;
-  @Input({ required: true }) value!: WritableSignal<string|undefined|null>
+  column!: PropertyColumn<any>;
+  filter!: TableCriteria;
+  value!: WritableSignal<string|undefined|null>
   
   txt = new FormControl('');
   

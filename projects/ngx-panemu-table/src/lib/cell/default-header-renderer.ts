@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, Signal, TemplateRef } from '@angular/core';
 import { PropertyColumn } from '../column/column';
 import { HeaderComponent, HeaderRenderer } from './header';
 import { CommonModule } from '@angular/common';
@@ -15,10 +15,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   standalone: true
 })
-export class DefaultHeaderRenderer implements OnInit, HeaderComponent<any> {
+export class DefaultHeaderRenderer implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>
-  templateRef?: Signal<TemplateRef<any>>;
   parameter: any;
+  templateRef?: Signal<TemplateRef<any>>;
 
   ngOnInit(): void {
     this.templateRef = this.parameter?.templateRef

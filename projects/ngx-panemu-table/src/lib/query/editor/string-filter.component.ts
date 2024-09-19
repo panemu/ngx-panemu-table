@@ -10,9 +10,9 @@ import { TableCriteria } from '../../table-query';
   templateUrl: './string-filter.component.html',
 })
 export class StringFilterComponent implements OnInit, FilterEditor {
-  @Input({ required: true }) column!: PropertyColumn<any>;
-  @Input({ required: true }) filter!: TableCriteria;
-  @Input({ required: true }) value!: WritableSignal<string|undefined|null>
+  column!: PropertyColumn<any>;
+  filter!: TableCriteria;
+  value!: WritableSignal<string|undefined|null>
   
   txt = new FormControl('');
   

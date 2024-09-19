@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, Signal, TemplateRef, Type } from '@angular/core';
+import { Component, Input, OnInit, signal, Signal, TemplateRef, Type } from '@angular/core';
 import { CellComponent } from './cell';
 import { PropertyColumn } from '../column/column';
-import { GenericCellPipe } from './generic-cell.pipe';
+import { CellFormatterPipe } from './cell-formatter.pipe';
 import { ExpansionRowRenderer } from '../row/expansion-row';
 
 @Component({
@@ -12,21 +12,23 @@ import { ExpansionRowRenderer } from '../row/expansion-row';
         {{expanded() ? 'expand_more' : 'chevron_right'}}
         </span>
      </button>
-      <span>{{row[column.field] | genericCell:row:column}}</span>
+      <span>{{row[column.field] | cellFormatter:row:column}}</span>
    </div>
    `,
   standalone: true,
-  imports: [GenericCellPipe]
+  imports: [CellFormatterPipe]
 })
 
 export class ExpansionCellRenderer implements OnInit, CellComponent<any> {
   row!: any;
-  column!: PropertyColumn<any>
+  column!: PropertyColumn<any>;
+
   parameter?: { 
     component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<any>>, 
     isDisabled?: (row: any) => boolean ,
     buttonPosition?: 'start' | 'end'
   };
+  
   disabled = false;
   expanded = signal(false);
   position = '';

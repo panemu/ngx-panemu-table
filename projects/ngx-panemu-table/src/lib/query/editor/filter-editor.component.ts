@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
@@ -7,11 +7,12 @@ import { PropertyColumn } from '../../column/column';
 import { TableCriteria } from '../../table-query';
 import { FilterEditor } from './filter-editor';
 import { StringFilterComponent } from './string-filter.component';
+import { FilterEditorDirective } from './filter-editor.directive';
 
 @Component({
   selector: 'panemu-filter-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective],
   templateUrl: './filter-editor.component.html',
 })
 export class FilterEditorComponent implements OnInit {
@@ -19,11 +20,12 @@ export class FilterEditorComponent implements OnInit {
   // criteria!: TableCriteria
   field = new FormControl('');
   filter!: TableCriteria;
-  editorComponent?: Type<FilterEditor>
-  column?: PropertyColumn<any>
+  editorComponent?: Type<FilterEditor> | null
+  column!: PropertyColumn<any>
   value = signal<string|undefined|null>('');
-
+  editor = viewChild<TemplateRef<any>>('editor')
   constructor(private dialogRef: MatDialogRef<FilterEditorComponent, TableCriteria>,
+    private cdr: ChangeDetectorRef
   ) {
 
   }
@@ -37,12 +39,13 @@ export class FilterEditorComponent implements OnInit {
   }
 
   private resetEditor(f: string | null) {
-    this.column = this.columns.find(item => item.field == f);
-    if (this.column) {
+    // if (this.editor()) this.editor().
+    this.column = this.columns.find(item => item.field == f)!;
+    // this.editorComponent = null;
+    // setTimeout(() => {
       this.editorComponent = this.column?.filterEditor || StringFilterComponent;
-    } else {
-      this.editorComponent = undefined;
-    }
+    // });
+    // this.cdr.markForCheck();
   }
 
   cancel() {

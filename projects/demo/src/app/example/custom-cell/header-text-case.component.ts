@@ -10,7 +10,7 @@ type TextCase = 'normal' | 'upper' | 'lower'
   imports: [CommonModule, ReactiveFormsModule],
   standalone: true
 })
-export class HeaderTextCaseComponent implements OnInit, HeaderComponent<any> {
+export class HeaderTextCaseComponent implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>;
   rdbCase = new FormControl('upper' as TextCase)
   constructor() { }

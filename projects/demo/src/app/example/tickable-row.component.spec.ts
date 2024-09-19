@@ -42,7 +42,7 @@ describe('TickableRowComponent', () => {
     expect(checkboxHeader.checked).toBe(false);
     expect(checkboxHeader.indeterminate).toBe(false);
     expect(component.clmTick.getTickedRows().length).toBe(0);
-    const tickCheckboxes = componentEl.querySelectorAll('.panemu-table .cdk-column-__tick_0_0 input') as NodeListOf<HTMLInputElement>;
+    const tickCheckboxes = componentEl.querySelectorAll('.panemu-table .__tick_0_0 input') as NodeListOf<HTMLInputElement>;
     expect(tickCheckboxes.length).toBe(100);
     
     //========= tick first row programmatically

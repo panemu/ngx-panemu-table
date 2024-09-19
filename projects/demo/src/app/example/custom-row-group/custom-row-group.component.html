@@ -1,0 +1,32 @@
+<div class="flex flex-col h-[500px] gap-4">
+  
+  <div class="flex relative justify-center">
+    <panemu-query [controller]="controller" />
+  </div>
+  <div class="flex-grow overflow-auto">
+    <panemu-table [controller]="controller" />
+  </div>
+  <div class="flex gap-4">
+    <button (click)="defaultRowGroup()">Default RowGroup</button>
+    <button (click)="customRowGroupTemplate()">Custom Template (No Pagination)</button>
+    <button (click)="customRowGroupComponent()">Custom Content Component</button>
+    <button (click)="customRowGroup()">Custom Component</button>
+  </div>
+</div>
+
+<ng-template #genderGroupTemplate let-rowGroup>
+  <div class="flex items-center">
+    <span class="material-symbols-outlined text-2xl ">
+      {{rowGroup.data.value == 'M' ? 'male' : 'female'}}
+    </span>
+    <span>{{rowGroup.data.count}}</span>
+  </div>
+</ng-template>
+
+<ng-template #countryGroupTemplate let-rowGroup="rowGroupa">
+  <div class="flex items-center gap-2">
+    <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
+    <img width="24px" src="assets/flags/{{rowGroup.data.value?.toLowerCase()}}.svg">
+    <span class="group-label">{{rowGroup.data.value | groupCell:rowGroup.formatter}} - ({{rowGroup.data.count}})</span>
+  </div>
+</ng-template>

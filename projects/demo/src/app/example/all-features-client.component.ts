@@ -23,11 +23,12 @@ export class AllFeaturesClientComponent implements OnInit {
     expansion: { component: PeopleFormComponent },
     sticky: 'end',
     width: 80,
+    resizable: false,
     cellStyle: (_: string) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
   };
 
   columns = this.pts.buildColumns<People>([
-    new TickColumnClass<People>({ width: 40 }),
+    new TickColumnClass<People>({ width: 50 }),
     { field: 'id', type: ColumnType.INT, width: 50 },
     { field: 'name', width: 150 },
     { field: 'email', width: 230, expansion: {
@@ -37,7 +38,7 @@ export class AllFeaturesClientComponent implements OnInit {
       },
     } },
     { field: 'gender', width: 80, type: ColumnType.MAP, valueMap: this.genderMap },
-    { field: 'country', width: 150, cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
+    { field: 'country', width: 150, type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
     { field: 'amount', width: 100, type: ColumnType.DECIMAL },
     {
       type: ColumnType.GROUP, label: 'Date Info', children: [

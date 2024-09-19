@@ -1,4 +1,106 @@
-<ng-template #columnHeader let-column='column'>
+<div class="panemu-table">
+  <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
+  
+  <div [class.v-scrollable]="verticalScroll" style="overflow: auto;">
+    <table #panemuTable class="table">
+      <colgroup>
+        @for (column of _visibleColumns; track $index) {
+          <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
+        }
+      </colgroup>
+      <thead >
+        @for (header of columnDefinition.header; track header) {
+          <tr>
+            @for (cell of header.cells; track cell.__key; let idx = $index) {
+              <ng-container *ngIf="cell.resizable; else notResizable">
+                <th class="default-header" 
+                  [attr.data-col]="'th_' + cell.__key!" 
+                  [attr.group]="cell.__isGroup"
+                  [attr.rowspan]="cell.__rowSpan" 
+                  [attr.colspan]="cell.__colSpan" 
+                  [resizable]="cell.width!" 
+                  [columnId]="'th_' + cell.__key!" 
+                  [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
+                  [table]="matTable">
+                  <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
+                </th>
+              </ng-container>
+              <ng-template #notResizable>
+                <th class="default-header" 
+                  [attr.data-col]="'th_' + cell.__key!"
+                  [attr.group]="cell.__isGroup"
+                  [attr.rowspan]="cell.__rowSpan" 
+                  [attr.colspan]="cell.__colSpan" 
+                  [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
+                  >
+                  <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
+                </th>
+              </ng-template>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of dataSource; track row) {
+
+          @if (isGroup($index, row)) {
+
+            <tr >
+              <ng-template [rowGroupRenderer]="$any(row).column.rowGroupRenderer" [rowGroup]="$any(row)" [colSpan]="_displayedColumns.length" [expandAction]="groupHeaderClick.bind(this)"></ng-template>
+            </tr>
+
+          } @else if (isExpansionRow($index, row)) {
+
+            <tr>
+              <td [attr.colspan]="_displayedColumns.length">
+                @if($any(row).isTemplateRef()) {
+                  <ng-container 
+                  [ngTemplateOutlet]="$any(row).component()" 
+                  [ngTemplateOutletContext]="{row: $any(row).row, column: $any(row).column, close: $any(row).close.bind($any(row))}">
+
+                  </ng-container>
+                } @else {
+                  <ng-template 
+                    [expansionRowRenderer]="$any(row).component" 
+                    [row]="$any(row).row" 
+                    [column]="$any(row).column" 
+                    [close]="$any(row).close.bind($any(row))">
+                  </ng-template>
+                }
+              </td>
+            </tr>
+
+          } @else {
+
+            <tr class="row {{row | rowStyling:rowOptions.rowClass}}"
+            [style]="row | rowStyling:rowOptions.rowStyle"
+            [class.selected-row]="_controllerSelectedRowSignal() == row" 
+            (click)="selectRow($any(row))">
+
+              @for (column of _visibleColumns; track column) {
+
+                <td 
+                  class="default-cell {{column.__key!}} {{$any(row)[column.field] | cellStyling:row:column.cellClass}}" 
+                  [style]="$any(row)[column.field] | cellStyling:row:column.cellStyle"
+                  [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+                  >
+                  <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
+                </td>
+              }
+            </tr>
+
+          }
+          
+        }
+      </tbody>
+      
+      
+    </table>
+  </div>
+  <div class="no-data" *ngIf="controller() && !dataSource?.length"> {{labelTranslation.noData}} </div>
+</div>
+
+<ng-template #columnHeader let-column="column">
   <div class="column-header" [class.sortable]="column.sortable" (click)="sort(column)">
     <ng-template [headerRenderer]="column" ></ng-template>
     <span *ngIf="controller().sortedColumn[column.field]" class="material-symbols-outlined">
@@ -6,102 +108,3 @@
     </span>
   </div>
 </ng-template>
-<div class="panemu-table">
-  <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
-  
-  <div class="" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: auto;">
-    <table #panemuTable mat-table [dataSource]="dataSource" class="table" [fixedLayout]="false" >
-      <colgroup>
-        @for (column of _visibleColumns; track $index) {
-          <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
-        }
-      </colgroup>
-      @for (header of headers; track $index; let idx = $index) {
-        @for (cell of header.cells; track cell.__key) {
-          <ng-container [matColumnDef]="'th_' + cell.__key!" [sticky]="cell.sticky == 'start'" [stickyEnd]="cell.sticky == 'end'">
-            <ng-container *ngIf="cell.resizable; else notResizable">
-              <th mat-header-cell class="default-header" 
-                [attr.data-col]="'th_' + cell.__key!" 
-                [attr.group]="cell.__isGroup"
-                [attr.rowspan]="cell.__rowSpan" 
-                [attr.colspan]="cell.__colSpan" 
-                [resizable]="cell.width!" 
-                [columnId]="'th_' + cell.__key!" 
-                [table]="matTable" *matHeaderCellDef>
-                <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
-              </th>
-            </ng-container>
-            <ng-template #notResizable>
-              <th mat-header-cell class="default-header" 
-                [attr.data-col]="'th_' + cell.__key!"
-                [attr.group]="cell.__isGroup"
-                [attr.rowspan]="cell.__rowSpan" 
-                [attr.colspan]="cell.__colSpan" 
-                *matHeaderCellDef>
-                <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
-              </th>
-            </ng-template>
-            
-          </ng-container>
-        }
-        <tr mat-header-row *matHeaderRowDef="header.keys; sticky: true" class="row-header"></tr>
-      }
-
-      @for (column of _visibleColumns; track $index) {
-        <ng-container [matColumnDef]="column.__key!" [sticky]="column.sticky == 'start'" [stickyEnd]="column.sticky == 'end'">
-          <!-- This is a hack to support Grouped Column feature. Without it , the header won't show -->
-          <th *matHeaderCellDef style="display: none; height: 0;"></th>
-          
-          <td mat-cell *matCellDef="let row;" 
-            class="default-cell {{row[column.field] | cellStyling:row:column.cellClass}}" 
-            [style]="row[column.field] | cellStyling:row:column.cellStyle">
-            <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
-          </td>
-        </ng-container>
-      }
-      
-      <!-- This is a hack to support Grouped Column feature. Without it , the header won't show -->
-      <tr *matHeaderRowDef="_displayedColumns;" ></tr>
-
-      <tr mat-row *matRowDef="let row; columns: _displayedColumns;when: !isGroup" 
-        class="row {{row | rowStyling:rowOptions.rowClass}}"
-        [style]="row | rowStyling:rowOptions.rowStyle"
-        [class.selected-row]="_controllerSelectedRowSignal() == row" 
-        (click)="selectRow(row)">
-      </tr>
-      
-      <!-- Group header -->
-      <ng-container matColumnDef="groupHeader">
-        <td mat-cell [attr.colspan]="_displayedColumns.length" *matCellDef="let group"
-          [style]="'padding-left: '+(group.level * 20) + 'px;'">
-          <div class="group-row">
-            <div class="group-cell" (click)="groupHeaderClick(group)">
-              <span class="material-symbols-outlined" *ngIf="group.expanded">arrow_drop_down</span>
-              <span class="material-symbols-outlined" *ngIf="!group.expanded">arrow_right</span>
-              <span class="group-label">{{group.value | groupCell:group.formatter}} ({{group.count}})</span>
-              <span *ngIf="group.controller?.loading | async" style="margin-left: 12px;">
-                <pnm-spinning-icon/>
-              </span>
-            </div>
-            <ng-container *ngIf="group.expanded && group.controller">
-              <panemu-pagination [controller]="group.controller" [group]="group" class="row-group-pagination"></panemu-pagination>
-            </ng-container>
-          </div>
-        </td>
-      </ng-container>
-      <tr mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
-
-      <ng-container matColumnDef="detailRow">
-        <td mat-cell [attr.colspan]="_displayedColumns.length" *matCellDef="let detail">
-          @if(detail.isTemplateRef()) {
-            <ng-container [ngTemplateOutlet]="detail.component()" [ngTemplateOutletContext]="{row: detail.row, column: detail.column, close: detail.close.bind(detail)}"></ng-container>
-          } @else {
-            <ng-container *ngComponentOutlet="detail.component; inputs: {row: detail.row, column: detail.column, close: detail.close.bind(detail)}" ></ng-container>
-          }
-        </td>
-      </ng-container>
-      <tr mat-row *matRowDef="let row; columns: ['detailRow']; when: isExpansionRow"></tr>
-    </table>
-  </div>
-  <div class="no-data" *ngIf="controller() && !dataSource?.length"> {{labelTranslation.noData}} </div>
-</div>

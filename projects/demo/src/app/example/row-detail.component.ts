@@ -16,7 +16,7 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
 export class RowDetailComponent {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
-
+  
   private readonly clmEditInExpansion: ComputedColumn = {
     type: ColumnType.COMPUTED,
     formatter: (val: any) => '',

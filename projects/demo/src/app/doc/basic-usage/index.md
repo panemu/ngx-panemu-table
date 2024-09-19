@@ -13,9 +13,11 @@ keyword: BasicUsagePage
 
 ```
 
+In that snippet, the `verticalScroll` property is set to false. It will displays all rows and the table height will adjust accordingly.
+
 After that, pass the controller to `PanemuTableComponent`.
 
-```html file="../../example/basic.component.html"#L2
+```html file="../../example/basic.component.html"#L1
 
 ```
 

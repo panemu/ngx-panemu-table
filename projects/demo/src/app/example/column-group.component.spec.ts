@@ -31,7 +31,7 @@ describe('ColumnGroupComponent', () => {
     const componentDe: DebugElement = fixture.debugElement;
     const componentEl: HTMLElement = componentDe.nativeElement;
     const trList = componentEl.querySelectorAll('table thead tr');
-    expect(trList.length).toBe(3);//the last tr is a hidden tr
+    expect(trList.length).toBe(2);
 
     const firstThList = trList[0].querySelectorAll('th');
     expect(firstThList.length).toBe(6);
@@ -54,7 +54,7 @@ describe('ColumnGroupComponent', () => {
     expect(firstThList[5].getAttribute('rowspan')).toBe('2');
     expect(firstThList[5].getAttribute('colspan')).toBe('1');
 
-    const secondThList = trList[1].querySelectorAll('th[role="columnheader"]');
+    const secondThList = trList[1].querySelectorAll('th');
     expect(secondThList.length).toBe(5);//9 hidden columns as a hack. 5 visisble
 
     secondThList.forEach(item => {
@@ -78,7 +78,7 @@ describe('ColumnGroupComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     const trList = componentEl.querySelectorAll('table thead tr');
-    expect(trList.length).toBe(4);//the last tr is a hidden tr
+    expect(trList.length).toBe(3);
 
     const firstThList = trList[0].querySelectorAll('th');
     expect(firstThList.length).toBe(4);
@@ -108,7 +108,7 @@ describe('ColumnGroupComponent', () => {
     expect(secondThList[2].getAttribute('rowspan')).toBe('2');
     expect(secondThList[2].getAttribute('colspan')).toBe('1');
 
-    const thirdThList = trList[2].querySelectorAll('th[role="columnheader"]');
+    const thirdThList = trList[2].querySelectorAll('th');
     expect(thirdThList.length).toBe(5);
 
     thirdThList.forEach(item => {
@@ -131,9 +131,9 @@ describe('ColumnGroupComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     const trList = componentEl.querySelectorAll('table thead tr');
-    expect(trList.length).toBe(2);//the last tr is a hidden tr
+    expect(trList.length).toBe(1);
 
-    const firstThList = trList[0].querySelectorAll('th[role="columnheader"]');
+    const firstThList = trList[0].querySelectorAll('th');
     expect(firstThList.length).toBe(9);
     firstThList.forEach(item => {
       expect(item.getAttribute('rowspan')).toBe('1');

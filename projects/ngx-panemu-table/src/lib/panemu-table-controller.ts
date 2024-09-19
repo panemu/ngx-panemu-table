@@ -3,11 +3,11 @@ import { BehaviorSubject, catchError, finalize, Observable, of, Subject, switchM
 import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
-import { RowGroup, RowGroupModel } from "./row/row-group";
+import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
+import { RowGroup, RowGroupData } from "./row/row-group";
+import { RowOptions } from "./row/row-options";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
-import { RowOptions } from "./row/row-options";
-import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
 import { formatDateToIso, isDataRow, toDate } from "./util";
 
 /**
@@ -22,7 +22,7 @@ import { formatDateToIso, isDataRow, toDate } from "./util";
  */
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
 
-type DisplayDataFunction<T> = (data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) => void;
+type DisplayDataFunction<T> = (data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) => void;
 
 type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) => void
 
@@ -286,7 +286,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       return tq;
     }
 
-    groupController.__tableDisplayData = (data: T[] | RowGroupModel[], parent?: RowGroup, groupField?: GroupBy) => {
+    groupController.__tableDisplayData = (data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) => {
       this.__tableDisplayData!(data, group, groupField);
     };
     
@@ -297,14 +297,14 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     if (group.parent) {
       this.buildCriteriaRecursively(group.parent, tableCriteria);
     }
-    let val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.value : `"${group.value}"`;
+    let val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.data.value : `"${group.data.value}"`;
     if (group.modifier == 'year') {
-      let nextYear = +(group.value) + 1;
-      val = `${group.value}-01-01.,${nextYear}-01-01`;
+      let nextYear = +(group.data.value) + 1;
+      val = `${group.data.value}-01-01.,${nextYear}-01-01`;
     } else if (group.modifier == 'month') {
-      let endMonth = toDate(group.value + '-01');
+      let endMonth = toDate(group.data.value + '-01');
       endMonth.setMonth(endMonth.getMonth() + 1);
-      val = group.value + '-01' + '.,' + formatDateToIso(endMonth);
+      val = group.data.value + '-01' + '.,' + formatDateToIso(endMonth);
 
     }
     tableCriteria.push({ field: group.field, value: val });
@@ -433,7 +433,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       
       if (row instanceof RowGroup) {
         if (csvOption.includeRowGroup) {
-          csvRow.push(this.escapeCsvText(row.formatter(row.value) + ` (${row.count})`));
+          csvRow.push(this.escapeCsvText(row.formatter(row.data.value) + ` (${row.data.count || 0})`));
           for (let index = 1; index < visibleCols.length; index++) {
             csvRow.push('');
           }

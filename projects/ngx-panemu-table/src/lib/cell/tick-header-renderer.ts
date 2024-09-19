@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, Input, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TickColumnClass } from '../column/tick-column-class';
 import { PropertyColumn } from '../column/column';
@@ -21,10 +21,9 @@ import { isDataRow } from '../util';
    }
    `
 })
-
-export class TickHeaderRenderer implements HeaderComponent<any> {
-   checkbox = viewChild<ElementRef<HTMLInputElement>>('checkbox');
+export class TickHeaderRenderer implements HeaderComponent {
    column!: PropertyColumn<any>
+   checkbox = viewChild<ElementRef<HTMLInputElement>>('checkbox');
    partialChecked = false
    allChecked = false;
    constructor() {

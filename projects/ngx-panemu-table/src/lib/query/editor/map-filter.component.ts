@@ -12,9 +12,9 @@ import { TableCriteria } from '../../table-query';
 })
 export class MapFilterComponent implements OnInit, FilterEditor, OnChanges {
   
-  @Input({ required: true }) column!: MapColumn<any>;
-  @Input({ required: true }) filter!: TableCriteria;
-  @Input({ required: true }) value!: WritableSignal<string|undefined|null>;
+  column!: MapColumn<any>;
+  filter!: TableCriteria;
+  value!: WritableSignal<string|undefined|null>;
   
   cmb = new FormControl('');
   options: string[][] = [];

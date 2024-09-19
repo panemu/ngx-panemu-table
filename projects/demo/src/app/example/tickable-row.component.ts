@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -14,6 +14,7 @@ export class TickableRowComponent implements OnInit {
   
   clmTick = new TickColumnClass<People>()
   clmTick2 = new TickColumnClass<People>({ label: 'Tick 2', sticky: null, checkBoxHeader: false, isDisabled: (row) => row.gender == 'M' })
+  
   columns = this.pts.buildColumns<People>([
     this.clmTick,
     { field: 'id', },
@@ -26,10 +27,13 @@ export class TickableRowComponent implements OnInit {
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
   ])
+  
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
+  constructor(private dataService: DataService, private pts: PanemuTableService) {
+   
+   }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {
@@ -52,6 +56,7 @@ export class TickableRowComponent implements OnInit {
 
   getTickedRows() {
     const tickedRows = this.clmTick.getTickedRows().length;
+    
     alert('Ticked Rows: ' + tickedRows);
   }
 }

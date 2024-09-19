@@ -14,6 +14,9 @@ import { ColumnGroupComponent } from './example/column-group.component';
 import { RowDetailComponent } from './example/row-detail.component';
 import { CustomHeaderComponent } from './example/custom-header.component';
 import { CustomFilterEditorComponent } from './example/custom-filter-editor.component';
+import { CustomRowGroupComponent } from './example/custom-row-group/custom-row-group.component';
+import { DateColumnComponent } from './doc/columns/date-column/date-column.component';
+import { VerticalScrollComponent } from './example/vertical-scroll.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -21,7 +24,7 @@ export const routes: Routes = [
 	{ path: 'column-type', component: ColumnTypeComponent },
 	// { path: 'column-width', component: ColumnWidthComponent },
 	{ path: 'computed', component: ComputedComponent },
-	// { path: 'pagination', component: PaginationComponent },
+	{ path: 'date-column', component: DateColumnComponent },
 	{ path: 'all-features-client', component: AllFeaturesClientComponent },
 	{ path: 'tick', component: TickableRowComponent },
 	{ path: 'all-features-server', component: AllFeaturesServerComponent },
@@ -34,5 +37,7 @@ export const routes: Routes = [
 	{ path: 'row-detail', component: RowDetailComponent },
 	{ path: 'custom-header', component: CustomHeaderComponent },
 	{ path: 'custom-filter-editor', component: CustomFilterEditorComponent },
+	{ path: 'custom-row-group', component: CustomRowGroupComponent },
+	{ path: 'vertical-scroll', component: VerticalScrollComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

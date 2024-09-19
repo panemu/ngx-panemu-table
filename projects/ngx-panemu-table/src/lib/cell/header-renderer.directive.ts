@@ -12,7 +12,7 @@ export class HeaderRendererDirective implements OnInit {
 
   ngOnInit(): void {
     let componentRef = this.container.createComponent(this.column.headerRenderer!.component);
-    componentRef.instance.column = this.column!;
+    componentRef.instance.column = this.column;
     componentRef.instance.parameter = this.column.headerRenderer?.parameter;
   }
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { MapColumn, PropertyColumn } from '../column/column';
+import { Component, Input } from '@angular/core';
+import { MapColumn } from '../column/column';
 import { CellComponent } from './cell';
 import { MapCellPipe } from './map-cell.pipe';
 
@@ -12,5 +12,4 @@ import { MapCellPipe } from './map-cell.pipe';
 export class MapCellRenderer implements CellComponent<any> {
   row!: any;
   column!: MapColumn<any>
-
 }

@@ -1,26 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Signal, TemplateRef, Type } from '@angular/core';
-import { Expansion, PropertyColumn } from '../column/column';
+import { Component, Input, OnInit, Signal, TemplateRef } from '@angular/core';
+import { PropertyColumn } from '../column/column';
 import { CellComponent, CellRenderer } from './cell';
-import { GenericCellPipe } from './generic-cell.pipe';
-import { ExpansionRowRenderer } from '../row/expansion-row';
-import { ExpansionCellRenderer } from './expansion-cell-renderer';
+import { CellFormatterPipe } from './cell-formatter.pipe';
 
 @Component({
   templateUrl: 'default-cell-renderer.html',
   standalone: true,
-  imports: [CommonModule, GenericCellPipe]
+  imports: [CommonModule, CellFormatterPipe]
 })
 export class DefaultCellRenderer implements CellComponent<any>, OnInit {
   row!: any;
   column!: PropertyColumn<any>
-  templateRef?: Signal<TemplateRef<any>>;
   parameter?: any;
+  templateRef?: Signal<TemplateRef<any>>;
   
   ngOnInit(): void {
     this.templateRef = this.parameter?.templateRef
   }
   
+  /**
+   * Create a custom cell renderer using `ng-template`.
+   * @param templateRef 
+   * @returns 
+   */
   static create(templateRef?: Signal<TemplateRef<any> | undefined>): CellRenderer {
     return {
       component: DefaultCellRenderer,

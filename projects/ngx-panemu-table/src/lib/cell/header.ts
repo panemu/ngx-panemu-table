@@ -1,12 +1,18 @@
 import { Type } from "@angular/core";
 import { PropertyColumn } from "../column/column";
 
-export interface HeaderRenderer {
-  component: Type<HeaderComponent<any>>,
+/**
+ * Interface for header component. 
+ */
+export interface HeaderComponent {
+  column: PropertyColumn<any>
   parameter?: any;
 }
 
-export interface HeaderComponent<T> {
-  column: PropertyColumn<T>
+/**
+ * 
+ */
+export interface HeaderRenderer {
+  component: Type<HeaderComponent>,
   parameter?: any;
 }
