@@ -1,7 +1,7 @@
 /**
  * Default values for `BaseColumn` and its extension.
  * 
- * Override `PanemuTableService.getDefaultColumnOptions` method
+ * Override `PanemuTableService.getColumnOptions` method
  * to change it app-wide. Pass to `PanemuTableService.buildColumns` to provide default values for one single table.
  */
 export interface DefaultColumnOptions {

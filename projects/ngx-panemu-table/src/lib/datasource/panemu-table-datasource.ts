@@ -6,6 +6,7 @@ import { RowGroupData } from "../row/row-group";
 const BETWEEN_EQ_START_EQ_END = '..';
 const BETWEEN_EQ_START = '.,';
 const BETWEEN_EQ_END = ',.';
+const BETWEEN = ',,';
 /**
  * A convenience datasource class that handle client side sorting, filtering, grouping and pagination.
  */
@@ -41,7 +42,7 @@ export class PanemuTableDataSource<T> {
   }
 
   /**
-   * Get data from specified `start` index, maximum of `maxRows` is taken, matching the criteria in `tableQuery`.
+   * Get data with the specified `start` index, maximum of `maxRows` is taken, matching the criteria in `tableQuery`.
    * @param start 
    * @param maxRows 
    * @param tableQuery 
@@ -77,7 +78,7 @@ export class PanemuTableDataSource<T> {
     });
   }
 
-  private group(result: T[], groupBy?: GroupBy): RowGroupData[] | null {
+  protected group(result: T[], groupBy?: GroupBy): RowGroupData[] | null {
     if (!groupBy) {
       return null;
     }
@@ -107,47 +108,57 @@ export class PanemuTableDataSource<T> {
     }))
   }
 
-  private toYear(value: string) {
+  protected toYear(value: string) {
     if (!value) return value;
     return value.split('-')[0] || value;
   }
 
-  private toMonth(value: string) {
+  protected toMonth(value: string) {
     if (!value) return value;
     let parts = value.split('-');
     return `${parts[0]}-${parts[1]}` || value;
   }
 
-  private toDate(value: string) {
+  protected toDate(value: string) {
     if (!value) return value;
     return value.substring(0, 10);
   }
 
 
-  private filter(result: T[], tableCriteria: TableCriteria[]) {
+  protected filter(result: T[], tableCriteria: TableCriteria[]) {
     if (!tableCriteria?.length) {
       return [...result];
     }
 
     result = result.filter((a: any) => {
-      let result = false;
+      let filterResult = false;
       for (const crit of tableCriteria) {
-        let value = a[crit.field] + '';
+        let value = a[crit.field];
+        let hasBeenChecked = false;
         if (typeof crit.value == 'string') {
           if (crit.value.includes(BETWEEN_EQ_START_EQ_END)) {
-            return this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
+            hasBeenChecked = true;
           } else if (crit.value.includes(BETWEEN_EQ_START)) {
-            return this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
+            hasBeenChecked = true;
           } else if (crit.value.includes(BETWEEN_EQ_END)) {
-            return this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+            hasBeenChecked = true;
+          } else if (crit.value.includes(BETWEEN)) {
+            filterResult = this.betweenFilter(BETWEEN, value, crit.value);
+            hasBeenChecked = true;
           }
         }
-        if (typeof value == 'number') {
-          result = value == (+crit.value)
-        } else {
-          result = (value).toLowerCase().includes((crit.value + '').replaceAll('"', '').toLowerCase() )
+        if (!hasBeenChecked) {
+          if (typeof value == 'number') {
+            filterResult = value == (+crit.value)
+          } else {
+            value = value + '';
+            filterResult = (value).toLowerCase().includes((crit.value + '').replaceAll('"', '').toLowerCase() )
+          }
         }
-        if (!result) {
+        if (!filterResult) {
           return false;
         }
       }
@@ -156,16 +167,24 @@ export class PanemuTableDataSource<T> {
     return result;
   }
 
-  private betweenFilter(betweenOperator: string, value: string, criteriaValue: string) {
-    let startValue = criteriaValue.substring(0,criteriaValue.indexOf(betweenOperator)).trim();
-    let endValue = criteriaValue.substring(criteriaValue.indexOf(betweenOperator) + 2).trim();
+  protected betweenFilter(betweenOperator: string, value: any, criteriaValue: string) {
+    let startValue: any = criteriaValue.substring(0,criteriaValue.indexOf(betweenOperator)).trim();
+    let endValue: any = criteriaValue.substring(criteriaValue.indexOf(betweenOperator) + 2).trim();
+
+    if (typeof value == 'number') {
+      startValue = +startValue
+      endValue = +endValue
+    }
     let firstFunction = betweenOperator[0] == '.' ? (val: any) => val >= startValue : (val: any) => val > startValue;
+    if (!endValue) {
+      return firstFunction(value);
+    }
     let secondFunction = betweenOperator[1] == '.' ? (val: any) => val <= endValue : (val: any) => val < endValue;
 
     return firstFunction(value) && secondFunction(value);
   }
 
-  private sort(result: T[], sortings: SortingInfo[]) {
+  protected sort(result: T[], sortings: SortingInfo[]) {
     if (!sortings?.length) {
       return;
     }

@@ -30,6 +30,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _criteria: Filter[] = [];
   labelTranslation: LabelTranslation;
   searchTitle = '';
+  hasGroupableColumn = true;
   @ViewChild('txtCriteriaElement', {read: MatAutocompleteTrigger}) txtCriteriaElement!: MatAutocompleteTrigger;
 
 
@@ -68,7 +69,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (selectedColumn?.type == ColumnType.MAP && (selectedColumn as MapColumn<any>).valueMap) {
           const valueMap = (selectedColumn as MapColumn<any>).valueMap;
           const map: {[key: string] : any} = isSignal(valueMap) ? (valueMap as Signal<any>)() : valueMap;
-          let mapValue = Object.keys(map).find(key => map[key].toLowerCase() == criteriaValue!.toLowerCase());
+          let mapValue = map[criteriaValue] ? criteriaValue : Object.keys(map).find(key => map[key].toLowerCase() == criteriaValue!.toLowerCase());
           if (!mapValue) {
             mapValue = Object.keys(map).find(key => (map[key] as string).toLowerCase().startsWith(criteriaValue!.toLowerCase()));
             if (!mapValue) {
@@ -93,10 +94,11 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private onControllerChange(): void {
     if (!this.controller()) return;
+    this.hasGroupableColumn = !!this.controller().columnDefinition.body.find(item => !!item.groupable);
     this._columns = (this.controller().columnDefinition.body as PropertyColumn<any>[]).filter(item => !!item.field);
     this._filterableColumns = this._columns.filter(item => item.filterable);
     this.$subscription.add(
-      this.controller().__onReload().subscribe({
+      this.controller().beforeReloadEvent.subscribe({
         next: _ => {
           this._criteria = this.controller().criteria.map(item => {
             let column = this._columns.find(clm => clm.field == item.field);

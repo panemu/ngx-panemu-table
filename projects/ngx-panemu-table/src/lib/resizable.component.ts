@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Inject, Input, OnInit, Optional } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostBinding, Inject, Input, OnChanges, OnInit, Optional, SimpleChanges } from "@angular/core";
 import { ResizableDirective } from "./resizable.directive";
 import { getColElement, initTableWidth, setElementWidth } from "./util";
 
@@ -8,7 +8,7 @@ import { getColElement, initTableWidth, setElementWidth } from "./util";
   standalone: true,
   imports: [ResizableDirective]
 })
-export class ResizableComponent implements OnInit {
+export class ResizableComponent implements OnChanges {
   @Input() @Optional() resizable: number | string = 0;
   @Input({required: true}) columnId!: string;
   @Input() table!: ElementRef<HTMLElement>;
@@ -16,11 +16,14 @@ export class ResizableComponent implements OnInit {
   originalTableWidth: number = 0
   colElement?: HTMLElement
   constructor(private myElement: ElementRef) { }
+  
 
-  ngOnInit(): void {
-    this.colElement = getColElement(this.table.nativeElement, this.columnId);
-    if (+(this.resizable) > 0) {
-      setElementWidth(+this.resizable, this.colElement);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.table) {
+      this.colElement = getColElement(this.table.nativeElement, this.columnId);
+      if (+(this.resizable) > 0) {
+        setElementWidth(+this.resizable, this.colElement);
+      }
     }
   }
 

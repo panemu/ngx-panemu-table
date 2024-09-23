@@ -41,7 +41,7 @@
       }
      </mat-autocomplete>
   </div>
-  <button class="group-button" [matMenuTriggerFor]="menu">
+  <button *ngIf="hasGroupableColumn" class="group-button" [matMenuTriggerFor]="menu">
     <span class="material-symbols-outlined">
       splitscreen_top
     </span>

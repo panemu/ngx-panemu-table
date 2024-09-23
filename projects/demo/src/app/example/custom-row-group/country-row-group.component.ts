@@ -18,7 +18,13 @@ export class CountryRowGroup implements OnInit, RowGroupComponent {
   rowGroup!: RowGroup;
   expandAction!: (group: RowGroup) => void;
   parameter?: any;
+  
+  disableInteraction = false;
+
+
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.disableInteraction = this.parameter?.alwaysExpanded ?? false;
+  }
 }

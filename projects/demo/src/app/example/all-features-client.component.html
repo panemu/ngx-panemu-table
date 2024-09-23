@@ -25,3 +25,11 @@
     <button (click)=close()>Send</button>
   </div>
 </ng-template>
+
+<ng-template #countryFooter let-rowGroup="rowGroup" let-colSpan="colSpan">
+  <td [attr.colspan]="colSpan">
+    <span [style.padding-left.rem]="rowGroup.level">
+      This is group footer {{rowGroup.column.field}} {{rowGroup.data.value}} - {{rowGroup.data.count}}
+    </span>
+  </td>
+</ng-template>

@@ -1,5 +1,5 @@
 import { CellFormatter } from "../cell/cell";
-import { BaseColumn } from "../column/column";
+import { PropertyColumn } from "../column/column";
 import { PanemuTableController } from "../panemu-table-controller";
 
 /**
@@ -15,14 +15,26 @@ export interface RowGroupData {
  * Class for grouping data displayed in table.
  */
 export class RowGroup {
+
   field!: string;
-  data!: RowGroupData;
   level = 0;
   parent?: RowGroup;
   expanded = false;
-  column!: BaseColumn<any>;
   controller?: PanemuTableController<any>;
   formatter!: CellFormatter;
   modifier?: string;
+  
+  constructor(public column: PropertyColumn<any>, public data: RowGroupData) {
+    this.field = column.field as string;
+    this.formatter = column.formatter!;
+  }
 
+
+}
+
+/**
+ * Class for the footer of grouping data.
+ */
+export class RowGroupFooter {
+  constructor(public rowGroup: RowGroup){}
 }

@@ -30,8 +30,8 @@ export class CustomPanemuTableService extends PanemuTableService {
     return this.labelTranslation;
   }
 
-  override getDefaultColumnOptions(): DefaultColumnOptions {
-      const options = super.getDefaultColumnOptions();
+  override getColumnOptions(): DefaultColumnOptions {
+      const options = super.getColumnOptions();
       options.sortable = false;
       return options;
   }

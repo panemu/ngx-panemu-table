@@ -39,7 +39,7 @@ To specify row class and style dynamically, define the logic in `RowOptions` obj
 ```typescript
 controller = PanemuTableController.create<People>(this.columns, this.datasource, {
   
-  rowClass: (row: People) => row.country == 'Indonesia' ? 'indonesia' : '',
+  rowClass: (row: People) => row.country == 'ID' ? 'indonesia' : '',
   
   rowStyle: (row) => {
     if (row.gender == 'F') return 'color: red;'
@@ -48,8 +48,7 @@ controller = PanemuTableController.create<People>(this.columns, this.datasource,
 });
 ```
 
-In below example, Indonesian are bold and Female are red. Indonesian female are bold and red. When a row is selected
-the texts are underlined.
+In below example, Indonesian (country code ID) are bold and Female are red. Indonesian female are bold and red. When a row is selected the texts are underlined.
 
 {{ NgDocActions.demo("DynamicRowStyleComponent") }}
 
@@ -60,7 +59,7 @@ In above example, the `selected-row` class is overriden as follow.
 ```scss
 .panemu-table {
   
-  tr.selected-row, tr.selected-row:nth-child(2n) {
+  tr.selected-row:nth-child(odd), tr.selected-row:nth-child(even) {
     background: inherit;
     color: inherit;
     text-decoration: underline;

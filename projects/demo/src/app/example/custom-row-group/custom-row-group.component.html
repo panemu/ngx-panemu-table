@@ -1,4 +1,4 @@
-<div class="flex flex-col h-[500px] gap-4">
+<div class="flex flex-col h-[500px] gap-4 custom-row-group">
   
   <div class="flex relative justify-center">
     <panemu-query [controller]="controller" />
@@ -23,10 +23,11 @@
   </div>
 </ng-template>
 
-<ng-template #countryGroupTemplate let-rowGroup="rowGroupa">
-  <div class="flex items-center gap-2">
-    <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
-    <img width="24px" src="assets/flags/{{rowGroup.data.value?.toLowerCase()}}.svg">
-    <span class="group-label">{{rowGroup.data.value | groupCell:rowGroup.formatter}} - ({{rowGroup.data.count}})</span>
-  </div>
+<ng-template #genderGroupFooterTemplate let-rowGroup="rowGroup" let-colSpan="colSpan" let-parameter="parameter">
+  <td [attr.colspan]="colSpan">
+    <span [style.padding-left.rem]="rowGroup.level">
+      This is group footer. {{parameter.message}}
+    </span>
+  </td>
 </ng-template>
+

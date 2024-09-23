@@ -12,7 +12,7 @@ import { ExpansionRowRenderer } from '../row/expansion-row';
         {{expanded() ? 'expand_more' : 'chevron_right'}}
         </span>
      </button>
-      <span>{{row[column.field] | cellFormatter:row:column}}</span>
+      <span>{{row[column.field] | cellFormatter:row:column:column.formatter}}</span>
    </div>
    `,
   standalone: true,

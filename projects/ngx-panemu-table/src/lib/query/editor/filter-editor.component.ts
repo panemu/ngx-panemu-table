@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
@@ -8,6 +8,7 @@ import { TableCriteria } from '../../table-query';
 import { FilterEditor } from './filter-editor';
 import { StringFilterComponent } from './string-filter.component';
 import { FilterEditorDirective } from './filter-editor.directive';
+import { PanemuTableService } from '../../panemu-table.service';
 
 @Component({
   selector: 'panemu-filter-editor',
@@ -23,7 +24,9 @@ export class FilterEditorComponent implements OnInit {
   editorComponent?: Type<FilterEditor> | null
   column!: PropertyColumn<any>
   value = signal<string|undefined|null>('');
-  editor = viewChild<TemplateRef<any>>('editor')
+  editor = viewChild<TemplateRef<any>>('editor');
+  pts = inject(PanemuTableService);
+
   constructor(private dialogRef: MatDialogRef<FilterEditorComponent, TableCriteria>,
     private cdr: ChangeDetectorRef
   ) {
@@ -43,7 +46,7 @@ export class FilterEditorComponent implements OnInit {
     this.column = this.columns.find(item => item.field == f)!;
     // this.editorComponent = null;
     // setTimeout(() => {
-      this.editorComponent = this.column?.filterEditor || StringFilterComponent;
+      this.editorComponent = this.column?.filterEditor || this.pts.getDefaultFilterComponent();
     // });
     // this.cdr.markForCheck();
   }

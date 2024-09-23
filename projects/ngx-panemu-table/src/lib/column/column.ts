@@ -2,14 +2,32 @@ import { Signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { CellFormatter, CellRenderer } from "../cell/cell";
 import { HeaderRenderer } from "../cell/header";
 import { ExpansionRow, ExpansionRowRenderer } from "../row/expansion-row";
-import { RowGroup } from "../row/row-group";
+import { RowGroup, RowGroupFooter } from "../row/row-group";
 import { TickColumnClass } from "./tick-column-class";
 import { FilterEditor } from "../query/editor/filter-editor";
 import { RowGroupRenderer } from "../row/default-row-group-renderer";
 
+/**
+ * Interface for expanding cell to `ExpansionRow`. The generic T type is the data of row
+ * containing the cell.
+ */
 export interface Expansion<T> {
+
+  /**
+   * `ng-template` or component to be rendered inside `ExpansionRow`.
+   */
   component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
+
+  /**
+   * Callback to disable expand button. By default the expand button is enabled.
+   * @param row 
+   * @returns 
+   */
   isDisabled?: (row: T) => boolean,
+
+  /**
+   * Position of the expand button. Default is at the `start` of the cell.
+   */
   buttonPosition?: 'start' | 'end'
 }
 
@@ -106,7 +124,7 @@ export interface BaseColumn<T> {
    * For internal use
    * @internal
    */
-  __data?: Signal<(T | RowGroup | ExpansionRow<T>)[]>
+  __data?: Signal<(T | RowGroup | RowGroupFooter | ExpansionRow<T>)[]>
 
   /**
    * Allow the column to be resized. Default true
@@ -153,6 +171,10 @@ export interface BaseColumn<T> {
    */
   __isGroup?: boolean
 
+  /**
+   * Expansion row renderer. If this property is filled, the cell will have a button to expand.
+   * The `rowComponent` property will be rendered in a new row just below the cell.
+   */
   expansion?: Expansion<T>
 
   /**

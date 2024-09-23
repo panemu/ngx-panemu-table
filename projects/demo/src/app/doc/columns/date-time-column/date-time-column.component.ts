@@ -4,11 +4,11 @@ import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDat
 interface Data { last_login: string }
 
 const DATA: Data[] = [
-  {"last_login": "2024-07-03 09:56:29"},
-  {"last_login": "2024-04-29 12:48:59"},
-  {"last_login": "2024-06-03 13:14:23"},
-  {"last_login": "2024-06-18 12:06:58"},
-  {"last_login": "2024-04-24 03:46:26"}
+  { "last_login": "2024-07-03 09:56:29" },
+  { "last_login": "2024-04-29 12:48:59" },
+  { "last_login": "2024-06-03 13:14:23" },
+  { "last_login": "2024-06-18 12:06:58" },
+  { "last_login": "2024-04-24 03:46:26" }
 ]
 
 @Component({
@@ -20,7 +20,7 @@ const DATA: Data[] = [
 export class DateTimeColumnComponent implements OnInit {
 
   columns = this.pts.buildColumns<Data>([
-    { field: 'last_login', label: 'Regular Column' },
+    { field: 'last_login', label: 'Original Data' },
     { field: 'last_login', type: ColumnType.DATETIME, label: 'Default Format' },
     {
       field: 'last_login',
@@ -29,9 +29,9 @@ export class DateTimeColumnComponent implements OnInit {
     },
   ])
 
-  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), { autoHeight: true });
 
-  constructor(private pts: PanemuTableService) {}
+  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.reloadData();

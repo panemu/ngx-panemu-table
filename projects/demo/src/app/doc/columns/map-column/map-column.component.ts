@@ -36,7 +36,7 @@ export class MapColumnComponent implements OnInit {
     },
   ])
 
-  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
 
   constructor(private pts: PanemuTableService) { }
 

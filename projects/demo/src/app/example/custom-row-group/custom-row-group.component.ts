@@ -1,38 +1,57 @@
-import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, 
-  PanemuQueryComponent, 
+import { Component, inject, OnInit, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+  ColumnType,
+  PanemuQueryComponent,
   DefaultRowGroupRenderer,
-  PanemuTableComponent, 
-  PanemuTableController, 
-  PanemuTableDataSource, 
-  PanemuTableService, 
+  PanemuTableComponent,
+  PanemuTableController,
+  PanemuTableDataSource,
+  PanemuTableService,
   GroupCellPipe,
-  TableQuery} from 'ngx-panemu-table';
+  TableQuery
+} from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { CountryRowGroup } from './country-row-group.component';
 import { tap } from 'rxjs';
 import { BooleanRowGroupContentComponent } from './boolean-row-group-content.component';
+import { CountryRowGroupFooter } from './country-row-group-footer.component';
 
 @Component({
   selector: 'app-custom-row-group',
   standalone: true,
   imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe],
   templateUrl: './custom-row-group.component.html',
-  styleUrl: './custom-row-group.component.scss'
+  styleUrl: './custom-row-group.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class CustomRowGroupComponent implements OnInit {
-  
+
   pts = inject(PanemuTableService);
   genderGroupTemplate = viewChild<TemplateRef<any>>('genderGroupTemplate');
+  genderGroupFooterTemplate = viewChild<TemplateRef<any>>('genderGroupFooterTemplate');
 
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
-    { field: 'gender', rowGroupRenderer: DefaultRowGroupRenderer.create({contentRenderer: this.genderGroupTemplate, showPagination: false})},
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), rowGroupRenderer: {component: CountryRowGroup} },
-    { field: 'verified', rowGroupRenderer: DefaultRowGroupRenderer.create({contentRenderer: BooleanRowGroupContentComponent}) },
+    {
+      field: 'gender',
+      rowGroupRenderer: DefaultRowGroupRenderer.create(
+        { 
+          header: { contentRenderer: this.genderGroupTemplate, showPagination: false },
+          footerComponent: this.genderGroupFooterTemplate,
+          parameter: {message: 'This is parameterized message.'}
+      })
+    },
+    {
+      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(),
+      rowGroupRenderer: { component: CountryRowGroup, footerComponent: CountryRowGroupFooter }
+    },
+    {
+      field: 'verified',
+      rowGroupRenderer: DefaultRowGroupRenderer.create({ header: { contentRenderer: BooleanRowGroupContentComponent } })
+    },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
@@ -53,7 +72,7 @@ export class CustomRowGroupComponent implements OnInit {
     return this.datasource.getData(startIndex, maxRows, tableQuery).pipe(
       tap(tableData => {
         if (tableQuery.groupBy?.field == 'country') {
-          const totalMap: {[key: string]: number} = {};
+          const totalMap: { [key: string]: number } = {};
           const allAdata = this.datasource.getAllData();
           for (const people of allAdata) {
             if (people.country) {
@@ -62,7 +81,7 @@ export class CustomRowGroupComponent implements OnInit {
           }
           for (const item of tableData.rows) {
             const group = item as any;
-            group['average'] = totalMap[group.value]/group.count;
+            group['average'] = totalMap[group.value] / group.count;
           }
         }
       })
@@ -70,7 +89,7 @@ export class CustomRowGroupComponent implements OnInit {
   }
 
   defaultRowGroup() {
-    this.controller.groupByColumns = [{ field: 'enrolled', modifier:'month' }]
+    this.controller.groupByColumns = [{ field: 'enrolled', modifier: 'month' }]
     this.controller.reloadData()
   }
 
@@ -84,8 +103,8 @@ export class CustomRowGroupComponent implements OnInit {
     this.controller.reloadData()
   }
 
-  customRowGroup(){
-    this.controller.groupByColumns = [{ field: 'country'}]
+  customRowGroup() {
+    this.controller.groupByColumns = [{ field: 'country' }]
     this.controller.reloadData()
   }
 }

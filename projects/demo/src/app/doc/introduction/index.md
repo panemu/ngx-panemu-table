@@ -37,37 +37,44 @@ the html file only needs to have a very simple `panemu-table` tag.
 
 ## Features
 
+- Declarative table definition in typescript. Very little code in html needed.
+- Sane defaults that can be overriden app-wide and per table basis.
 - Pagination. More flexible than common pagination.
-- Filtering. Support `between` operator using dot and comma. Dot represent `greater/less and equal`. Comma represent `greater/less`.
+    - Previous page of first page overflow to last page and vice versa.
+    - User can input arbitrary range.
+    - Client or server side. Client side pagination is provided, server side implementation is up to you.
+
+- Filtering.
+    - Provided filter editors for string, date and key-value pair.
+    - You can create custom filter editor.
+    - Support `between` operator using dot and comma. Dot represent `greater/less and equal`. Comma represent `greater/less` whithout equal.
 ```
 amount: 1.,10 is translated to `amount >= 1 and amount < 10`
 amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 ```
-- Searching
-- Grouping
-- Column Resizable
-- Customizable table cell, header, row group, filter editor, css styles and classes etc.
-- Sticky column
-- Group multiple columns under one cell header ✨
-- Cell Expansion (v.0.0.6). See `*CellExpansionPage`. ✨ 
-- Export to CSV (v.0.0.6). See `PanemuTableController.getcsvdata` . ✨ 
-
+- Row Grouping.
+   - Support group level pagination.
+   - Customizable row group header and footer.
+- Column header
+  - Group multiple columns under one cell header.
+  - Support custom cell header renderer. You can put anything in column header.
+- Column Resizable.
+- Customizable table cell.
+  - Support custom cell using `ng-template` or angular component.
+  - Support custom cell formatting and styling
+  - Cell expansion. See `*CellExpansionPage`. ✨ 
+- Sticky column, header and footer
+- Export to CSV. See `PanemuTableController.getcsvdata` . ✨ 
+- Handle huge data using virtual scroll. Now it doesn't support variable row height. But it will in the future.
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
-
-{{ NgDocActions.demo("BasicComponent") }}
 
 ## More In The Future
 
 These features are not developed yet. Please create a ticket in [our repository](https://github.com/panemu/ngx-panemu-table) if you need them so we know what to prioritize.
 
-- Filter editor for all data type including Date, DateTime and Map. It should allow user to change the filter value without clearing the filter.
 - Global search
-- Table footer
-- Virtual scroll to display large data
-- ~~Column grouping (nested column)~~ supported since v.0.0.5
 - Column reorder
-- ~~Export~~ csv export is supported since v.0.0.6
 - Save columns position, width and visibility
 
 ## About Panemu

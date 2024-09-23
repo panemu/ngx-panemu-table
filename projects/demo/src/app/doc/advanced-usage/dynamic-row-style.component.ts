@@ -18,7 +18,7 @@ export class DynamicRowStyleComponent implements OnInit {
     { field: 'name' },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: {F: 'Female', M: 'Male'} },
-    { field: 'country' },
+    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
@@ -26,17 +26,17 @@ export class DynamicRowStyleComponent implements OnInit {
   ])
   datasource = new PanemuTableDataSource<People>;
 
-  controller = PanemuTableController.create<People>(this.columns, this.datasource, {
+  controller = PanemuTableController.create<People>(this.columns, this.datasource, { rowOptions: {
     // rowSelection: false,
     rowClass: (row: People) => {
-      if (row.country == 'Indonesia') return 'indonesia';
+      if (row.country == 'ID') return 'indonesia';
       return '';
     },
     rowStyle: (row) => {
       if (row.gender == 'F') return 'color: red;'
       return '';
     }
-  });
+  }});
 
   constructor(private dataService: DataService, private pts: PanemuTableService) {}
 

@@ -20,13 +20,13 @@ const DATA: People[] = [
   standalone: true,
   imports: [PanemuTableComponent],
   template: `
-  <div class="h-96 flex flex-col gap-4">
+  <div class="flex flex-col gap-4">
     <div class="flex gap-4">
       <button data-test-id="btn2" (click)="group1()">Group 1</button>
       <button data-test-id="btn3" (click)="group2()">Group 2</button>
       <button data-test-id="btn1" (click)="noGroup()">No Group</button>
     </div>
-    <div class="flex-grow">
+    <div>
       <panemu-table [controller]="controller"></panemu-table>
     </div>
   </div>
@@ -57,7 +57,7 @@ export class ColumnGroupComponent {
       { field: 'amount' },
     ]);
       
-    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
     this.controller.reloadData();
   }
   group1() {
@@ -82,7 +82,7 @@ export class ColumnGroupComponent {
       { field: 'amount' },
     ]);
 
-    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
     this.controller.reloadData();
   }
   
@@ -112,7 +112,7 @@ export class ColumnGroupComponent {
       { field: 'amount' },
     ]);
 
-    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+    this.controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
     this.controller.reloadData();
   }
 

@@ -1007,8 +1007,4 @@ export const CountryCode = [
     name: "Zimbabwe",
     code: "ZW"
   },
-  {
-    name: "Åland Islands",
-    code: "AX"
-  }
 ]

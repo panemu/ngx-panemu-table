@@ -2,7 +2,8 @@
 keyword: MapColumnPage
 ---
 
-Specify type to `ColumnType.MAP`. Specify the `valueMap` property with key-value pair object or `Signal` of key-value pair.
+`MapColumn` is similar to combobox in a way that the displayed data is not the actual value. There is a `map` that
+translate the actial value to display value. To use it, specify the column type to `ColumnType.MAP`. Then set `valueMap` property with key-value pair object or `Signal` of key-value pair.
 
 ```typescript {3}
 columns = this.pts.buildColumns<Data>([
@@ -12,7 +13,7 @@ columns = this.pts.buildColumns<Data>([
 ])
 ```
 
-In the case of the data for the map is taken from server, use `Signal`:
+If the value map is retrieved asynchronously or later after table initialization, use `Signal`:
 
 ```typescript
 genderMap = signal<any>({});

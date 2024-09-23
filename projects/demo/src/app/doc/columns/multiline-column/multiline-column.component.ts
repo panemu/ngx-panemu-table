@@ -32,7 +32,7 @@ export class MultilineColumnnComponent implements OnInit {
     { field: 'verified'}
   ])
 
-  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
 
   constructor(private pts: PanemuTableService) { }
 

@@ -1,25 +1,40 @@
-import { Directive, Input, OnInit, Type, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Directive, Input, OnChanges, OnInit, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { DefaultRowGroupRenderer, RowGroupComponent, RowGroupRenderer } from './default-row-group-renderer';
 import { RowGroup } from './row-group';
-import { DefaultRowGroupRenderer, RowGroupRenderer } from './default-row-group-renderer';
 
 @Directive({
   selector: '[rowGroupRenderer]',
   standalone: true
 })
-export class RowGroupRendererDirective implements OnInit {
+export class RowGroupRendererDirective implements OnChanges {
   @Input() rowGroupRenderer?: RowGroupRenderer;
   @Input() colSpan!: number;
   @Input() rowGroup!: RowGroup;
   @Input() expandAction!: (group: RowGroup) => void;
-
+  componentRef?: ComponentRef<RowGroupComponent> | null;
   constructor(private container: ViewContainerRef) { }
 
-  ngOnInit(): void {
-    let componentRef = this.container.createComponent(this.rowGroupRenderer?.component || DefaultRowGroupRenderer);
-    componentRef.instance.colSpan = this.colSpan;
-    componentRef.instance.rowGroup = this.rowGroup;
-    componentRef.instance.expandAction = this.expandAction;
-    componentRef.instance.parameter = this.rowGroupRenderer?.parameter;
+  ngOnInit() {
+    
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // if (changes['rowGroupRenderer']) {
+      this.recreateElement();
+    // }
+  }
+  recreateElement(): void {
+    this.componentRef?.destroy();
+    
+    this.componentRef = this.container.createComponent(this.rowGroupRenderer?.component || DefaultRowGroupRenderer);
+    this.componentRef.instance.colSpan = this.colSpan;
+    this.componentRef.instance.rowGroup = this.rowGroup;
+    this.componentRef.instance.expandAction = this.expandAction;
+    this.componentRef.instance.parameter = this.rowGroupRenderer?.parameter;
+  }
+  ngOnDestroy(): void {
+    this.componentRef?.destroy();
+    this.componentRef = null;
   }
 
 }

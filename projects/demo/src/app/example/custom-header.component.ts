@@ -38,7 +38,7 @@ export class CustomHeaderComponent implements OnInit {
   ])
 
   cmbColumnHeader = new FormControl(this.customColumns.body[0].__key)
-  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA));
+  controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
 
   constructor(private pts: PanemuTableService) { }
 

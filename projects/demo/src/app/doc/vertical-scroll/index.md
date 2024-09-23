@@ -2,18 +2,21 @@
 keyword: VerticalScrollPage
 ---
 
-By default vertical scroll is enabled. You have to make space for the table either by hardcoding the container height or make the table take all remaining vertical spaces.
+By default vertical scroll is enabled. The table takes its container space. So the container must have the height harcoded or takes its parent available spaces.
 
-If your use case is to display a few data, it is better to disable the vertical scroll. The height will be adjusted automatically to make all rows visible. 
+If your use case is to display a few data, it is better to set the `autoHeight` property to true. The height will be adjusted automatically to make all rows visible. 
 
-```typescript {3}
-<panemu-table 
-	[controller]="controller" 
-	[verticalScroll]="false"
-/>
+```typescript {5}
+controller = PanemuTableController.create(
+  this.columns,
+  new PanemuTableDataSource(DATA),
+  { 
+    autoHeight: true 
+  }
+);
 ```
 
-For example:
+This basic example display all rows by enabling the `autoHeigh` thus disabling vertical scrolling.
 
 {{ NgDocActions.demo("BasicComponent") }}
 

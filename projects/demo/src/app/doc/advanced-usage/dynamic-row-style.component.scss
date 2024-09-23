@@ -3,7 +3,7 @@
     font-weight: 700;
   }
 
-  tr.selected-row, tr.selected-row:nth-child(2n) {
+  tr.selected-row:nth-child(odd), tr.selected-row:nth-child(even) {
     background: inherit;
     color: inherit;
     text-decoration: underline;

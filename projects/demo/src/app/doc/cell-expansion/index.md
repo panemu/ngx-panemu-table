@@ -13,7 +13,7 @@ Cell Expansion is a feature to display any component or template under a row. Th
     buttonPosition: 'end', 
 
     //optional. Call back to enable/disable expansion for each row
-    isDisabled?: (row: People) => row.country !== 'Indonesia'
+    isDisabled?: (row: People) => row.country !== 'ID'
   }
 }
 ```
@@ -47,7 +47,7 @@ If using angular component, the component should implements `ExpansionRowRendere
 
 ```
 
-The Edit People expansion is a bit different. It doesn't have the default button to trigger the expansion. Instead the button is a custom one with pencil icon. This is achieved by providing `cellRenderer` to the column defintion. Then the pencil button click event is bound to `PanemuTableController.expand` method.
+The Edit People expansion is a bit different. It doesn't have the default button to trigger the expansion. Instead the button is a custom one with pencil icon. This is achieved by providing `cellRenderer` to the column definition. Then the pencil button click event is bound to `PanemuTableController.expand` method.
 
 Below is the `ng-template` for the pencil button:
 

@@ -61,9 +61,9 @@ describe('AllFeaturesClientComponent', () => {
 	})
 
   it('pagination on row group should works', async () => {
-    const oriMaxRows = PanemuTableController.DEFAULT_MAX_ROWS;
+    const oriMaxRows = PanemuTableController['DEFAULT_MAX_ROWS'];
     const paginationSize = 5;
-    PanemuTableController.DEFAULT_MAX_ROWS = paginationSize;
+    PanemuTableController['DEFAULT_MAX_ROWS'] = paginationSize;
     component.controller.criteria = [];
     component.controller.reloadData();
 		await fixture.whenStable();
@@ -90,6 +90,45 @@ describe('AllFeaturesClientComponent', () => {
     expect(paginationEl!.querySelector('span')?.textContent?.trim()).toBe(`/ ${philippinesCount}`);
     const inputEl = paginationEl!.querySelector('input') as HTMLInputElement;
     expect(inputEl.value).toBe('1-5');
-    PanemuTableController.DEFAULT_MAX_ROWS = oriMaxRows;
+    PanemuTableController['DEFAULT_MAX_ROWS'] = oriMaxRows;
 	})
+
+  it('2 level grouping. first level with month modifier', async () => {
+    component.controller.criteria = [];
+    component.controller.groupByColumns = [{field: 'enrolled', modifier: 'month'}, {field: 'gender'}];
+    component.controller.reloadData();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    //expand 
+    const de: DebugElement = fixture.debugElement;
+    const componentEl: HTMLElement = de.nativeElement;
+    let firstCell = componentEl.querySelector('tbody tr td');
+    let groupLabelEl = firstCell?.querySelector('.group-label') as HTMLElement;
+    groupLabelEl.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    let allRows = componentEl.querySelectorAll('tbody tr');
+    let secondRowCellExpander = allRows[1].querySelector('td .group-label') as HTMLElement;
+    secondRowCellExpander?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    allRows = componentEl.querySelectorAll('tbody tr') as NodeListOf<HTMLElement>;
+
+    let firstRowData = 2;
+    let lastRowData = -1;
+    for (let index = firstRowData; index < allRows.length; index++) {
+      const tr = allRows[index];
+      const rowGroupLabel = tr.querySelector('td .group-label');
+
+      if (rowGroupLabel) {
+        lastRowData = index;
+        break;
+      }
+    }
+
+    const count = lastRowData - firstRowData;
+    expect(count).toBe(12); //Apr 2023 - Female should be 12
+  })
 })

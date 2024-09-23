@@ -62,6 +62,21 @@ panemu-groupby,
       }
     }
 
+    tfoot {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      height: 46px;
+
+      tr {
+        background-color: #F4F4F5;
+
+        th {
+          vertical-align: middle;
+        }
+      }
+    }
+
     tr {
       height: 32px;
     }

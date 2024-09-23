@@ -1,0 +1,12 @@
+.custom-row-group {
+  .panemu-table tbody {
+
+    tr:not(.row-group):not(.selected-row) {
+      background-color: white;
+    }
+
+    tr.row-group {
+      background-color: rgb(240, 253, 244);
+    }
+  }
+}

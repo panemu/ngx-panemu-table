@@ -1,14 +1,14 @@
-import { computed, Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
-import { BehaviorSubject, catchError, finalize, Observable, of, Subject, switchMap } from "rxjs";
+import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
+import { BehaviorSubject, catchError, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
 import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
+import { TableOptions } from "./option/options";
 import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
 import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
-import { RowGroup, RowGroupData } from "./row/row-group";
-import { RowOptions } from "./row/row-options";
+import { RowGroup, RowGroupData, RowGroupFooter } from "./row/row-group";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
-import { formatDateToIso, isDataRow, toDate } from "./util";
+import { formatDateToIso, isDataRow, mergeDeep, toDate } from "./util";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -18,7 +18,7 @@ import { formatDateToIso, isDataRow, toDate } from "./util";
  * `startIndex`: zero-based row index to retrive.
  * 
  * `maxRows`: Maximum rows to fetch per page. To avoid user entering very big number that can bring server
- * or the browser down, specify the value of `MAX_ROWS_LIMIT`. By default it is 500.
+ * or the browser down, override `PanemuTableService.getPaginationMaxRowsLimit`.
  */
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
 
@@ -37,30 +37,27 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     alert('There is an error when loading table. Override this error handler by setting PanemuTableController.DEFAULT_ERROR_HANDLER at the start of the application ')
   }
 
-  /**
-   * Set default value for pagination maxRows. Set this value when the application start to apply it app-wide.
-   */
-  static DEFAULT_MAX_ROWS = 100;
+  
+  private static DEFAULT_MAX_ROWS: number;
 
-  /**
-   * Set biggest possible number for `DEFAULT_MAX_ROWS`. It is to avoid user entering very big number.
-   */
-  static MAX_ROWS_LIMIT = 500;
+  private static MAX_ROWS_LIMIT = 500;
   
   /**
+   * The value of this signal is set by table component. The table knows how to agregate the
+   * row data, groups data etc.
    * @internal
    */
-  __data = signal<(T | RowGroup | ExpansionRow<T>)[]>([]);
+  private data = signal<(T | RowGroup | RowGroupFooter | ExpansionRow<T>)[]>([]);
 
-  __regularData = computed(() => {
-    if (this.__data?.()) {
-      const result = this.__data().filter(item => isDataRow(item)) as T[]
-      return result;
-    }
-    return []
-  })
-  
-  private __selectedRow = signal<T | null>(null)
+  // private __regularData = computed(() => {
+  //   if (this.data?.()) {
+  //     const result = this.data().filter(item => isDataRow(item)) as T[]
+  //     return result;
+  //   }
+  //   return []
+  // })
+
+  private selectedRow = signal<T | null>(null)
   groupByColumns: GroupBy[] = [];
   criteria: TableCriteria[] = [];
   private _loading = new BehaviorSubject<boolean>(false);
@@ -69,18 +66,18 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   /**
    * @internal
    */
-  __tableDisplayData?: DisplayDataFunction<T>;
+  private tableDisplayData?: DisplayDataFunction<T>;
 
-  __expandCell?: ExpandCell<T>
+  private expandCell?: ExpandCell<T>
 
-  /**
-   * @internal
-   */
-  __refreshPagination?: RefreshPagination;
-  private reloadCue = new Subject();
+  private refreshPagination?: RefreshPagination;
+  private reloadCue = new BehaviorSubject(0);
+  private afterReload$ = new BehaviorSubject<TableData<T> | null>(null);
   private _startIndex = 0;
+  private lastReloadTotalRows = 0;
   private _maxRows = Math.min(PanemuTableController.DEFAULT_MAX_ROWS, PanemuTableController.MAX_ROWS_LIMIT);
-
+  private static DEFAULT_TABLE_OPTIONS: TableOptions<any>;
+  tableOptions: TableOptions<T> = JSON.parse(JSON.stringify(PanemuTableController.DEFAULT_TABLE_OPTIONS));
   sortedColumn: { [key: string]: 'asc' | 'desc' } = {};
 
   private hasPagination = false;
@@ -90,12 +87,13 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   refreshTable!: Function;
   // columns: BaseColumn<T>[];
 
-  private constructor(public columnDefinition: ColumnDefinition<T>, private retrieveDataFunction: RetrieveDataFunction<T>, public __rowOptions?: RowOptions<T>) {
-    if (!__rowOptions) {
-      this.__rowOptions = {}
-    }
+  private constructor(public columnDefinition: ColumnDefinition<T>, 
+    private retrieveDataFunction: RetrieveDataFunction<T>, 
+    tableOptions?: Partial<TableOptions<T>>) {
     
-    this.__rowOptions!.rowSelection = this.__rowOptions!.rowSelection ?? true;
+    mergeDeep(this.tableOptions, tableOptions);
+    this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;  
+    this.tableOptions.autoHeight = this.tableOptions.virtualScroll ? false : this.tableOptions.autoHeight;
     this.initReloadCueListener();
   }
 
@@ -107,11 +105,11 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   static create<T>(columns: ColumnDefinition<T>,
     datasource: PanemuTableDataSource<T>,
-    rowOptions?: RowOptions<T>) {
+    tableOptions?: Partial<TableOptions<T>>) {
 
     return new PanemuTableController(columns, (start, max, tq) => {
       return datasource.getData(start, max, tq);
-    }, rowOptions)
+    }, tableOptions)
   }
 
   /**
@@ -121,8 +119,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @param retrieveDataFunction 
    * @returns 
    */
-  static createWithCustomDataSource<T>(columns: ColumnDefinition<T>, retrieveDataFunction: RetrieveDataFunction<T>, rowOptions?: RowOptions<T>) {
-    return new PanemuTableController(columns, retrieveDataFunction, rowOptions)
+  static createWithCustomDataSource<T>(columns: ColumnDefinition<T>, retrieveDataFunction: RetrieveDataFunction<T>, tableOptions?: Partial<TableOptions<T>>) {
+    return new PanemuTableController(columns, retrieveDataFunction, tableOptions)
   }
 
   private createTableQuery() {
@@ -145,12 +143,13 @@ export class PanemuTableController<T> implements PanemuPaginationController {
      * Wrap reload routine in a switchMap so only the last request matters
      */
     this.reloadCue.pipe(
+      skip(1),
       switchMap(_ => {
         this._loading.next(true);
         let tq = this.createTableQuery();
         let start = this._startIndex;
         let rowsToLoad = this._maxRows;
-        if (!this.__refreshPagination && !this.hasPagination) {
+        if (!this.refreshPagination && !this.hasPagination) {
           start = 0;
           rowsToLoad = 0;
         }
@@ -166,22 +165,64 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     ).subscribe({
       next: result => {
         if (result) {
-          this.__tableDisplayData?.(result.rows, undefined, this.groupByColumns?.[0]);
+          this.tableDisplayData?.(result.rows, undefined, this.groupByColumns?.[0]);
+          this.lastReloadTotalRows = result.totalRows;
           setTimeout(() => {
-            this.__refreshPagination?.(this._startIndex, this._maxRows, result.totalRows);
+            this.refreshPagination?.(this._startIndex, this._maxRows, result.totalRows);
           });
+        } else {
+          this.lastReloadTotalRows = 0;
         }
+        this.afterReload$.next(result);
       },
       error: e => console.error(e)
     })
   }
 
   /**
-   * @internal
+   * Connect pagination component with the controller. It tells the controller
+   * that pagination should be used. If there is no pagination component calling
+   * this method, the controller will set its `maxRows` to 0 which means the datasource
+   * should return all data. 
+   * 
+   * The controller will also tell the pagination about pagination information after each reload.
+   * 
+   * @param refreshAction callback function called by the controller so that the pagination
+   * component can update itself. This callback is called after reloading data.
+   */
+  initPaginationComponent(refreshAction: RefreshPagination) {
+    this.refreshPagination = refreshAction;
+
+    /**
+     * If the controller has loaded data before the pagination is connected,
+     * then tell pagination component to display the pagination info. It happens
+     * when virtual scroll active. If the table is scrolled down/up, the rowgroup
+     * and pagination component is recreated.
+     */
+    if (this.data().length) {
+      this.refreshPagination(this.startIndex, 
+        Math.min(this.lastReloadTotalRows, this.maxRows), 
+        this.lastReloadTotalRows)
+    }
+  }
+
+  /**
+   * This observable fire just before loading a data. This is only for table controller.
+   * It will not fire for `RowGroup` expand action because RowGroup has its own
+   * controller instance.
    * @returns 
    */
-  __onReload() {
-    return this.reloadCue as Observable<any>;
+  get beforeReloadEvent() {
+    return this.reloadCue.asObservable();
+  }
+
+  /**
+   * Observable to listen to after reload event. This is only for table controller.
+   * It will not fire for `RowGroup` expand action because RowGroup has its own
+   * controller instance.
+   */
+  get afterReloadEvent() {
+    return this.afterReload$.asObservable()
   }
 
   // relayout() {
@@ -197,8 +238,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns 
    */
   getData() {
-    if (this.__data?.()) {
-      const result = this.__data().filter(item => isDataRow(item)) as T[]
+    if (this.data?.()) {
+      const result = this.data().filter(item => isDataRow(item)) as T[]
       return result;
     }
     return [];
@@ -211,7 +252,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns 
    */
   getAllData() {
-    return this.__data?.() ? [...this.__data()] : []
+    return this.data?.() ? [...this.data()] : []
   }
 
   /**
@@ -219,7 +260,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns 
    */
   getAllDataAsSignal() {
-    return this.__data
+    return this.data
   }
 
   /**
@@ -243,27 +284,28 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Set max rows to display in table. Only usable if there is `PanemuPaginationComponent` using this controller.
    * Otherwise all data from datasource is displayed at once.<br><br>
    * 
-   * To change default max rows for all tables across application, set `PanemuTableController.DEFAULT_MAX_ROWS`
-   * at the start of application.
+   * To change default max rows for all tables across application, create a service extending PanemuTableService 
+   * and override `PanemuTableService.getPaginationMaxRows`.
    * 
-   * The value is limited by `PanemuTableController.MAX_ROWS_LIMIT`.
+   * The value is limited by `PanemuTableService.getPaginationMaxRowsLimit`.
    */
   set maxRows(val: number) { this._maxRows = Math.min(val, PanemuTableController.MAX_ROWS_LIMIT) }
 
   /**
    * Get max rows from connected `PanemuPaginationComponent`.
    * 
-   * To change default max rows for all tables across application, set `PanemuTableController.DEFAULT_MAX_ROWS`
-   * at the start of application.
+   * To change default max rows for all tables across application, create a service extending PanemuTableService 
+   * and override `PanemuTableService.getPaginationMaxRows`
    */
   get maxRows() { return this._maxRows }
 
   /**
-   * This is an internal method used by grouping functionality. Developer shouldn't need to call this method.
+   * This is an internal method used by grouping functionality and group-level pagination.
+   * You shouldn't need to call this method unless you are creating custom pagination component.
    * @param group
    * @internal 
    */
-  __reloadGroup(group: RowGroup) {
+  reloadGroup(group: RowGroup) {
     if (!group.controller) {
       group.controller = this.createGroupController(group);
     }
@@ -286,8 +328,13 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       return tq;
     }
 
-    groupController.__tableDisplayData = (data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) => {
-      this.__tableDisplayData!(data, group, groupField);
+    /**
+     * When the group controller get the data, dispatch it to
+     * parent controller
+     */
+    groupController.tableDisplayData = (data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) => {
+      groupController.data.set(data as any);
+      this.tableDisplayData!(data, group, groupField);
     };
     
     return groupController;
@@ -323,11 +370,11 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Reload data without resetting pagination start index.
    */
   reloadCurrentPage() {
-    if (this.__tableDisplayData) {
-      this.reloadCue.next(performance.now())
+    if (this.tableDisplayData) {
+      this.reloadCue.next(this.reloadCue.getValue() + 1)
     } else {
       setTimeout(() => {
-        this.reloadCue.next(performance.now())
+        this.reloadCue.next(this.reloadCue.getValue() + 1)
       });
     }
   }
@@ -337,7 +384,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns 
    */
   getSelectedRow() {
-    return this.__selectedRow()
+    return this.selectedRow()
   }
 
   /**
@@ -345,7 +392,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns 
    */
   getSelectedRowSignal() {
-    return this.__selectedRow.asReadonly()
+    return this.selectedRow.asReadonly()
   }
 
   /**
@@ -354,16 +401,16 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns true if the row index or row object is successfully selected. Return false if the object in selected index is a RowGroup or the row object is not in table data
    */
   selectRow(rowOrIndex: T | number) {
-    if (!this.__data || !this.__rowOptions?.rowSelection) return false;
+    if (!this.data || !this.tableOptions.rowOptions.rowSelection) return false;
 
     if (typeof rowOrIndex == 'number') {
-      const row = this.__data!()[rowOrIndex as number];
+      const row = this.data!()[rowOrIndex as number];
       if (row && isDataRow(row)) {
-        this.__selectedRow.set(row as T);
+        this.selectedRow.set(row as T);
         return true;
       }
-    } else if (this.__data().includes(rowOrIndex)) {
-      this.__selectedRow.set(rowOrIndex);
+    } else if (this.data().includes(rowOrIndex)) {
+      this.selectedRow.set(rowOrIndex);
       return true;
     }
     return false;
@@ -375,10 +422,10 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns true if succesful in which there is a non RowGroup to select.
    */
   selectFirst() {
-    if (this.__data) {
-      for (const aRow of this.__data()) {
+    if (this.data) {
+      for (const aRow of this.data()) {
         if (isDataRow(aRow)) {
-          this.__selectedRow.set(aRow as T);
+          this.selectedRow.set(aRow as T);
           return true;
         }
       }
@@ -390,11 +437,11 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Clear row selection
    */
   clearSelection() {
-    this.__selectedRow.set(null)
+    this.selectedRow.set(null)
   }
 
   expand(row: T, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
-    this.__expandCell?.(row, column.expansion!.component, column, expanded)
+    this.expandCell?.(row, column.expansion!.component, column, expanded)
   }
 
   private escapeCsvText(text: string) {
@@ -425,26 +472,23 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       csv.push(visibleCols.map(item => this.escapeCsvText(item.label || '')).join(','));
     }
 
-    for (const row of this.__data()) {
-      if (row instanceof ExpansionRow) {
-        continue;
-      }
+    for (const row of this.data()) {
+      
       const csvRow: string[] = [];
       
-      if (row instanceof RowGroup) {
-        if (csvOption.includeRowGroup) {
-          csvRow.push(this.escapeCsvText(row.formatter(row.data.value) + ` (${row.data.count || 0})`));
-          for (let index = 1; index < visibleCols.length; index++) {
-            csvRow.push('');
-          }
-          csv.push(csvRow.join(','));
+      if (row instanceof RowGroup && csvOption.includeRowGroup) {
+        csvRow.push(this.escapeCsvText(row.formatter(row.data.value) + ` (${row.data.count || 0})`));
+        for (let index = 1; index < visibleCols.length; index++) {
+          csvRow.push('');
         }
-      } else {
+        csv.push(csvRow.join(','));
+      } else if (isDataRow(row)) {
+        const dataRow = row as T;
         for (const col of visibleCols) {
           if (col.formatter) {
-            csvRow.push(this.escapeCsvText(col.formatter(row[col.field])))
+            csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field])))
           } else {
-            csvRow.push(this.escapeCsvText(row[col.field] + ''))
+            csvRow.push(this.escapeCsvText(dataRow[col.field] + ''))
           }
         }
         csv.push(csvRow.join(','));

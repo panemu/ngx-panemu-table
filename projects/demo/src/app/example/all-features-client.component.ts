@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, ComputedColumn, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.component';
@@ -16,6 +16,7 @@ export class AllFeaturesClientComponent implements OnInit {
   genderMap = signal({});
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
+  countryFooter = viewChild<TemplateRef<any>>('countryFooter');
   clmAction: ComputedColumn = {
     type: ColumnType.COMPUTED,
     formatter: (val: any) => '',
@@ -29,16 +30,22 @@ export class AllFeaturesClientComponent implements OnInit {
 
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>({ width: 50 }),
-    { field: 'id', type: ColumnType.INT, width: 50 },
+    { field: 'id', type: ColumnType.INT, width: 50},
     { field: 'name', width: 150 },
-    { field: 'email', width: 230, expansion: {
-      component: this.sendEmailTemplate, 
-      isDisabled: (row) => {
-        return row.country == 'Indonesia'
-      },
-    } },
+    {
+      field: 'email', width: 230, expansion: {
+        component: this.sendEmailTemplate,
+        isDisabled: (row) => {
+          return row.country == 'Indonesia'
+        },
+      }
+    },
     { field: 'gender', width: 80, type: ColumnType.MAP, valueMap: this.genderMap },
-    { field: 'country', width: 150, type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)) },
+    {
+      field: 'country', width: 150, type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(),
+      cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
+      rowGroupRenderer: DefaultRowGroupRenderer.create({ footerComponent: this.countryFooter })
+    },
     { field: 'amount', width: 100, type: ColumnType.DECIMAL },
     {
       type: ColumnType.GROUP, label: 'Date Info', children: [
@@ -60,7 +67,7 @@ export class AllFeaturesClientComponent implements OnInit {
     this.controller.groupByColumns = [{ field: 'country' }]
 
     //set inital filtering
-    this.controller.criteria = [{ field: 'verified', value: true }]
+    this.controller.criteria = [{ field: 'verified', value: 'true' }]
 
     this.dataService.getPeople().subscribe(result => {
       this.datasource.setData(result);

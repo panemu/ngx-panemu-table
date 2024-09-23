@@ -1,0 +1,14 @@
+<td>
+</td>
+<td  [attr.colspan]="4">
+  <div class="flex font-bold justify-between">
+    <span>Total {{rowGroup.data.value | groupCell:rowGroup.formatter}}: {{rowGroup.data.count}}</span>
+    <span *ngIf="!parameter?.alwaysExpanded">Average Amount: </span>
+  </div>
+</td>
+<td>
+  <div *ngIf="!parameter?.alwaysExpanded" class="flex font-bold">
+    {{$any(rowGroup.data).average | number:'.2'}}
+  </div>
+</td>
+<td colspan="3"></td>

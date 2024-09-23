@@ -1,16 +1,19 @@
 import { formatDate, formatNumber } from '@angular/common';
-import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, WritableSignal } from '@angular/core';
+import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, Type, WritableSignal } from '@angular/core';
 import { CellFormatter } from './cell/cell';
 import { DefaultCellRenderer } from "./cell/default-cell-renderer";
 import { DefaultHeaderRenderer } from './cell/default-header-renderer';
-import { MapCellRenderer } from './cell/map-cell-renderer';
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
 import { LabelTranslation } from './option/label-translation';
 import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
 import { DateFilterComponent } from './query/editor/date-filter.component';
 import { MapFilterComponent } from './query/editor/map-filter.component';
-
+import { TableOptions } from './option/options';
+import { PanemuTableController } from './panemu-table-controller';
+import { mergeDeep } from './util';
+import { FilterEditor } from './query/editor/filter-editor'
+import { StringFilterComponent } from './query/editor/string-filter.component';
 const GROUP_KEY_PREFIX = 'group_';
 
 @Injectable({
@@ -30,19 +33,28 @@ export class PanemuTableService {
     selectColumnToSearchOn: 'Select a column to search on'
   };
 
-  constructor(@Inject(LOCALE_ID) protected locale: string) { }
+  constructor(@Inject(LOCALE_ID) protected locale: string) {
+
+    /**
+     * The PanemuTableController is instantiated using new. Not using dependency injection. Thus
+     * it can't get reference to this service class. So we assign the controller properties here.
+     */
+    PanemuTableController['DEFAULT_TABLE_OPTIONS'] = this.getTableOptions();
+    PanemuTableController['DEFAULT_MAX_ROWS'] = this.getPaginationMaxRows();
+    PanemuTableController['MAX_ROWS_LIMIT'] = this.getPaginationMaxRowsLimit();
+  }
 
   /**
    * Build columns for the table. This method handle column initialization. The `options` argument is by default
-   * taken from `PanemuTableService.getDefaultColumnOptions`
+   * taken from `PanemuTableService.getColumnOptions`
    * 
    * @param columns 
-   * @param options 
+   * @param options any specified value will override `PanemuTableService.getColumnOptions`.
    * @returns 
    */
   buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T> {
     let bodyColumns = this.buildBody(columns);
-    this.initColumns(bodyColumns);
+    this.initColumns(bodyColumns, options);
     let headerRows: HeaderRow[] = [];
     this.buildHeaders(headerRows, columns, 0, this.getDepth(columns, 0), signal(0));
     headerRows.forEach(item => {
@@ -130,9 +142,9 @@ export class PanemuTableService {
 
 
   private initColumns<T>(columns: BaseColumn<T>[], options?: DefaultColumnOptions): BaseColumn<T>[] {
-    const defaultOptions = this.getDefaultColumnOptions();
+    const defaultOptions = this.getColumnOptions();
     if (options) {
-      Object.assign(defaultOptions, options);
+      mergeDeep(defaultOptions, options);
     }
 
     columns.forEach((item, index) => this.initColumn(item, index, defaultOptions))
@@ -173,11 +185,11 @@ export class PanemuTableService {
             break;
           case ColumnType.DATETIME:
             column.formatter = this.getDateTimeCellFormatter();
-            column.filterEditor = column.filterEditor || DateFilterComponent
+            column.filterEditor = column.filterEditor || this.getDateTimeFilterComponent();
             break;
           case ColumnType.DATE:
             column.formatter = this.getDateCellFormatter();
-            column.filterEditor = column.filterEditor || DateFilterComponent
+            column.filterEditor = column.filterEditor || this.getDateFilterComponent();
             break;
           case ColumnType.MAP:
             const mapColumn = (<MapColumn<any>>column);
@@ -185,10 +197,10 @@ export class PanemuTableService {
               mapColumn.valueMap = signal(mapColumn.valueMap);
             }
             column.formatter = this.getMapFormatter(mapColumn.valueMap as Signal<any>);
-            if (!column.cellRenderer) {
-              column.cellRenderer = { component: MapCellRenderer }
-            }
-            column.filterEditor = column.filterEditor || MapFilterComponent
+            // if (!column.cellRenderer) {
+            //   column.cellRenderer = { component: MapCellRenderer }
+            // }
+            column.filterEditor = column.filterEditor || this.getMapFilterComponent();
             break;
           default:
             column.formatter = this.getDefaultCellFormatter();
@@ -229,7 +241,7 @@ export class PanemuTableService {
   }
 
   /**
-   * Get default cell formatter
+   * Get default cell formatter. It does nothing beside changing null or undefined to empty string.
    * @returns 
    */
   getDefaultCellFormatter(): CellFormatter {
@@ -337,7 +349,7 @@ export class PanemuTableService {
    * Unspecified properties in `BaseColumn` use values returned by this method.
    * @returns 
    */
-  getDefaultColumnOptions(): DefaultColumnOptions {
+  getColumnOptions(): DefaultColumnOptions {
     return {
       visible: true,
       filterable: true,
@@ -345,5 +357,73 @@ export class PanemuTableService {
       resizable: true,
       sortable: true
     }
+  }
+
+  /**
+   * Get default table options.
+   * @returns 
+   */
+  getTableOptions<T>(): TableOptions<T> {
+    let defaultOptions: Required<TableOptions<T>> = {
+      rowOptions: {
+        rowSelection: true
+      },
+      autoHeight: false,
+      virtualScroll: false,
+      virtualScrollRowHeight: 32,
+      footer: null
+    };
+    return defaultOptions;
+  }
+
+  /**
+   * Get default value for pagination maxRows. Override this method to apply default maxRows app-wide.
+   * @returns default 100
+   */
+  getPaginationMaxRows() {
+    return 100;
+  }
+
+  /**
+   * Limit for pagination maxRows to prevent user entering too big range in pagination input range
+   * for example 1-1000. In that case the maxRows is 1000 and it is bigger than the value returned
+   * by this method (500 by default). The pagination will fallback to 1-500.
+   * 
+   * @returns biggest possible number for pagination maxRows. Default is 500.
+   */
+  getPaginationMaxRowsLimit() {
+    return 500;
+  }
+
+  /**
+   * Default `ColumnType.Date` filter component used by `PanemuQueryComponent`.
+   * @returns 
+   */
+  getDateFilterComponent(): Type<FilterEditor> {
+    return DateFilterComponent
+  }
+
+  /**
+   * Default `ColumnType.DateTime` filter component used by `PanemuQueryComponent`.
+   * @returns 
+   */
+  getDateTimeFilterComponent(): Type<FilterEditor> {
+    return DateFilterComponent
+  }
+
+  /**
+   * Default `ColumnType.Map` filter component used by `PanemuQueryComponent`.
+   * @returns 
+   */
+  getMapFilterComponent(): Type<FilterEditor> {
+    return MapFilterComponent
+  }
+
+  /**
+   * Default filter component used by `PanemuQueryComponent`.
+   * @returns 
+   */
+  getDefaultFilterComponent(): Type<FilterEditor> {
+    return StringFilterComponent;
   }
 }

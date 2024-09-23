@@ -1,10 +1,13 @@
-<td colspan="5" (click)="expandAction(rowGroup)">
+<td colspan="5" (click)="disableInteraction ? null : expandAction(rowGroup)">
   <div class="flex justify-between items-center">
-    <span class="group-label">
+    <span class="group-label flex items-center gap-4">
+      <img width="24px" src="assets/flags/{{rowGroup.data.value.toLowerCase()}}.svg">
       {{rowGroup.data.value | groupCell:rowGroup.formatter}} 
-      - ({{rowGroup.data.count}})
-      - click to expand</span>
-    <span class="text-xs font-semibold text-gray-400">Average Amount:</span>
+      - ({{rowGroup.data.count}}) </span>
+      <span *ngIf="!disableInteraction">
+        click to expand
+      </span>
+    <span *ngIf="!disableInteraction" class="text-xs font-semibold text-gray-400">Average Amount:</span>
   </div>
 </td>
 <td class="text-right">{{$any(rowGroup.data).average | number:'.2'}}</td>

@@ -1,36 +1,60 @@
 <div class="panemu-table">
   <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
   
-  <div [class.v-scrollable]="verticalScroll" style="overflow: auto;">
-    <table #panemuTable class="table">
+  <div [class.v-scrollable]="!tableOptions.autoHeight" style="overflow: auto;">
+    @if (tableOptions.virtualScroll) {
+      <cdk-virtual-scroll-viewport [itemSize]="tableOptions.virtualScrollRowHeight" style="height: 100%;">
+        <table #panemuTable class="table">
+          <ng-container [ngTemplateOutlet]="tableHeadTemplate"></ng-container>
+          <tbody>
+            <ng-container *cdkVirtualFor="let row of dataSource">
+              <ng-container *ngTemplateOutlet="rowTemplate; context:{row}" ></ng-container>
+            </ng-container>
+          </tbody>
+          <ng-container [ngTemplateOutlet]="footerComponent"></ng-container>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    } @else {
+      <table #panemuTable class="table">
+        <ng-container [ngTemplateOutlet]="tableHeadTemplate"></ng-container>
+        <tbody>
+          @for (row of dataSource; track row) {
+            <ng-container *ngTemplateOutlet="rowTemplate; context:{row}" ></ng-container>
+          }
+        </tbody>
+        <ng-container [ngTemplateOutlet]="footerComponent"></ng-container>
+      </table>
+    }
+
+    <ng-template #tableHeadTemplate>
       <colgroup>
         @for (column of _visibleColumns; track $index) {
           <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
         }
       </colgroup>
-      <thead >
+      <thead [style.top]="headerTop">
         @for (header of columnDefinition.header; track header) {
           <tr>
             @for (cell of header.cells; track cell.__key; let idx = $index) {
               <ng-container *ngIf="cell.resizable; else notResizable">
-                <th class="default-header" 
-                  [attr.data-col]="'th_' + cell.__key!" 
+                <th class="default-header"
+                  [attr.data-col]="'th_' + cell.__key!"
                   [attr.group]="cell.__isGroup"
-                  [attr.rowspan]="cell.__rowSpan" 
-                  [attr.colspan]="cell.__colSpan" 
-                  [resizable]="cell.width!" 
-                  [columnId]="'th_' + cell.__key!" 
+                  [attr.rowspan]="cell.__rowSpan"
+                  [attr.colspan]="cell.__colSpan"
+                  [resizable]="cell.width!"
+                  [columnId]="'th_' + cell.__key!"
                   [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
                   [table]="matTable">
                   <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
                 </th>
               </ng-container>
               <ng-template #notResizable>
-                <th class="default-header" 
+                <th class="default-header"
                   [attr.data-col]="'th_' + cell.__key!"
                   [attr.group]="cell.__isGroup"
-                  [attr.rowspan]="cell.__rowSpan" 
-                  [attr.colspan]="cell.__colSpan" 
+                  [attr.rowspan]="cell.__rowSpan"
+                  [attr.colspan]="cell.__colSpan"
                   [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
                   >
                   <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
@@ -40,71 +64,72 @@
           </tr>
         }
       </thead>
-      <tbody>
-        @for (row of dataSource; track row) {
+    </ng-template>
 
-          @if (isGroup($index, row)) {
-
-            <tr >
-              <ng-template [rowGroupRenderer]="$any(row).column.rowGroupRenderer" [rowGroup]="$any(row)" [colSpan]="_displayedColumns.length" [expandAction]="groupHeaderClick.bind(this)"></ng-template>
-            </tr>
-
-          } @else if (isExpansionRow($index, row)) {
-
-            <tr>
-              <td [attr.colspan]="_displayedColumns.length">
-                @if($any(row).isTemplateRef()) {
-                  <ng-container 
-                  [ngTemplateOutlet]="$any(row).component()" 
-                  [ngTemplateOutletContext]="{row: $any(row).row, column: $any(row).column, close: $any(row).close.bind($any(row))}">
-
-                  </ng-container>
-                } @else {
-                  <ng-template 
-                    [expansionRowRenderer]="$any(row).component" 
-                    [row]="$any(row).row" 
-                    [column]="$any(row).column" 
-                    [close]="$any(row).close.bind($any(row))">
-                  </ng-template>
-                }
-              </td>
-            </tr>
-
-          } @else {
-
-            <tr class="row {{row | rowStyling:rowOptions.rowClass}}"
-            [style]="row | rowStyling:rowOptions.rowStyle"
-            [class.selected-row]="_controllerSelectedRowSignal() == row" 
-            (click)="selectRow($any(row))">
-
-              @for (column of _visibleColumns; track column) {
-
-                <td 
-                  class="default-cell {{column.__key!}} {{$any(row)[column.field] | cellStyling:row:column.cellClass}}" 
-                  [style]="$any(row)[column.field] | cellStyling:row:column.cellStyle"
-                  [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-                  >
-                  <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
-                </td>
-              }
-            </tr>
-
+    <ng-template #rowTemplate let-row="row">
+      @if (isGroup(row)) {
+        <tr [class]="'row-group ' + row.column.__key">
+          <ng-template [rowGroupRenderer]="row.column.rowGroupRenderer" [rowGroup]="row" [colSpan]="_displayedColumns.length" [expandAction]="expandAction"></ng-template>
+        </tr>
+      } @else if (isGroupFooter(row)) {
+        <tr [class]="'row-group-footer ' + row.rowGroup.column.__key">
+          <ng-template [rowGroupFooterRenderer]="row.rowGroup.column.rowGroupRenderer" [rowGroup]="row.rowGroup" [colSpan]="_displayedColumns.length"></ng-template>
+        </tr>
+      } @else if (isExpansionRow(row)) {
+        <tr>
+          <td [attr.colspan]="_displayedColumns.length">
+            @if(row.isTemplateRef()) {
+              <ng-container
+              [ngTemplateOutlet]="$any(row).component()"
+              [ngTemplateOutletContext]="{row: row.row, column: row.column, close: row.close.bind(row)}">
+              </ng-container>
+            } @else {
+              <ng-template
+                [expansionRowRenderer]="$any(row).component"
+                [row]="row.row"
+                [column]="row.column"
+                [close]="row.close.bind(row)">
+              </ng-template>
+            }
+          </td>
+        </tr>
+      } @else {
+        <tr class="row {{row | rowStyling:tableOptions.rowOptions.rowClass}}"
+        [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
+        [class.selected-row]="_controllerSelectedRowSignal() == row"
+        (click)="selectRow(row)">
+          @for (column of _visibleColumns; track column) {
+            <td
+              class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+              [style]="row[column.field] | cellStyling:row:column.cellStyle"
+              [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+              >
+              <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
+            </td>
           }
-          
-        }
-      </tbody>
-      
-      
-    </table>
+        </tr>
+      }
+    </ng-template>
+
+    <ng-template #footerComponent>
+      @if (tableOptions.footer) {
+        <tfoot [style.bottom]="footerBottom">
+          <tr>
+            <ng-template [tableFooterRenderer]="tableOptions.footer.component" [parameter]="tableOptions.footer.parameter" [colSpan]="_displayedColumns.length"></ng-template>
+          </tr>
+        </tfoot>
+      }
+    </ng-template>
+
   </div>
-  <div class="no-data" *ngIf="controller() && !dataSource?.length"> {{labelTranslation.noData}} </div>
+  <div class="no-data" *ngIf="controller && !dataSource?.length"> {{labelTranslation.noData}} </div>
 </div>
 
 <ng-template #columnHeader let-column="column">
   <div class="column-header" [class.sortable]="column.sortable" (click)="sort(column)">
     <ng-template [headerRenderer]="column" ></ng-template>
-    <span *ngIf="controller().sortedColumn[column.field]" class="material-symbols-outlined">
-      {{controller().sortedColumn[column.field] == 'asc' ? 'arrow_drop_down' : 'arrow_drop_up'}}
+    <span *ngIf="controller.sortedColumn[column.field]" class="material-symbols-outlined">
+      {{controller.sortedColumn[column.field] == 'asc' ? 'arrow_drop_down' : 'arrow_drop_up'}}
     </span>
   </div>
 </ng-template>

@@ -4,9 +4,9 @@ import { RowGroup } from "../row/row-group";
 export type RefreshPagination = (start: number, maxRows: number, totalRows: number) => void;
 
 export interface PanemuPaginationController {
-  __refreshPagination?: RefreshPagination
+  initPaginationComponent: (refreshEvent: RefreshPagination) => void
   startIndex: number
   maxRows: number
-  __reloadGroup: (group: RowGroup) => void
+  reloadGroup: (group: RowGroup) => void
   reloadCurrentPage: Function
 }

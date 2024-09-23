@@ -18,8 +18,18 @@ export interface RowGroupContentComponent {
 }
 
 /**
- * The default component that renders RoGroup is  `DefaultRowGroupRenderer`.
+ * The default component that renders RowGroup is `DefaultRowGroupRenderer`.
+ * If you want to only customize the content part and keep the expand button as is, consider using
+ * `DefaultRowGroupRenderer.create` static method. It also has a flag to hide the pagination.
+ * 
  * To create a custom renderer, create a component extending this interface.
+ * The template should be one or more td elements. The host css display property must be set to `contents`.
+ * 
+ * ```css
+ *:host {
+    display: contents;
+  }
+ * ```
  */
 export interface RowGroupComponent {
   /**
@@ -28,8 +38,7 @@ export interface RowGroupComponent {
   colSpan: number
 
   /**
-   * This is the RowGroup object.
-   * Access the `RowGroup.data` property to get the data provided by 
+   * This is the RowGroup object. Access the `RowGroup.data` property to get the data provided by 
    * the table datasource.
    */
   rowGroup: RowGroup
@@ -44,15 +53,34 @@ export interface RowGroupComponent {
 }
 
 /**
+ * The template should be one or more td elements. The host css display property must be set to `contents`.
+ */
+export interface RowGroupFooterComponent {
+  /**
+   * This is the RowGroup object. Access the `RowGroup.data` property to get the data provided by 
+   * the table datasource.
+   */
+  rowGroup: RowGroup
+
+  /**
+  * It stores the number of visible columns that can be used to span the td element horizontally.
+  */
+  colSpan: number
+
+  parameter?: any
+}
+
+/**
  * Interface for `PropertyColumn.rowGroupRenderer`. It gives a way to customize RowGroup component.
  * If you want to only customize the content part and keep the expand button as is, consider using
  * `DefaultRowGroupRenderer.create` static method. It also has a flag to hide the pagination.
  */
 export interface RowGroupRenderer {
   /**
-   *
+   * Component implements `RowGroupComponent`
    */
   component: Type<RowGroupComponent>,
+  footerComponent?: Type<RowGroupFooterComponent> | Signal<TemplateRef<any> | undefined>,
   parameter?: any;
 }
 
@@ -84,13 +112,30 @@ export class DefaultRowGroupRenderer implements OnInit, RowGroupComponent {
         this.contentComponent = this.parameter?.contentRenderer;
       }
     }
-    
+
   }
 
-  static create(parameter: {contentRenderer?: Type<RowGroupContentComponent> | Signal<TemplateRef<any> | undefined>, showPagination?: boolean}): RowGroupRenderer {
+  /**
+   * Customize DefaultRowGroupRenderer. Provided customization is
+   * - show/hide pagination
+   * - content component
+   * - footer component
+   * @param parameter
+   * @returns 
+   */
+  static create(customization: {
+    header?: { contentRenderer?: Type<RowGroupContentComponent> | Signal<TemplateRef<any> | undefined>, showPagination?: boolean },
+    footerComponent?: Type<RowGroupFooterComponent> | Signal<TemplateRef<any> | undefined>,
+    parameter?: any
+  }): RowGroupRenderer {
+
+    let params = customization.parameter || {};
+    Object.assign(params, customization.header)
+
     return {
       component: DefaultRowGroupRenderer,
-      parameter: parameter
+      footerComponent: customization.footerComponent,
+      parameter: params
     }
   }
 }

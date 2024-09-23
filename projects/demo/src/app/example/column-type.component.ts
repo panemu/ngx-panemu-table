@@ -1,12 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'pnm-column-type',
   templateUrl: 'column-type.component.html',
-  imports: [PanemuTableComponent],
+  imports: [PanemuTableComponent, PanemuQueryComponent],
   standalone: true
 })
 

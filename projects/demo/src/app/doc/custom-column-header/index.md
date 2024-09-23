@@ -1,5 +1,5 @@
 ---
-keyword: CustomRowHeaderPage
+keyword: CustomColumnHeaderPage
 ---
 
 {{ NgDocActions.demo("CustomHeaderComponent") }}

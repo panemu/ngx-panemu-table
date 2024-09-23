@@ -1,0 +1,25 @@
+<div class="h-[500px] flex flex-col gap-4">
+  <div class="flex gap-2  flex-wrap">
+    <button (click)="idLessOrEqual()">Id &lt;= 5</button>
+    <button (click)="idLessThan()">Id &lt; 5</button>
+    <button (click)="idGreaterOrEqual()">Id &gt;= 5</button>
+    <button (click)="idGreaterThan()">Id &gt; 5</button>
+    <button (click)="idBetweenInclusive()">5 &gt;= Id &lt;= 10</button>
+    <button (click)="idBetweenExclusive()">5 &gt; Id &lt; 10</button>
+    <button (click)="enrolledBetween()">Enrolled Jan 2023</button>
+    <button (click)="lastLoginBetween()">Last Login 22-25 Mar 2024</button>
+    <button (click)="nameContains()">Name contains co</button>
+  </div>
+  <div>
+    <panemu-query [controller]="controller"/>
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"/>
+  </div>
+</div>
+
+<ng-template #footerTemplate let-colSpan="colSpan">
+  <th [attr.colspan]="colSpan" class="text-left">
+    Total Rows: {{totalRows}}
+  </th>
+</ng-template>

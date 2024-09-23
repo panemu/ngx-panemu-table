@@ -24,8 +24,8 @@ export class CustomPanemuTableService extends PanemuTableService {
     }
   }
 
-  override getDefaultColumnOptions(): DefaultColumnOptions {
-      const options = super.getDefaultColumnOptions();
+  override getColumnOptions(): DefaultColumnOptions {
+      const options = super.getColumnOptions();
       options.sortable = false;
       return options;
   }

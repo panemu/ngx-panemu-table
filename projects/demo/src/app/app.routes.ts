@@ -17,6 +17,9 @@ import { CustomFilterEditorComponent } from './example/custom-filter-editor.comp
 import { CustomRowGroupComponent } from './example/custom-row-group/custom-row-group.component';
 import { DateColumnComponent } from './doc/columns/date-column/date-column.component';
 import { VerticalScrollComponent } from './example/vertical-scroll.component';
+import { VirtualScrollComponent } from './example/virtual-scroll.component';
+import { CustomRowGroup2Component } from './example/custom-row-group/custom-row-group2.component';
+import { FilterExamplesComponent } from './example/filter-examples.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -38,6 +41,9 @@ export const routes: Routes = [
 	{ path: 'custom-header', component: CustomHeaderComponent },
 	{ path: 'custom-filter-editor', component: CustomFilterEditorComponent },
 	{ path: 'custom-row-group', component: CustomRowGroupComponent },
+	{ path: 'custom-row-group2', component: CustomRowGroup2Component },
 	{ path: 'vertical-scroll', component: VerticalScrollComponent },
+	{ path: 'virtual-scroll', component: VirtualScrollComponent },
+	{ path: 'filter-examples', component: FilterExamplesComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

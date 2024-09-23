@@ -1,15 +1,15 @@
-import { RowGroup } from "./row/row-group";
+import { RowGroup, RowGroupFooter } from "./row/row-group";
 import { ExpansionRow } from "./row/expansion-row";
 
 /**
- * Function to check if passed row is a data row. There are 3 object types that can be displayed
- * in `PanemuTableComponent`: RowGroup, ExpansionRow and the actual data.
+ * Function to check if passed row is a data row. There are 4 object types that can be displayed
+ * in `PanemuTableComponent`: RowGroup, RowGroupFooter, ExpansionRow, and the actual data.
  * 
  * @param row object to check
  * @returns true if row is not RowGroup nor ExpansionRow
  */
 export function isDataRow(row: any) {
-  return !(row instanceof ExpansionRow) && !(row instanceof RowGroup)
+  return !(row instanceof ExpansionRow) && !(row instanceof RowGroup) && !(row instanceof RowGroupFooter)
 }
 
 export function formatDateToIso(d?: Date): string | undefined {
@@ -63,4 +63,31 @@ export function setElementWidth(w: number, element?: HTMLElement) {
   if (element) {
     element!.style.width = w + 'px';
   }
+}
+
+export function isObject(item: any) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function mergeDeep(target: any, ...sources: any) {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
 }

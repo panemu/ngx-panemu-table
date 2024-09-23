@@ -16,7 +16,8 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
 export class RowDetailComponent {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
-  
+  deleteExpansionRow = viewChild<TemplateRef<any>>('deleteExpansionRow');
+
   private readonly clmEditInExpansion: ComputedColumn = {
     type: ColumnType.COMPUTED,
     formatter: (val: any) => '',
@@ -27,28 +28,30 @@ export class RowDetailComponent {
   };
 
   columns = this.pts.buildColumns<People>([
+    { field: 'id', },
     { field: 'name', },
     {
       field: 'email', expansion: {
-        component: this.sendEmailTemplate, 
+        component: this.sendEmailTemplate,
         isDisabled: (row) => {
-          return row.country == 'Indonesia'
+          return row.country == 'ID'
         },
-      }
-    },
-    { field: 'country', expansion: {
-        component: NestedTableComponent,
         buttonPosition: 'end',
       }
     },
-    
+    {
+      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), expansion: {
+        component: NestedTableComponent,
+      }
+    },
+
     this.clmEditInExpansion,
   ])
   datasource = new PanemuTableDataSource<People>();
 
-  controller = PanemuTableController.create<People>(this.columns, this.datasource);
+  controller = PanemuTableController.create<People>(this.columns, this.datasource, {virtualScroll: true, virtualScrollRowHeight: 32, autoHeight: true});
 
-  constructor(private pts: PanemuTableService, 
+  constructor(private pts: PanemuTableService,
     private dataService: DataService,
   ) { }
 
@@ -66,7 +69,23 @@ export class RowDetailComponent {
   }
 
   edit(row: People) {
+    this.clmEditInExpansion.expansion = { component: PeopleFormComponent };
     this.controller.expand(row, this.clmEditInExpansion)
+  }
+
+  deleteConfirmation(row: People) {
+    this.clmEditInExpansion.expansion = { component: this.deleteExpansionRow };
+    this.controller.expand(row, this.clmEditInExpansion)
+  }
+
+  doDelete(row: People) {
+    const allData = this.datasource.getAllData();
+    const idx = allData.indexOf(row);
+    if (idx > -1) {
+      allData.splice(idx, 1);
+      this.datasource.setData(allData);
+    }
+    this.controller.reloadData();
   }
 
   editFirstRow() {
