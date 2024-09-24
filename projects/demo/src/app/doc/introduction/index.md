@@ -14,10 +14,6 @@ keyword: IntroductionPage
 <br>
 <br>
 
-> **Note**
-> ✨ Cell Expansion (v.0.0.6).See `*CellExpansionPage`.
-> <br>✨ Export to CSV (v.0.0.6). See `PanemuTableController.getcsvdata`
-
 NgxPanemuTable is an Angular table component. It is designed to be easy to use. Most work will be in typescript file, while
 the html file only needs to have a very simple `panemu-table` tag.
 
@@ -76,6 +72,29 @@ These features are not developed yet. Please create a ticket in [our repository]
 - Global search
 - Column reorder
 - Save columns position, width and visibility
+
+## Releases:
+
+### v.0.0.7
+
+* Virtual scroll
+* Table footer
+* RowGroup now customizable and can have footer
+
+### v.0.0.6
+
+* Cell expansion
+* Export to CSV
+
+### v.0.0.5
+
+* Group multiple columns under one cell header
+
+
+### Support Us
+
+<a href='https://ko-fi.com/s/60c660f1f0' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 
 ## About Panemu
 
