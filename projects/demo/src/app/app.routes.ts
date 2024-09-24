@@ -20,6 +20,7 @@ import { VerticalScrollComponent } from './example/vertical-scroll.component';
 import { VirtualScrollComponent } from './example/virtual-scroll.component';
 import { CustomRowGroup2Component } from './example/custom-row-group/custom-row-group2.component';
 import { FilterExamplesComponent } from './example/filter-examples.component';
+import { MapColumnComponent } from './doc/columns/map-column/map-column.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -45,5 +46,6 @@ export const routes: Routes = [
 	{ path: 'vertical-scroll', component: VerticalScrollComponent },
 	{ path: 'virtual-scroll', component: VirtualScrollComponent },
 	{ path: 'filter-examples', component: FilterExamplesComponent },
+	{ path: 'map-column', component: MapColumnComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

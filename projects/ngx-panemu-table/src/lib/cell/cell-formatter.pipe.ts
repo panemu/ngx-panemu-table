@@ -26,7 +26,7 @@ export class CellFormatterPipe implements PipeTransform {
    * @param formatter formatter from `PropertyColumn.formatter`. It is included to trigger cell refresh when formatter is changed.
    * @returns 
    */
-  transform(val: any, row?: any, column?: PropertyColumn<any>, formatter?:CellFormatter): any {
+  transform(val: any, row?: any, column?: PropertyColumn<any>, formatter?:CellFormatter, valueMap?: any): any {
     if (column?.formatter) {
       return column.formatter!(val, row, column);
     }
