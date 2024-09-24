@@ -1,23 +1,16 @@
 <div class="flex flex-col gap-4" [style.height.px]="height">
-	<div class="flex justify-between">
-		<div>Container height
-			<mat-slider
-        class="example-margin"
-        [max]="900"
-        [min]="300"
-        [step]="10"
-        [discrete]="false">
-      <input matSliderThumb [(ngModel)]="height" #slider>
-    </mat-slider>
-		</div>
-	  <panemu-pagination [controller]="controller"/>
-	</div>
-	<div class="flex-grow">
-		 <panemu-table [controller]="controller"></panemu-table>
-	</div>
-	<div>
-		This line is below the table. Notice the table is taking all remaining space. 
-	</div>
- </div>
-
- 
+  <div class="flex justify-between">
+    <div>Container height
+      <mat-slider class="example-margin" [max]="900" [min]="300" [step]="10" [discrete]="false">
+        <input matSliderThumb [(ngModel)]="height" #slider>
+      </mat-slider>
+    </div>
+    <panemu-pagination [controller]="controller" />
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+  <div>
+    This line is below the table. Slide the Container height slider and notice the table is taking all remaining space.
+  </div>
+</div>
