@@ -2,11 +2,52 @@ import { Signal, TemplateRef, Type } from "@angular/core";
 import { TableFooterComponent } from "../table-footer";
 import { PropertyColumn } from "../column/column";
 
+/**
+ * Interface for custom row renderer. The template root component should be a tr element.
+ *
+```html
+<ng-template #rowRenderer 
+  let-row="row" 
+  let-visibleColumns="visibleColumns" 
+  let-rowOptions="rowOptions"
+  let-selectedRow="selectedRow"
+  let-selectRow="selectRow"
+>
+  <tr>
+    <td *ngFor="let column of visibleColumns">
+      {{row[column.field]}}
+    </td>
+  </tr>
+</ng-template>
+```
+@see https://ngx-panemu-table.panemu.com/usages/cell-spanning
+ */
 export interface RowRenderer<T> {
+  /**
+   * Row to render
+   */
   row: T;
+
+  /**
+   * List of visible column. It is derived from `ColumnDefinition.body`.
+   */
   visibleColumns: PropertyColumn<T>[];
+
+  /**
+   * Provides reference to rowClass and rowStyle factories.
+   */
   rowOptions: RowOptions<T>;
+
+  /**
+   * A signal to check if current row is selected.
+   */
   selectedRow: Signal<T | null>;
+
+  /**
+   * A function to select current row
+   * @param row 
+   * @returns 
+   */
   selectRow: (row: T) => void;
 }
 
