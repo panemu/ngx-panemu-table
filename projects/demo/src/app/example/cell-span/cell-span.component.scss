@@ -1,0 +1,9 @@
+.cell-span {
+  .panemu-table table tbody tr:not(.selected-row) {
+    background-color: white;
+  }
+
+  .panemu-table table tbody tr:not(.selected-row) td:not(:last-child) {
+    border-right: 1px solid #dedede;
+  }
+}

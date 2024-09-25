@@ -21,6 +21,8 @@ import { VirtualScrollComponent } from './example/virtual-scroll.component';
 import { CustomRowGroup2Component } from './example/custom-row-group/custom-row-group2.component';
 import { FilterExamplesComponent } from './example/filter-examples.component';
 import { MapColumnComponent } from './doc/columns/map-column/map-column.component';
+import { CellSpanComponent } from './example/cell-span/cell-span.component';
+import { PaginationComponent } from './example/pagination.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -47,5 +49,7 @@ export const routes: Routes = [
 	{ path: 'virtual-scroll', component: VirtualScrollComponent },
 	{ path: 'filter-examples', component: FilterExamplesComponent },
 	{ path: 'map-column', component: MapColumnComponent },
+	{ path: 'cell-span', component: CellSpanComponent },
+	{ path: 'pagination', component: PaginationComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

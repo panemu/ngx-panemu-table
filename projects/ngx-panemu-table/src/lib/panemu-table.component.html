@@ -93,21 +93,11 @@
             }
           </td>
         </tr>
+      } @else if (tableOptions.rowOptions.rowRenderer?.()) {
+        <ng-container [ngTemplateOutlet]="tableOptions.rowOptions.rowRenderer!()!" 
+        [ngTemplateOutletContext]="{row, visibleColumns: _visibleColumns, rowOptions: tableOptions.rowOptions, selectedRow: _controllerSelectedRowSignal, selectRow: this.selectRow.bind(this)}"></ng-container>
       } @else {
-        <tr class="row {{row | rowStyling:tableOptions.rowOptions.rowClass}}"
-        [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
-        [class.selected-row]="_controllerSelectedRowSignal() == row"
-        (click)="selectRow(row)">
-          @for (column of _visibleColumns; track column) {
-            <td
-              class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
-              [style]="row[column.field] | cellStyling:row:column.cellStyle"
-              [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-              >
-              <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
-            </td>
-          }
-        </tr>
+        <ng-container [ngTemplateOutlet]="defaultRowRenderer" [ngTemplateOutletContext]="{row}"></ng-container>
       }
     </ng-template>
 
@@ -132,4 +122,22 @@
       {{controller.sortedColumn[column.field] == 'asc' ? 'arrow_drop_down' : 'arrow_drop_up'}}
     </span>
   </div>
+</ng-template>
+
+<ng-template #defaultRowRenderer let-row="row">
+
+  <tr class="row {{row | rowStyling:tableOptions.rowOptions.rowClass}}"
+  [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
+  [class.selected-row]="_controllerSelectedRowSignal() == row"
+  (click)="selectRow(row)">
+    @for (column of _visibleColumns; track column) {
+      <td
+      class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+      [style]="row[column.field] | cellStyling:row:column.cellStyle"
+      [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+      >
+      <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
+    </td>
+    }
+  </tr>
 </ng-template>
