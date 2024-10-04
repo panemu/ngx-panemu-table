@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnType, ColumnDefinition, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, ColumnDefinition, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PanemuSettingComponent } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 const DATA: People[] = [
@@ -18,13 +18,14 @@ const DATA: People[] = [
 @Component({
   selector: 'app-column-group',
   standalone: true,
-  imports: [PanemuTableComponent],
+  imports: [PanemuTableComponent, PanemuSettingComponent],
   template: `
   <div class="flex flex-col gap-4">
     <div class="flex gap-4">
       <button data-test-id="btn2" (click)="group1()">Group 1</button>
       <button data-test-id="btn3" (click)="group2()">Group 2</button>
       <button data-test-id="btn1" (click)="noGroup()">No Group</button>
+      <panemu-setting key="tblBasic" [controller]="controller"></panemu-setting>
     </div>
     <div>
       <panemu-table [controller]="controller"></panemu-table>

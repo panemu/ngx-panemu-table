@@ -1,0 +1,11 @@
+<div class="sticky-badge hover-child-inverse-display" *ngIf="(stickyObservable$ | async)" (click)="click()">
+  <span *ngIf="stickyObservable$.getValue() == 'start'" class="material-symbols-outlined">align_horizontal_left</span>
+  {{label}}
+  <span *ngIf="stickyObservable$.getValue() == 'end'" class="material-symbols-outlined">align_horizontal_right</span>
+</div>
+
+<div class="sticky-options hover-child-flex">
+  <button [class.selected]="stickyObservable$.getValue() == 'start'" (click)="stick('start')"><span class="material-symbols-outlined">align_horizontal_left</span></button>
+  <button [class.selected]="!stickyObservable$.getValue()" (click)="stick(null)"><span class="material-symbols-outlined">horizontal_distribute</span></button>
+  <button [class.selected]="stickyObservable$.getValue() == 'end'" (click)="stick('end')"><span class="material-symbols-outlined">align_horizontal_right</span></button>
+</div>

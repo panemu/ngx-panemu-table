@@ -57,6 +57,7 @@ export class GroupbyComponent {
       this.controller().groupByColumns.push({ field: item.field.toString(), modifier});
     }
     this.controller().reloadData();
+    this.controller().saveState();
   }
 
   isInGroup(clm: PropertyColumn<any>, modifier?: string): boolean {

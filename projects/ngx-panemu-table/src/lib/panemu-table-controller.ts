@@ -1,6 +1,6 @@
 import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
-import { BehaviorSubject, catchError, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
-import { BaseColumn, ColumnDefinition, ColumnType } from "./column/column";
+import { BehaviorSubject, catchError, delay, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
+import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, NonGroupColumn } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { TableOptions } from "./option/options";
 import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
@@ -9,6 +9,9 @@ import { RowGroup, RowGroupData, RowGroupFooter } from "./row/row-group";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { formatDateToIso, isDataRow, mergeDeep, toDate } from "./util";
+import { ColumnState, TableState } from "./state/table-states";
+import { TableStateManager } from "./state/table-state-manager";
+import { PanemuTableService } from "./panemu-table.service";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -32,16 +35,6 @@ type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | u
  */
 export class PanemuTableController<T> implements PanemuPaginationController {
 
-  static DEFAULT_ERROR_HANDLER = (err: any) => {
-    console.error(err)
-    alert('There is an error when loading table. Override this error handler by setting PanemuTableController.DEFAULT_ERROR_HANDLER at the start of the application ')
-  }
-
-  
-  private static DEFAULT_MAX_ROWS: number;
-
-  private static MAX_ROWS_LIMIT = 500;
-  
   /**
    * The value of this signal is set by table component. The table knows how to agregate the
    * row data, groups data etc.
@@ -75,12 +68,15 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   private afterReload$ = new BehaviorSubject<TableData<T> | null>(null);
   private _startIndex = 0;
   private lastReloadTotalRows = 0;
-  private _maxRows = Math.min(PanemuTableController.DEFAULT_MAX_ROWS, PanemuTableController.MAX_ROWS_LIMIT);
-  private static DEFAULT_TABLE_OPTIONS: TableOptions<any>;
-  tableOptions: TableOptions<T> = JSON.parse(JSON.stringify(PanemuTableController.DEFAULT_TABLE_OPTIONS));
+  private _maxRows;
+  private stateInitialized = false;
+  tableOptions: TableOptions<T>;
   sortedColumn: { [key: string]: 'asc' | 'desc' } = {};
 
   private hasPagination = false;
+  private pts: PanemuTableService;
+  private stateManager: TableStateManager;
+
   /**
    * Force refresh the table.
    */
@@ -90,7 +86,10 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   private constructor(public columnDefinition: ColumnDefinition<T>, 
     private retrieveDataFunction: RetrieveDataFunction<T>, 
     tableOptions?: Partial<TableOptions<T>>) {
-    
+    this.pts = columnDefinition.__tableService;
+    this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
+    this.tableOptions = this.pts.getTableOptions();
+    this.stateManager = new TableStateManager(this.pts);
     mergeDeep(this.tableOptions, tableOptions);
     this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;  
     this.tableOptions.autoHeight = this.tableOptions.virtualScroll ? false : this.tableOptions.autoHeight;
@@ -157,7 +156,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         return this.retrieveDataFunction(start, rowsToLoad, tq).pipe(
           finalize(() => this._loading.next(false)),
           catchError(err => {
-            PanemuTableController.DEFAULT_ERROR_HANDLER(err);
+            this.pts.handleError(err);
             return of(null)
           })
         );
@@ -289,7 +288,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * 
    * The value is limited by `PanemuTableService.getPaginationMaxRowsLimit`.
    */
-  set maxRows(val: number) { this._maxRows = Math.min(val, PanemuTableController.MAX_ROWS_LIMIT) }
+  set maxRows(val: number) { this._maxRows = Math.min(val, this.pts.getPaginationMaxRowsLimit()) }
 
   /**
    * Get max rows from connected `PanemuPaginationComponent`.
@@ -314,7 +313,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   private createGroupController(group: RowGroup) {
-    let groupController = new PanemuTableController({header: [], body: []}, this.retrieveDataFunction);
+    let groupController = new PanemuTableController({header: [], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts}, this.retrieveDataFunction);
     let slicedGroupByColumn = group.parent ? group.parent.controller!.groupByColumns.slice(1) : this.groupByColumns.slice(1);
     groupController.groupByColumns = slicedGroupByColumn;
     groupController.createTableQuery = () => {
@@ -370,6 +369,26 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Reload data without resetting pagination start index.
    */
   reloadCurrentPage() {
+
+    if (this.tableOptions.stateKey && !this.stateInitialized) {
+      this.stateInitialized = true;
+      this.readState().pipe(
+        finalize(() => this.reloadCurrentPage())
+      ).subscribe({
+        next: state => {
+          if (state) {
+            this.restoreState(state);
+          }
+
+        },
+        error : e => {
+          console.error(e);
+        }
+      })
+
+      return;
+    }
+
     if (this.tableDisplayData) {
       this.reloadCue.next(this.reloadCue.getValue() + 1)
     } else {
@@ -440,6 +459,12 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     this.selectedRow.set(null)
   }
 
+  /**
+   * Expand cell. Only works of the column `BaseColumn.expansion` is defined.
+   * @param row 
+   * @param column 
+   * @param expanded a signal to listen to expand/collapse state.
+   */
   expand(row: T, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
     this.expandCell?.(row, column.expansion!.component, column, expanded)
   }
@@ -496,5 +521,105 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     }
 
     return csv.join('\n');
+  }
+
+  /**
+   * Called by setting component to repaint table header
+   */
+  relayout!: Function;
+
+  /**
+   * Save table states. The states are:
+   * 1. Column visibility, order and stickiness
+   * 2. Sorting
+   * 3. Pagination
+   * 4. Filtering
+   * 5. Grouping
+   * 
+   * Saving state only works if `TableOptions.stateKey` is defined. It has to be unique app-wide.
+   * The state is stored in local storage. To save in db server, override `PanemuTableService.saveTableState`.
+   */
+  saveState() {
+    this.stateManager.saveTableState(this)
+  }
+
+  /**
+   * Delete state.
+   * 
+   * @see `PanemuTableController.saveState`
+   */
+  deleteState() {
+    this.stateManager.deleteTableState(this.tableOptions.stateKey)
+  }
+
+  /**
+   * Read state.
+   * @returns 
+   * @see `PanemuTableController.saveState`
+   */
+  readState() {
+    return this.stateManager.getSavedTableState(this.tableOptions.stateKey, this.columnDefinition.structureKey)
+  }
+
+  private restoreState(state: TableState) {
+    this.criteria = state.criteria || [];
+    this.groupByColumns = state.groupByColumns || [];
+    this.startIndex = state.startIndex;
+    this.maxRows = state.maxRows;
+    this.sortedColumn = state.sorting ?? {};
+    const flattenStructure = this.getFlattenColumns(this.columnDefinition.mutatedStructure, []);
+    const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
+    for (const clmState of state.columns) {
+      const actualColumn = flattenStructure.find(item => item.__key == clmState.key);
+      if (!actualColumn) {
+        console.error(`unable to restore state for column key ${clmState.key}`);
+        return;
+      }
+      newStructure.push(actualColumn);
+      if (clmState.children?.length) {
+        const childStructure = this.restoreGroupState(clmState, flattenStructure);
+        (actualColumn as GroupedColumn).children = childStructure;
+      } else {
+        this.copyState(clmState, actualColumn);
+      }
+    }
+
+    this.columnDefinition.mutatedStructure = newStructure;
+    this.relayout();
+  }
+
+  private copyState(clmState: ColumnState, actualColumn: BaseColumn<any>) {
+    actualColumn.width = clmState.width;
+    actualColumn.visible = clmState.visible;
+    actualColumn.sticky = clmState.sticky;
+  }
+
+  private restoreGroupState(groupState: ColumnState, flattenStructure: (NonGroupColumn<any> | GroupedColumn)[]) {
+    const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
+    for (const child of groupState.children!) {
+      const actualColumn = flattenStructure.find(item => item.__key == child.key);
+      if (!actualColumn) {
+        console.error(`unable to restore state for column key ${child.key}`);
+        return [];
+      }
+      newStructure.push(actualColumn);
+      if (child.children?.length) {
+        const childStructure = this.restoreGroupState(child, flattenStructure);
+        (actualColumn as GroupedColumn).children = childStructure;
+      } else {
+        this.copyState(child, actualColumn);
+      }
+    }
+    return newStructure;
+  }
+
+  private getFlattenColumns(columns: (NonGroupColumn<any> | GroupedColumn)[], result: (NonGroupColumn<any> | GroupedColumn)[]) {
+    for (const clm of columns) {
+      result.push(clm);
+      if (clm.type == ColumnType.GROUP) {
+        this.getFlattenColumns((clm as GroupedColumn).children, result);
+      }
+    }
+    return result;
   }
 }

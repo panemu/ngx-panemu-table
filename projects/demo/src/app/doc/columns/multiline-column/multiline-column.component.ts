@@ -22,7 +22,7 @@ export class MultilineColumnnComponent implements OnInit {
 
   columns = this.pts.buildColumns<People>([
     { field: 'id', width: 50 },
-    { field: 'name', width: 300 },
+    { field: 'name', width: 300, cellClass: (_) => 'multi-line' },
     { field: 'email', width: 200 },
     { field: 'gender' },
     { field: 'country' },

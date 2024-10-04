@@ -80,7 +80,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.controller().criteria.push({field: val.source.value, value: criteriaValue});
-        this.controller().reloadData();
+        this.reload();
       } else {
         this.editQuery({field: val.source.value, label: '', value: ''})
       }
@@ -124,12 +124,17 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteCriteria(index: number) {
     this.controller().criteria.splice(index, 1);
-    this.controller().reloadData();
+    this.reload();
   }
 
   clearGroup() {
     this.controller().groupByColumns = [];
+    this.reload();
+  }
+
+  private reload() {
     this.controller().reloadData();
+    this.controller().saveState();
   }
 
   private $subscription = new Subscription();
@@ -146,7 +151,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.controller().criteria.push(result);
         }
-        this.controller().reloadData();
+        this.reload();
       }
     })
   }

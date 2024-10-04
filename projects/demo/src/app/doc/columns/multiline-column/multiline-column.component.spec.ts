@@ -30,9 +30,9 @@ describe('MultilineColumnnComponent', () => {
     await fixture.whenStable(); //wait for controller.reloadData()
     fixture.detectChanges();
 
-    const bannerDe: DebugElement = fixture.debugElement;
-    const bannerEl: HTMLElement = bannerDe.nativeElement;
-    let rows = bannerEl.querySelectorAll('table tbody tr') as NodeListOf<HTMLElement>;
+    const componentDe: DebugElement = fixture.debugElement;
+    const componentEl: HTMLElement = componentDe.nativeElement;
+    let rows = componentEl.querySelectorAll('table tbody tr') as NodeListOf<HTMLElement>;
     const cssRowHeight = 32;
     expect(rows[0].clientHeight).toBe(cssRowHeight);//32 is the row height set in css
     expect(rows[1].clientHeight > (cssRowHeight * 2)).toBe(true);

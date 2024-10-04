@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, EventEmitter, Inject, Output } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { distinctUntilChanged, map, skip, switchMap, takeUntil, tap, } from 'rxjs/operators';
+import { distinctUntilChanged, finalize, map, skip, switchMap, takeUntil, tap, } from 'rxjs/operators';
 
 @Directive({
   selector: '[resizable]',
@@ -9,6 +9,7 @@ import { distinctUntilChanged, map, skip, switchMap, takeUntil, tap, } from 'rxj
 })
 export class ResizableDirective {
   @Output() onStart = new EventEmitter
+  @Output() onEnd = new EventEmitter
   @Output()
   readonly resizable = fromEvent<MouseEvent>(
     this.elementRef.nativeElement,
@@ -28,7 +29,8 @@ export class ResizableDirective {
           return clientX - right + 6; //6 is .bar margin
         }),
         distinctUntilChanged(),
-        takeUntil(fromEvent(this.documentRef, 'mouseup'))
+        takeUntil(fromEvent(this.documentRef, 'mouseup')),
+        finalize(() => this.onEnd.emit())
       );
     })
   );

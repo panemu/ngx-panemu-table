@@ -28,8 +28,8 @@
 
     <ng-template #tableHeadTemplate>
       <colgroup>
-        @for (column of _visibleColumns; track $index) {
-          <col [attr.data-col]="'th_' + column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
+        @for (column of _visibleColumns; track column) {
+          <col #colEl [attr.data-col]="column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
         }
       </colgroup>
       <thead [style.top]="headerTop">
@@ -38,24 +38,29 @@
             @for (cell of header.cells; track cell.__key; let idx = $index) {
               <ng-container *ngIf="cell.resizable; else notResizable">
                 <th class="default-header"
-                  [attr.data-col]="'th_' + cell.__key!"
+                  [attr.data-col]="cell.__key!"
                   [attr.group]="cell.__isGroup"
                   [attr.rowspan]="cell.__rowSpan"
                   [attr.colspan]="cell.__colSpan"
                   [resizable]="cell.width!"
-                  [columnId]="'th_' + cell.__key!"
-                  [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
+                  (afterResize)="afterColumnResize()"
+                  [column]="cell"
+                  [class.sticky]="!!cell.sticky"
+                  [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
+                  [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
                   [table]="matTable">
                   <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
                 </th>
               </ng-container>
               <ng-template #notResizable>
                 <th class="default-header"
-                  [attr.data-col]="'th_' + cell.__key!"
+                  [attr.data-col]="cell.__key!"
                   [attr.group]="cell.__isGroup"
                   [attr.rowspan]="cell.__rowSpan"
                   [attr.colspan]="cell.__colSpan"
-                  [ngClass]="{'sticky-start': cell.sticky == 'start', 'sticky-end': cell.sticky == 'end'}"
+                  [class.sticky]="!!cell.sticky"
+                  [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
+                  [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
                   >
                   <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
                 </th>
@@ -112,7 +117,7 @@
     </ng-template>
 
   </div>
-  <div class="no-data" *ngIf="controller && !dataSource?.length"> {{labelTranslation.noData}} </div>
+  <div class="no-data" *ngIf="controller && !dataSource?.length && !(loading | async)"> {{labelTranslation.noData}} </div>
 </div>
 
 <ng-template #columnHeader let-column="column">
@@ -134,7 +139,9 @@
       <td
       class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
       [style]="row[column.field] | cellStyling:row:column.cellStyle"
-      [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+      [class.sticky]="!!column.sticky"
+      [style.left.px]="column.sticky == 'start' ? column.__leftStyle : null"
+      [style.right.px]="column.sticky == 'end' ? column.__rightStyle : null"
       >
       <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
     </td>

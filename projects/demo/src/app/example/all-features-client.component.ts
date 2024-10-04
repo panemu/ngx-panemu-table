@@ -60,7 +60,7 @@ export class AllFeaturesClientComponent implements OnInit {
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
+  constructor(private dataService: DataService, public pts: PanemuTableService) { }
 
   ngOnInit() {
     //set initial grouping

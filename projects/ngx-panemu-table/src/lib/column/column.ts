@@ -6,6 +6,7 @@ import { RowGroup, RowGroupFooter } from "../row/row-group";
 import { TickColumnClass } from "./tick-column-class";
 import { FilterEditor } from "../query/editor/filter-editor";
 import { RowGroupRenderer } from "../row/default-row-group-renderer";
+import { PanemuTableService } from "../panemu-table.service";
 
 /**
  * Interface for expanding cell to `ExpansionRow`. The generic T type is the data of row
@@ -79,7 +80,7 @@ export enum ColumnType {
   GROUP,
 }
 
-type StickyType = 'start' | 'end' | null;
+export type StickyType = 'start' | 'end' | null;
 
 export interface BaseColumn<T> {
   /**
@@ -172,6 +173,16 @@ export interface BaseColumn<T> {
   __isGroup?: boolean
 
   /**
+   * Used to store the left style for sticky start
+   */
+  __leftStyle?: number;
+
+  /**
+   * Used to store the right style for sticky end
+   */
+  __rightStyle?: number;
+
+  /**
    * Expansion row renderer. If this property is filled, the cell will have a button to expand.
    * The `rowComponent` property will be rendered in a new row just below the cell.
    */
@@ -256,7 +267,7 @@ export type NonGroupColumn<T> = Column<T> | MapColumn<T> | TickColumnClass<T> | 
 /**
  * Group several column headers. It works by incorporating `rowspan` and `colspan` th element attributes.
  */
-export interface GroupedColumn {
+export interface GroupedColumn extends Pick<BaseColumn<any>, 'type' | 'label' | '__key'> {
   type: ColumnType.GROUP
   label: string
   children: (GroupedColumn | NonGroupColumn<any>)[]
@@ -274,7 +285,6 @@ export interface GroupedColumn {
  */
 export interface HeaderRow {
   cells: BaseColumn<any>[]
-  keys: string[]
 }
 
 /**
@@ -283,7 +293,16 @@ export interface HeaderRow {
  * `PanemuTableService.buildColumns()` method.
  */
 export interface ColumnDefinition<T> {
-  header: HeaderRow[]
-  body: PropertyColumn<T>[]
+  header: HeaderRow[];
+  body: PropertyColumn<T>[];
+  structureKey: string;
+  mutatedStructure: (NonGroupColumn<T> | GroupedColumn)[];
+
+  /**
+   * This is a hack to transfer `PanemuTableService` to `PanemuTableController`.
+   * It is to avoid API change.
+   * @internal
+   */
+  __tableService: PanemuTableService
 }
 

@@ -54,7 +54,7 @@ export class PanemuPaginationComponent implements OnChanges {
     } else {
       this.controller.reloadCurrentPage();
     }
-
+    this.controller.saveState();
   }
 
   prev() {

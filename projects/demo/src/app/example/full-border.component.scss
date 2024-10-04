@@ -1,0 +1,8 @@
+.full-border .panemu-table {
+  border: 1px solid #dedede;
+  
+  td:not(:last-child), th:not(:last-child) {
+    border-right: 1px solid #dedede;
+  }
+
+}

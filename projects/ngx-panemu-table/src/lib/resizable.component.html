@@ -2,5 +2,5 @@
   <div class="content">
     <ng-content></ng-content>
   </div>
-  <div class="bar" (resizable)="onResize($event)" (onStart)="onStart()"></div>
+  <div class="bar" (resizable)="onResize($event)" (onStart)="onStart()" (onEnd)="onEnd()"></div>
  </div>

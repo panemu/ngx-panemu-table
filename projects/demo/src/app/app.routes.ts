@@ -23,6 +23,9 @@ import { FilterExamplesComponent } from './example/filter-examples.component';
 import { MapColumnComponent } from './doc/columns/map-column/map-column.component';
 import { CellSpanComponent } from './example/cell-span/cell-span.component';
 import { PaginationComponent } from './example/pagination.component';
+import { StickyColumnComponent } from './example/sticky-column.component';
+import { FullBorderComponent } from './example/full-border.component';
+import { PersistStateComponent } from './example/persist-state.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -51,5 +54,8 @@ export const routes: Routes = [
 	{ path: 'map-column', component: MapColumnComponent },
 	{ path: 'cell-span', component: CellSpanComponent },
 	{ path: 'pagination', component: PaginationComponent },
+	{ path: 'sticky-column', component: StickyColumnComponent },
+	{ path: 'full-border', component: FullBorderComponent },
+	{ path: 'persist-state', component: PersistStateComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

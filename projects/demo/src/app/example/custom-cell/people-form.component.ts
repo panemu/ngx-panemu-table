@@ -26,17 +26,11 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    setTimeout(() => {
-      this.ready = true;
-      this.form.setValue({
-        name: this.row.name,
-        email: this.row.email || ''
-      })
-
-      //OnPush change detection is normally not needed. It is here due to interference from NgDoc lib.
-      // The interefence only happens when this component is put in NgDocPage
-      this.cdr.markForCheck();
-    }, 500);
+    this.ready = true;
+    this.form.setValue({
+      name: this.row.name,
+      email: this.row.email || ''
+    })
   }
 
   save() {

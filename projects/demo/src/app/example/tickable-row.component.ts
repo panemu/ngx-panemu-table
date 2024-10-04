@@ -1,5 +1,5 @@
 import { Component, effect, OnInit } from '@angular/core';
-import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
@@ -17,7 +17,7 @@ export class TickableRowComponent implements OnInit {
   
   columns = this.pts.buildColumns<People>([
     this.clmTick,
-    { field: 'id', },
+    { field: 'id', sticky: 'start' },
     { field: 'name' },
     { field: 'email' },
     this.clmTick2,

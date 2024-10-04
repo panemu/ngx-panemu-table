@@ -8,4 +8,9 @@ export interface LabelTranslation {
   noData: string
   searcForValueInColumn: string
   selectColumnToSearchOn: string
+  columns: string
+  visibility_position_stickiness: string
+  stickyStart: string
+  stickyEnd: string
+  reset: string
 }

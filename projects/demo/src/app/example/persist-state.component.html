@@ -1,0 +1,37 @@
+<div class="flex flex-col h-[500px] gap-4">
+  <div class="flex justify-between items-center">
+    <panemu-query [controller]="controller"></panemu-query>
+    <div class="flex gap-2">
+      <panemu-pagination [controller]="controller"/>
+      <panemu-setting [controller]="controller"/>
+    </div>
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>
+
+<ng-template #actionCellTemplate let-column="column" let-row="row">
+  <div class="flex justify-between">
+    <button class="button" (click)="edit(row)"><span class="material-symbols-outlined text-base leading-5 block">edit</span></button>
+    <button class="button" (click)="delete(row)"><span class="material-symbols-outlined text-base leading-5 block">delete</span></button>
+  </div>
+</ng-template>
+
+<ng-template #sendEmailTemplate let-row="row" let-column="column" let-close="close">
+  <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px]">
+    <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>
+    <label>Message</label>
+    <textarea rows="5" class="w-80"></textarea>
+    <div></div>
+    <button (click)=close()>Send</button>
+  </div>
+</ng-template>
+
+<ng-template #countryFooter let-rowGroup="rowGroup" let-colSpan="colSpan">
+  <td [attr.colspan]="colSpan">
+    <span [style.padding-left.rem]="rowGroup.level">
+      This is group footer {{rowGroup.column.field}} {{rowGroup.data.value}} - {{rowGroup.data.count}}
+    </span>
+  </td>
+</ng-template>

@@ -61,9 +61,10 @@ describe('AllFeaturesClientComponent', () => {
 	})
 
   it('pagination on row group should works', async () => {
-    const oriMaxRows = PanemuTableController['DEFAULT_MAX_ROWS'];
+
+    const oriMaxRows = component.pts.getPaginationMaxRows;
     const paginationSize = 5;
-    PanemuTableController['DEFAULT_MAX_ROWS'] = paginationSize;
+    component.pts.getPaginationMaxRows = () => paginationSize;
     component.controller.criteria = [];
     component.controller.reloadData();
 		await fixture.whenStable();
@@ -90,7 +91,7 @@ describe('AllFeaturesClientComponent', () => {
     expect(paginationEl!.querySelector('span')?.textContent?.trim()).toBe(`/ ${philippinesCount}`);
     const inputEl = paginationEl!.querySelector('input') as HTMLInputElement;
     expect(inputEl.value).toBe('1-5');
-    PanemuTableController['DEFAULT_MAX_ROWS'] = oriMaxRows;
+    component.pts.getPaginationMaxRows = oriMaxRows;
 	})
 
   it('2 level grouping. first level with month modifier', async () => {

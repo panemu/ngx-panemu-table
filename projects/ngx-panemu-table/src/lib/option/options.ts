@@ -80,6 +80,15 @@ export interface RowOptions<T> {
   rowRenderer?: Signal<TemplateRef<RowRenderer<T>> | undefined>
 }
 
+export interface FooterRenderer {
+  /**
+   * Template or component for the footer. It should contains one or more td or th elements.
+   * If it is a component, the host css display property must be set to `contents`. 
+   */
+  component: Type<TableFooterComponent> | Signal<TemplateRef<any> | undefined>
+  parameter?: any
+};
+
 /**
  * Options to configure some of the table behavior. The default value is in `PanemuTableService.getTableOptions`.
  */
@@ -109,17 +118,26 @@ export interface TableOptions<T> {
   /**
    * Table footer component/template
    */
-  footer?: {
-    /**
-     * Template or component for the footer. It should contains one or more td or th elements.
-     * If it is a component, the host css display property must be set to `contents`. 
-     */
-    component: Type<TableFooterComponent> | Signal<TemplateRef<any> | undefined>
-    parameter?: any
-  } | null,
+  footer?: FooterRenderer | null,
 
   /**
    * Options related to table row.
    */
   rowOptions: RowOptions<T>
+
+  /**
+   * Delay in milliseconds to calculate the width of table columns. Default value is 500.
+   * If `BaseColumn.width` is not specified, we'll let browser to calculate
+   * the optimum width for the column. After this delay, we run a logic to get
+   * the widths and put it in col element width style. It is required for multiple
+   * sticky columns. It also allows us to only specify width to certain columns
+   * while other columns get browser calculated width.
+   */
+  calculateColumWidthDelay: number
+
+  /**
+   * Key to save and restore the state of the columns to localstorage.
+   * It should be unique app-wide
+   */
+  stateKey?: string  
 }

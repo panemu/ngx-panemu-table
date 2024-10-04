@@ -1,6 +1,6 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, Input, OnChanges, Signal, SimpleChanges, TemplateRef, Type, ViewChild, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -12,7 +12,6 @@ import { CellStylingPipe } from './cell/cell-styling.pipe';
 import { GroupCellPipe } from './cell/group-cell.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
 import { BaseColumn, ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
-import { LabelTranslation } from './option/label-translation';
 import { TableOptions } from './option/options';
 import { PanemuPaginationComponent } from './pagination/panemu-pagination.component';
 import { PanemuTableController } from './panemu-table-controller';
@@ -21,12 +20,12 @@ import { ResizableComponent } from './resizable.component';
 import { ExpansionRow, ExpansionRowRenderer } from './row/expansion-row';
 import { ExpansionRowRendererDirective } from './row/expansion-row-renderer.directive';
 import { RowGroup, RowGroupData, RowGroupFooter } from './row/row-group';
+import { RowGroupFooterRendererDirective } from './row/row-group-footer-renderer.directive';
 import { RowGroupRendererDirective } from './row/row-group-renderer.directive';
 import { RowStylingPipe } from './row/row-styling.pipe';
+import { TableFooterRendererDirective } from './table-footer-renderer.directive';
 import { GroupBy } from './table-query';
 import { initTableWidth } from './util';
-import { RowGroupFooterRendererDirective } from './row/row-group-footer-renderer.directive';
-import { TableFooterRendererDirective } from './table-footer-renderer.directive';
 
 @Component({
   selector: 'panemu-table',
@@ -59,29 +58,50 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   @Input({required: true}) controller!: PanemuTableController<T>;
   dataSource: (T | RowGroup | RowGroupFooter | ExpansionRow<T>)[] = [];
   dataObservable = new BehaviorSubject<any[]>([])
-  _allColumns!: PropertyColumn<T>[];
   _visibleColumns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
   loading!: Observable<boolean>
   _columnType = ColumnType;
   _controllerSelectedRowSignal!: Signal<T | null>;
   tableOptions!: TableOptions<T>;
-  labelTranslation: LabelTranslation;
-  columnDefinition: ColumnDefinition<T> = {header:[], body: []};
   headers!:HeaderRow[];
   ready = false;
-  
   cdr = inject(ChangeDetectorRef);
-
+  pts = inject(PanemuTableService);
+  labelTranslation = this.pts.getLabelTranslation();
+  columnDefinition: ColumnDefinition<T> = {header:[], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts};
   @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
 
   @ViewChild(CdkVirtualScrollViewport)
   public viewPort!: CdkVirtualScrollViewport;
   headerTop = '0px';
   footerBottom = '0px';
+  colElements = viewChildren<ElementRef<HTMLElement>>('colEl');
+  constructor() {
+    
 
-  constructor(private panemuTableService: PanemuTableService) {
-    this.labelTranslation = this.panemuTableService.getLabelTranslation();
+    effect(() => {
+      console.log('colElements effect')
+      if (this.colElements() && this.colElements().length) {
+        setTimeout(() => {
+          this.initColumnWidth();
+          this.resetStickyColumn();
+        }, this.tableOptions?.calculateColumWidthDelay ?? 500);
+      }
+    })
+    
+  }
+
+  private initColumnWidth() {
+    const result = initTableWidth(this.matTable.nativeElement, true);
+    if (this._visibleColumns.length) {
+      Object.keys(result).forEach(k => {
+        const clm = this._visibleColumns.find(item => item.__key == k);
+        if (clm) {
+          clm.width = result[k];
+        }
+      })
+    }
   }
 
   ngAfterViewInit(): void {
@@ -94,9 +114,6 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
       };
     }
 
-    if (!!this.matTable) {
-      this.initDefaultColumnWidthIfNeeded();
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -106,53 +123,90 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     }
   }
 
-  private onControllerChange() {
-
-    if (this.controller) {
-      this.controller['tableDisplayData'] = this.displayData.bind(this);
-      // this.controller.__data = this.data.asReadonly();
-      this.controller['expandCell'] = this.expandCell.bind(this)
-      this._controllerSelectedRowSignal = this.controller.getSelectedRowSignal();
-      this.loading = this.controller.loading;
-      
-      this.columnDefinition = this.controller.columnDefinition;
-      this.headers = this.columnDefinition.header;
-      this._allColumns = this.columnDefinition.body as PropertyColumn<T>[];
-      this._visibleColumns = [];
-      this._allColumns.forEach(item => {
-        item.__data = this.controller['data'].asReadonly();
-        item.__expandHook = this.expandCell.bind(this)
-        if (item.visible) {
-          this._visibleColumns.push(item);
-        }
-      })
-
-      this.tableOptions = this.controller.tableOptions;
-      
-      this._displayedColumns = this._visibleColumns.map(item => item.__key!);
-
-      this.controller.refreshTable = this.refresh.bind(this);
-
-
-      this.matTable?.nativeElement?.removeAttribute('resized');
-      // setTimeout(() => {
-      //   this.ready = true;
-      // });
+  private relayout(rebuildHeader = true) {
+    if (rebuildHeader) {
+      this.pts['rebuildColumnDefinition'](this.columnDefinition);
+    }
+    this._visibleColumns = this.columnDefinition.body.filter(item => item.visible);
+    this._displayedColumns = this._visibleColumns.map(item => item.__key!);
+    this.resetStickyColumn();
+    if (rebuildHeader) {
       this.cdr.markForCheck();
     }
   }
 
-  private initDefaultColumnWidthIfNeeded() {
-    const anyColumnHasSpecifiedWidth = !!this._visibleColumns.find(item => !!item.width);
-    if (anyColumnHasSpecifiedWidth) {
-      let totWidth = 0;
-      this._visibleColumns.filter(item => item.visible).forEach(item => {
-        if (!item.width || item.width < 10) {
-          item.width = 150
+  resetStickyColumn() {
+    let styleLeft = 0;
+    
+    for (let idx = 0; idx < this._visibleColumns.length; idx++) {
+      let clm = this._visibleColumns[idx];
+      if (clm.sticky == 'start') {
+        clm.__leftStyle = styleLeft;
+        const colWidth = this.colElements().at(idx)?.nativeElement.style.width;
+        if (colWidth) {
+          styleLeft += +colWidth.replace('px', '');
         }
-        totWidth += item.width
+      }
+    }
+    
+    let styleRight = 0;
+    for (let idx = this._visibleColumns.length - 1; idx >= 0; idx--) {
+      let clm = this._visibleColumns[idx];
+      if (clm.sticky == 'end') {
+        clm.__rightStyle = styleRight;
+        const colWidth = this.colElements().at(idx)?.nativeElement.style.width;
+        if (colWidth) {
+          styleRight += +colWidth.replace('px', '');
+        }
+      }
+    }
+    this.matTable?.nativeElement.setAttribute('resized','');
+    if (styleLeft || styleRight) {
+      this.cdr.markForCheck();
+    }
+
+    
+  }
+
+  afterColumnResize() {
+    this.resetStickyColumn();
+    this.controller.saveState();
+  }
+
+  private onControllerChange() {
+
+    if (this.controller) {
+      this.columnDefinition = this.controller.columnDefinition;
+      if (this.controller.tableOptions.stateKey) {
+        this.pts['rebuildColumnDefinition'](this.columnDefinition);
+      }
+      this.controller['tableDisplayData'] = this.displayData.bind(this);
+      // this.controller.__data = this.data.asReadonly();
+      this.controller['expandCell'] = this.expandCell.bind(this);
+      this.controller.relayout = this.relayout.bind(this);
+      this._controllerSelectedRowSignal = this.controller.getSelectedRowSignal();
+      this.loading = this.controller.loading;
+      
+      this.headers = this.columnDefinition.header;
+      this.columnDefinition.body.forEach(item => {
+        item.__data = this.controller['data'].asReadonly();
+        item.__expandHook = this.expandCell.bind(this)
       })
-      this.matTable.nativeElement.style.width = `${totWidth}px`;
+      this.relayout(false);
+
+      this.tableOptions = this.controller.tableOptions;
+      
+
+      this.controller.refreshTable = this.refresh.bind(this);
+
+      if (this.matTable?.nativeElement) {
+        this.matTable.nativeElement.style.width = '';
+        this.matTable.nativeElement.removeAttribute('resized');
+      }
+      // setTimeout(() => {
+      //   this.ready = true;
+      // });
+      this.cdr.markForCheck();
     }
   }
 
@@ -163,7 +217,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     let newRows: any[] = data;
     if (groupField) {
       //the data contains RowGroupModel
-      let clm = this._allColumns.find(item => item.field == groupField.field)!;
+      let clm = this.columnDefinition.body.find(item => item.field == groupField.field)!;
       if (!clm) {
         throw new Error('Unknown column to group: ' + groupField.field);
       }
@@ -173,7 +227,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
         rg.parent = parent;
         rg.level = parent ? parent.level + 1 : 0;
         rg.modifier = groupField.modifier;
-        rg.formatter = groupField.modifier ? this.panemuTableService.getGroupModifierFormatter(groupField.modifier) : clm.formatter!;
+        rg.formatter = groupField.modifier ? this.pts.getGroupModifierFormatter(groupField.modifier) : clm.formatter!;
         return rg;
       });
     }
@@ -238,10 +292,10 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
    * To avoid columns resizing when collapsing a group, let's keep the column width
    */
   private keepColumnWidth() {
-    if (!this.matTable.nativeElement.hasAttribute('resized')) {
-      initTableWidth(this.matTable.nativeElement)
-    }
-    this.matTable.nativeElement.setAttribute('resized','');
+    // if (!this.matTable.nativeElement.hasAttribute('resized')) {
+    //   initTableWidth(this.matTable.nativeElement)
+    // }
+    // this.matTable.nativeElement.setAttribute('resized','');
   }
 
   private clearGroupChild(oriData: any[], row: RowGroup) {
@@ -301,6 +355,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     }
 
     this.controller.reloadCurrentPage();
+    this.controller.saveState();
   }
 
   selectRow(row: T) {

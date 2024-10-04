@@ -1,5 +1,6 @@
 import { RowGroup, RowGroupFooter } from "./row/row-group";
 import { ExpansionRow } from "./row/expansion-row";
+import { NonGroupColumn, GroupedColumn, ColumnType } from "./column/column";
 
 /**
  * Function to check if passed row is a data row. There are 4 object types that can be displayed
@@ -37,20 +38,42 @@ export function toDate(val: string) {
   let parts = val.split('-');
   return new Date(+parts[0], +parts[1] - 1, +parts[2])
 }
-
-export function initTableWidth(tableElement: HTMLElement) {
+/**
+ * Return object with column keys and the widths
+ * @param tableElement 
+ * @param keepColWidth 
+ * @returns 
+ */
+export function initTableWidth(tableElement: HTMLElement, keepColWidth = false) {
+  const result: {[key: string]: number} = {};
   const thList = tableElement.querySelectorAll('th[group="false"]');
   let totWidth = 0;
   for (let index = 0; index < thList.length; index++) {
     const element = thList[index] as HTMLElement;
+    let width = element.offsetWidth;
     const colId = element.getAttribute('data-col');
     if (colId) {
       const colEl = getColElement(tableElement, colId);
-      setElementWidth(element.offsetWidth, colEl)
+      if (keepColWidth && colEl.style.width) {
+        let existingWidth = +colEl.style.width.replace('px', '');
+        if (existingWidth) {
+          width = existingWidth;
+        }
+      }
+
+      /** The actual size has decimal part but css width with px units can only 
+       * has round number. The browser rounded it down. It can lead to ellipsis appears.
+       * So let's add 1px.
+       */
+      width += 1;
+      
+      result[colId] = width;
+      setElementWidth(width, colEl)
     }
-    totWidth += element.offsetWidth;
+    totWidth += width;
   }
   tableElement.style.width = `${totWidth}px`;
+  return result;
 }
 
 export function getColElement(tableElement: HTMLElement, id: string) {
@@ -90,4 +113,28 @@ export function mergeDeep(target: any, ...sources: any) {
   }
 
   return mergeDeep(target, ...sources);
+}
+
+export function generateStructureKey(columns: (NonGroupColumn<any> | GroupedColumn)[]) {
+  let key = '';
+  for (const clm of columns) {
+    if (clm.type == ColumnType.GROUP) {
+      key += getColumnKey(clm as GroupedColumn);
+    } else {
+      key += clm.__key;
+    }
+  }
+  return key;
+}
+
+function getColumnKey(clm: GroupedColumn) {
+  let key = clm.__key!;
+  for (const child of clm.children) {
+    if (child.type == ColumnType.GROUP) {
+      key += getColumnKey(child as GroupedColumn);
+    } else {
+      key += child.__key;
+    }
+  }
+  return key;
 }

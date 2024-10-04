@@ -18,6 +18,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
   selections = signal<T[]>([]);
   visible?: boolean;
   cellClass?: (value: any, row?: T) => string;
+  __key?: string;
   constructor(tickColumn?: TickColumn<T>) {
     if (tickColumn) {
       Object.assign(this, tickColumn);

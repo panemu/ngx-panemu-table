@@ -3,17 +3,18 @@ import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, Type, Writable
 import { CellFormatter } from './cell/cell';
 import { DefaultCellRenderer } from "./cell/default-cell-renderer";
 import { DefaultHeaderRenderer } from './cell/default-header-renderer';
+import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
 import { LabelTranslation } from './option/label-translation';
-import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
-import { DateFilterComponent } from './query/editor/date-filter.component';
-import { MapFilterComponent } from './query/editor/map-filter.component';
 import { TableOptions } from './option/options';
-import { PanemuTableController } from './panemu-table-controller';
-import { mergeDeep } from './util';
-import { FilterEditor } from './query/editor/filter-editor'
+import { TableState } from './state/table-states';
+import { DateFilterComponent } from './query/editor/date-filter.component';
+import { FilterEditor } from './query/editor/filter-editor';
+import { MapFilterComponent } from './query/editor/map-filter.component';
 import { StringFilterComponent } from './query/editor/string-filter.component';
+import { generateStructureKey, mergeDeep } from './util';
+import { EMPTY, of } from 'rxjs';
 const GROUP_KEY_PREFIX = 'group_';
 
 @Injectable({
@@ -30,18 +31,16 @@ export class PanemuTableService {
     groupBy: 'Group By',
     noData: 'No data to display',
     searcForValueInColumn: 'Search for "{par0}" in:',
-    selectColumnToSearchOn: 'Select a column to search on'
+    selectColumnToSearchOn: 'Select a column to search on',
+    columns: 'Columns',
+    visibility_position_stickiness: 'Visibility, Position and Stickiness',
+    stickyStart: 'Sticky Start',
+    stickyEnd: 'Sticky End',
+    reset: 'Reset'
   };
 
   constructor(@Inject(LOCALE_ID) protected locale: string) {
 
-    /**
-     * The PanemuTableController is instantiated using new. Not using dependency injection. Thus
-     * it can't get reference to this service class. So we assign the controller properties here.
-     */
-    PanemuTableController['DEFAULT_TABLE_OPTIONS'] = this.getTableOptions();
-    PanemuTableController['DEFAULT_MAX_ROWS'] = this.getPaginationMaxRows();
-    PanemuTableController['MAX_ROWS_LIMIT'] = this.getPaginationMaxRowsLimit();
   }
 
   /**
@@ -57,13 +56,22 @@ export class PanemuTableService {
     this.initColumns(bodyColumns, options);
     let headerRows: HeaderRow[] = [];
     this.buildHeaders(headerRows, columns, 0, this.getDepth(columns, 0), signal(0));
-    headerRows.forEach(item => {
-      item.keys = item.cells.map(cell => 'th_' + cell.__key!);
-    })
+    
     return {
+      structureKey: generateStructureKey(columns),
       header: headerRows,
-      body: bodyColumns as PropertyColumn<T>[]
+      body: bodyColumns as PropertyColumn<T>[],
+      mutatedStructure: columns,
+      __tableService: this
     }
+  }
+
+  private rebuildColumnDefinition(columnDef: ColumnDefinition<any>) {
+    let bodyColumns = this.buildBody(columnDef.mutatedStructure);
+    let headerRows: HeaderRow[] = [];
+    this.buildHeaders(headerRows, columnDef.mutatedStructure, 0, this.getDepth(columnDef.mutatedStructure, 0), signal(0));
+    columnDef.header = headerRows;
+    columnDef.body = bodyColumns as PropertyColumn<any>[];
   }
 
   private buildBody<T>(headers: (GroupedColumn | NonGroupColumn<T>)[]) {
@@ -86,7 +94,7 @@ export class PanemuTableService {
   ) {
 
     if (!wholeResult[level]) {
-      wholeResult[level] = { cells: [], keys: [] };
+      wholeResult[level] = { cells: [] };
     }
     let colSpan = 0;
 
@@ -109,6 +117,7 @@ export class PanemuTableService {
             __isGroup: true,
             __key: GROUP_KEY_PREFIX + currentGroupIndex,
           }
+          clmGroup.__key = groupHeader.__key;
           wholeResult[level].cells.push(groupHeader)
           colSpan += childrenColSpan;
         }
@@ -349,13 +358,13 @@ export class PanemuTableService {
    * Unspecified properties in `BaseColumn` use values returned by this method.
    * @returns 
    */
-  getColumnOptions(): DefaultColumnOptions {
+  getColumnOptions(): Required<DefaultColumnOptions> {
     return {
       visible: true,
       filterable: true,
       groupable: true,
       resizable: true,
-      sortable: true
+      sortable: true,
     }
   }
 
@@ -371,7 +380,9 @@ export class PanemuTableService {
       autoHeight: false,
       virtualScroll: false,
       virtualScrollRowHeight: 32,
-      footer: null
+      footer: null,
+      calculateColumWidthDelay: 500,
+      stateKey: ''
     };
     return defaultOptions;
   }
@@ -425,5 +436,59 @@ export class PanemuTableService {
    */
   getDefaultFilterComponent(): Type<FilterEditor> {
     return StringFilterComponent;
+  }
+
+  /**
+   * Function to handle error. Override this method to have your own error handler.
+   * @param err 
+   * @returns 
+   */
+  handleError(err: any) {
+    return (err: any) => {
+      console.error(err)
+      alert('There is an error when loading table. Override this error handler by setting PanemuTableController.DEFAULT_ERROR_HANDLER at the start of the application ')
+    }
+  }
+
+  /**
+   * By default `TableState` is saved to local storage. Override this method if you want
+   * to save it in a database server. If you override it, ensure to also override `PanemuTableService.getTableState`
+   * and `PanemuTableService.deleteTableState`.
+   * @param stateKey 
+   * @param state 
+   */
+  saveTableState(stateKey: string, state: TableState) {
+    localStorage.setItem(stateKey, JSON.stringify(state));
+  }
+
+  /**
+   * Get table state. The state is by default stored in local storage. This method returns an Observable
+   * so it can be overriden with http call in case developer save the state in server side.
+   * If you override it, ensure to also override `PanemuTableService.saveTableState` and `PanemuTableService.deleteTableState`.
+   * @param stateKey 
+   * @returns 
+   */
+  getTableState(stateKey: string) {
+    const stateString = localStorage.getItem(stateKey);
+    if (stateString) {
+
+      try {
+        const state = JSON.parse(stateString) as TableState;
+        return of(state)
+      } catch (e) {
+        console.error(`Failed to parse table state with key ${stateKey}`)
+        console.error(e);
+      }
+    }
+    return EMPTY;
+  }
+
+  /**
+   * Delete table state.
+   * If you override it, ensure to also override `PanemuTableService.saveTableState` and `PanemuTableService.getTableState`.
+   * @param stateKey 
+   */
+  deleteTableState(stateKey: string) {
+    localStorage.removeItem(stateKey);
   }
 }

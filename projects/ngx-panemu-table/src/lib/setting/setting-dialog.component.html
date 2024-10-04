@@ -1,0 +1,42 @@
+<div class="panemu-setting-dialog">
+  <div class="header">
+    <div class="title">
+      {{labelTranslation.columns}}
+    </div>
+    <div class="sub-title">{{labelTranslation.visibility_position_stickiness}}</div>
+  </div>
+
+  <div class="close" (click)="close()">
+    <span class="material-symbols-outlined">
+      close
+    </span>
+  </div>
+
+  <div class="body">
+    <div style="position: absolute; inset: 0; overflow: auto;">
+      <ng-container [ngTemplateOutlet]="columnList" [ngTemplateOutletContext]="{columns: controller.columnDefinition.mutatedStructure, level: 0}"></ng-container>
+      <div class="footer">
+        <div class="reset" (click)="reset()">{{labelTranslation.reset}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #columnList let-columns="columns" let-level="level">
+  <div cdkDropList (cdkDropListDropped)="drop($event, columns)" class="level-{{level}}">
+    @for (column of columns; track column.__key) {
+      @if(column.type == GROUP_COLUMN) {
+        <div class="panemu-setting draggable group-container level-{{level}}" cdkDrag cdkDragLockAxis="y" >
+          <span class="panemu-setting drag-group">{{column.label}}</span>
+          <ng-container [ngTemplateOutlet]="columnList" [ngTemplateOutletContext]="{columns: column.children, level: level + 1}"></ng-container>
+        </div>
+      } @else {
+        <div class="panemu-setting draggable leaf hover-parent" cdkDrag cdkDragLockAxis="y">
+          <input type="checkbox" [(ngModel)]="column.visible" (ngModelChange)="repaint()">
+          <div class="label">{{column.label || column.__key}}</div>
+          <sticky-selector [column]="column" (onRequestLayout)="repaint()"></sticky-selector>
+        </div>
+      }
+    }
+  </div>
+</ng-template>

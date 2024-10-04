@@ -9,4 +9,5 @@ export interface PanemuPaginationController {
   maxRows: number
   reloadGroup: (group: RowGroup) => void
   reloadCurrentPage: Function
+  saveState: Function
 }

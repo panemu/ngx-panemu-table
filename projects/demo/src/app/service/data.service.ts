@@ -38,7 +38,7 @@ export class DataService {
     );
 
     return observable.pipe(
-      delay(500),
+      delay(2000),
 
       mergeMap(_ => this.mockedServerDatasource.getData(start, maxRows, tableQuery))
     )
