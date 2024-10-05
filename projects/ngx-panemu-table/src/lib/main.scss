@@ -1,7 +1,10 @@
 .panemu-table,
 .panemu-query,
-panemu-groupby,
+.panemu-groupby,
 .panemu-query-menu,
+.panemu-setting,
+.panemu-setting-button,
+.panemu-setting-dialog,
 .panemu-pagination {
 
   @font-face {
@@ -10,7 +13,7 @@ panemu-groupby,
     font-weight: 200;
     src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v205/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDAvHOej.woff2) format('woff2');
   }
-
+  
   .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
     font-weight: normal;
@@ -646,7 +649,7 @@ panemu-groupby,
     outline: 1px solid #dedede;
 
   }
-  span {
+  span.material-symbols-outlined {
     font-size: 18px;
     display: block;
   }
