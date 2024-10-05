@@ -24,7 +24,9 @@ export class CellSpanComponent {
   columns = this.pts.buildColumns<People2>([
     { field: 'id', type: ColumnType.INT },
     { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
-    { field: 'name' },
+    { field: 'name', 
+      cellStyle: (value, row) => row.name_col_span > 1 ? 'background-color: yellow;' : '', 
+    },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
     { field: 'amount', type: ColumnType.DECIMAL },

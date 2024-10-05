@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, PanemuTableComponent, PanemuSettingComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
@@ -18,6 +18,7 @@ const DATA: People[] = [
 })
 
 export class BasicComponent implements OnInit {
+  pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
@@ -42,8 +43,6 @@ export class BasicComponent implements OnInit {
     },
     
   );
-
-  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.reloadData();

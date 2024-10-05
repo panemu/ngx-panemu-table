@@ -1,7 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { CellFormatter, DefaultColumnOptions, LabelTranslation, PanemuTableService, TableOptions } from 'ngx-panemu-table';
-import { CountryRowGroupFooter } from '../example/custom-row-group/country-row-group-footer.component';
 
 @Injectable({providedIn: 'root'})
 export class CustomPanemuTableService extends PanemuTableService {
@@ -30,11 +29,5 @@ export class CustomPanemuTableService extends PanemuTableService {
       options.sortable = false;
       return options;
   }
-
-  // override getTableOptions<T>(): TableOptions<T> {
-  //     const result = super.getTableOptions<T>();
-  //     result.footer = {component: CountryRowGroupFooter}
-  //     return result;
-  // }
 
 }

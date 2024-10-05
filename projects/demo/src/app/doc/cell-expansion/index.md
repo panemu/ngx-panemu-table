@@ -2,7 +2,7 @@
 keyword: CellExpansionPage
 ---
 
-Cell Expansion is a feature to display any component or template under a row. The strigger is from a cell in which the column definition has `expansion` property defined. It is a small button in the left hand side or right of the cell. Below is the way to define an expansion:
+Cell Expansion is a feature to display any component or template under a row. The trigger is from a cell in which the column definition has `expansion` property defined. It is a small button in the left hand side or right of the cell. Below is the way to define an expansion:
 
 ```typescript
 { field: 'country', expansion: {

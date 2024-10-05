@@ -464,6 +464,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @param row 
    * @param column 
    * @param expanded a signal to listen to expand/collapse state.
+   * @see https://ngx-panemu-table.panemu.com/usages/cell-expansion
    */
   expand(row: T, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) {
     this.expandCell?.(row, column.expansion!.component, column, expanded)
@@ -544,12 +545,20 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   /**
-   * Delete state.
+   * Delete table state. By default, it reload the window after it.
    * 
    * @see `PanemuTableController.saveState`
    */
-  deleteState() {
-    this.stateManager.deleteTableState(this.tableOptions.stateKey)
+  deleteState(reloadAfterDelete = true) {
+    this.stateManager.deleteTableState(this.tableOptions.stateKey).subscribe({
+      next: (_: any) => {
+        if (reloadAfterDelete) {
+          window.location.reload()
+        };
+      }
+    , error: e => {
+      this.pts.handleError(e)
+    }})
   }
 
   /**

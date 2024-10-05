@@ -50,18 +50,25 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 ```
 - Row Grouping.
    - Support group level pagination.
-   - Customizable row group header and footer.
+   - Customizable row group header and footer. See `*CustomRowGroupPage`.
 - Column header
   - Group multiple columns under one cell header.
   - Support custom cell header renderer. You can put anything in column header.
 - Column Resizable.
+- User can change column visibility, position and stickiness at runtime. See `PanemuSettingComponent`.
+- Save table states:
+  - Columns visibility, position and stickiness.
+  - Filter, grouping, sorting and pagination.
+  
+  If user changes any of those, go to other and back, the states are restored. See `*PersistStatesPage`.
 - Customizable table cell.
   - Support custom cell using `ng-template` or angular component.
   - Support custom cell formatting and styling
   - Cell expansion. See `*CellExpansionPage`. ✨ 
 - Sticky column, header and footer
+- Cell colspan and rowspan. See `*CellSpanningPage`.
 - Export to CSV. See `PanemuTableController.getcsvdata` . ✨ 
-- Handle huge data using virtual scroll. Now it doesn't support variable row height. But it will in the future.
+- Handle huge data using [virtual scroll](usages/virtual-scroll). Now it doesn't support variable row height. But it will in the future.
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
 
@@ -69,11 +76,17 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 
 These features are not developed yet. Please create a ticket in [our repository](https://github.com/panemu/ngx-panemu-table) if you need them so we know what to prioritize.
 
-- Global search
-- Column reorder
-- Save columns position, width and visibility
+- Global search.
+- Display transposed row in a dialog.
+- Virtual scroll with variable row height.
 
 ## Releases:
+
+### v.0.0.8
+
+* New `PanemuSettingComponent` as the UI to change columns visibility, position and stickiness.
+* Save table states (column structure, pagination, filtering, sorting and grouping)
+* Support cell rowspan and colspan using `RowRenderer`.
 
 ### v.0.0.7
 

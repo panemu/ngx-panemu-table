@@ -1,4 +1,4 @@
-import { EMPTY, map } from "rxjs";
+import { map, of } from "rxjs";
 import { BaseColumn, ColumnType, GroupedColumn, NonGroupColumn } from "../column/column";
 import { PanemuTableController } from "../panemu-table-controller";
 import { PanemuTableService } from "../panemu-table.service";
@@ -33,10 +33,11 @@ export class TableStateManager {
   }
 
   getSavedTableState(key?: string, structureKey?: string) {
-    if (!key || !structureKey) return EMPTY;
+    if (!key || !structureKey) return of(null);
+
     return this.pts.getTableState(key).pipe(
       map(state => {
-        if (state.structureKey != structureKey) {
+        if (state && state.structureKey != structureKey) {
           return null;
         }
         return state;
@@ -65,7 +66,8 @@ export class TableStateManager {
 
   deleteTableState(key?: string) {
     if (key) {
-      this.pts.deleteTableState(key)
+      return this.pts.deleteTableState(key);
     }
+    return of(null);
   }
 }

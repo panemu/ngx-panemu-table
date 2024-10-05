@@ -129,7 +129,7 @@ export interface TableOptions<T> {
    * Delay in milliseconds to calculate the width of table columns. Default value is 500.
    * If `BaseColumn.width` is not specified, we'll let browser to calculate
    * the optimum width for the column. After this delay, we run a logic to get
-   * the widths and put it in col element width style. It is required for multiple
+   * the widths and put it in col element width style. It is required tu support multiple
    * sticky columns. It also allows us to only specify width to certain columns
    * while other columns get browser calculated width.
    */
@@ -138,6 +138,8 @@ export interface TableOptions<T> {
   /**
    * Key to save and restore the state of the columns to localstorage.
    * It should be unique app-wide
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/persist-states
    */
   stateKey?: string  
 }

@@ -110,9 +110,8 @@ export interface BaseColumn<T> {
   visible?: boolean
 
   /**
-   * If all columns doesn't have width defined, the table will let browser to decide the column width.
-   * If at least one of the column has width defined then columns without width defined will have
-   * the same width (150px).
+   * Column width in px. If undefined, it is up to the browser to calculate the optimum size.
+   * If you find the browser doesn't calculate it properly, try to increase the value of `TableOptions.calculateColumWidthDelay`.
    */
   width?: number
 
@@ -138,7 +137,7 @@ export interface BaseColumn<T> {
      * @param row 
      * @returns 
      */
-  cellClass?: (value: any, row?: T) => string;
+  cellClass?: (value: any, row: T) => string;
 
   /**
    * Cell style factory. The style is applied to `td` element.
@@ -146,7 +145,7 @@ export interface BaseColumn<T> {
    * @param row 
    * @returns 
    */
-  cellStyle?: (value: any, row?: T) => string;
+  cellStyle?: (value: any, row: T) => string;
 
   /**
    * Automatically generated. Must be unique. It allows table to have multiple columns with the same field.
@@ -174,17 +173,21 @@ export interface BaseColumn<T> {
 
   /**
    * Used to store the left style for sticky start
+   * @internal
    */
   __leftStyle?: number;
 
   /**
    * Used to store the right style for sticky end
+   * @internal
    */
   __rightStyle?: number;
 
   /**
    * Expansion row renderer. If this property is filled, the cell will have a button to expand.
    * The `rowComponent` property will be rendered in a new row just below the cell.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/cell-expansion
    */
   expansion?: Expansion<T>
 

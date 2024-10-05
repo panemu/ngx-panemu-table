@@ -109,7 +109,10 @@ Delete the content of `app.component.html` replace it with this template:
 <div style="height: 90vh; display: flex; flex-direction: column;">
   <div style="display: flex; justify-content: space-between;">
     <panemu-query [controller]="controller" />
-    <panemu-pagination [controller]="controller" />
+    <div style="display: flex; gap: 4px;">
+      <panemu-pagination [controller]="controller" />
+      <panemu-setting [controller]="controller"/>
+    </div>
   </div>
   <div style="flex-grow: 1; margin-top: 8px;">
     <panemu-table [controller]="controller" />

@@ -48,7 +48,6 @@ export class SettingDialogComponent implements OnInit {
 
   reset() {
     this.controller.deleteState();
-    window.location.reload();
   }
 
   close() {

@@ -28,6 +28,11 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ## New Features:
 
+### v.0.0.8
+
+* New `PanemuSettingComponent` as the UI to change columns visibility, position and stickiness.
+* Save table states (column structure, pagination, filtering, sorting and grouping)
+* Support cell rowspan and colspan using `RowRenderer`.
 
 ### v.0.0.7
 

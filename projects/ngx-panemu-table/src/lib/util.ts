@@ -61,7 +61,7 @@ export function initTableWidth(tableElement: HTMLElement, keepColWidth = false) 
         }
       }
 
-      /** The actual size has decimal part but css width with px units can only 
+      /** The actual size has decimal part but css width with px unit can only 
        * has round number. The browser rounded it down. It can lead to ellipsis appears.
        * So let's add 1px.
        */

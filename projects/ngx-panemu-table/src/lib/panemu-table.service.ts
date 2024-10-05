@@ -14,7 +14,7 @@ import { FilterEditor } from './query/editor/filter-editor';
 import { MapFilterComponent } from './query/editor/map-filter.component';
 import { StringFilterComponent } from './query/editor/string-filter.component';
 import { generateStructureKey, mergeDeep } from './util';
-import { EMPTY, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 const GROUP_KEY_PREFIX = 'group_';
 
 @Injectable({
@@ -372,7 +372,7 @@ export class PanemuTableService {
    * Get default table options.
    * @returns 
    */
-  getTableOptions<T>(): TableOptions<T> {
+  getTableOptions<T>(): Required<TableOptions<T>> {
     let defaultOptions: Required<TableOptions<T>> = {
       rowOptions: {
         rowSelection: true
@@ -468,7 +468,7 @@ export class PanemuTableService {
    * @param stateKey 
    * @returns 
    */
-  getTableState(stateKey: string) {
+  getTableState(stateKey: string): Observable<TableState | null> {
     const stateString = localStorage.getItem(stateKey);
     if (stateString) {
 
@@ -480,7 +480,7 @@ export class PanemuTableService {
         console.error(e);
       }
     }
-    return EMPTY;
+    return of(null);
   }
 
   /**
@@ -490,5 +490,6 @@ export class PanemuTableService {
    */
   deleteTableState(stateKey: string) {
     localStorage.removeItem(stateKey);
+    return of(null);
   }
 }

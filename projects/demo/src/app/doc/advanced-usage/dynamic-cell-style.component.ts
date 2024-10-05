@@ -15,8 +15,8 @@ import { DataService } from '../../service/data.service';
 export class DynamicCellStyleComponent implements OnInit {
   columns = this.pts.buildColumns<People>([
     { field: 'name', 
-      cellClass:(value, row) => row?.verified ? 'cell-verified' : '',
-      cellStyle:(value, row) => row?.gender == 'M' ? 'color:red;' : ''
+      cellClass:(value, row) => row.verified ? 'cell-verified' : '',
+      cellStyle:(value, row) => row.gender == 'M' ? 'color:red;' : ''
     },
     { field: 'email' , },
     { field: 'gender', type: ColumnType.MAP, valueMap: {F: 'Female', M: 'Male'} },
