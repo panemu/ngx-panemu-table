@@ -397,9 +397,16 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
         oriData[existingIndex] = new ExpansionRow(row, rowExpansionComponent, column as PropertyColumn<T>, this.collapseExpansion.bind(this), expanded);
         expanded?.set(true);
       } else {
-        // same column. It must be a close action
-        existingRowExp.expanded?.set(false);
-        oriData.splice(existingIndex, 1);
+        // same column
+        if (existingRowExp.component === rowExpansionComponent) {
+          // It must be a close action
+          existingRowExp.expanded?.set(false);
+          oriData.splice(existingIndex, 1);
+        } else {
+          // replace with other expansion component
+          oriData[existingIndex] = new ExpansionRow(row, rowExpansionComponent, column as PropertyColumn<T>, this.collapseExpansion.bind(this), expanded);
+          expanded?.set(true);
+        }
       }
     } else {
       const newRowExp = new ExpansionRow<T>(row, rowExpansionComponent, column as PropertyColumn<T>, this.collapseExpansion.bind(this), expanded);

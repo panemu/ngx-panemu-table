@@ -13,7 +13,7 @@ export class ExpansionRowRendererDirective implements OnInit, OnDestroy {
   @Input() close!: Function;
   componentRef?: ComponentRef<ExpansionRowRenderer<any>> | null;
 
-  constructor(private container: ViewContainerRef) { }
+  constructor(private container: ViewContainerRef) {}
 
   ngOnInit(): void {
     this.componentRef?.destroy();

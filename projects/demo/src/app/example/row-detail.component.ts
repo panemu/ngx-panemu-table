@@ -49,7 +49,7 @@ export class RowDetailComponent {
   ])
   datasource = new PanemuTableDataSource<People>();
 
-  controller = PanemuTableController.create<People>(this.columns, this.datasource, {virtualScroll: true, virtualScrollRowHeight: 32, autoHeight: true});
+  controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
   constructor(private pts: PanemuTableService,
     private dataService: DataService,

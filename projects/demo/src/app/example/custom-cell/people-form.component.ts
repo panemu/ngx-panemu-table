@@ -8,9 +8,6 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   templateUrl: 'people-form.component.html',
   standalone: true,
   imports: [PanemuBusyIndicatorComponent, ReactiveFormsModule],
-
-  //OnPush change detection is normally not needed. It is here due to interference from NgDoc lib
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People> {
   row!: People;
@@ -23,7 +20,7 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
     email: ['']
   })
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.ready = true;
