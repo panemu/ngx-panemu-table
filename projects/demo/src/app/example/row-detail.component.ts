@@ -64,10 +64,6 @@ export class RowDetailComponent {
     })
   }
 
-  checkExpandDisabled(row: People) {
-    return row.country == 'Indonesia'
-  }
-
   edit(row: People) {
     this.clmEditInExpansion.expansion = { component: PeopleFormComponent };
     this.controller.expand(row, this.clmEditInExpansion)

@@ -25,7 +25,7 @@ export class CellSpanComponent {
     { field: 'id', type: ColumnType.INT },
     { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
     { field: 'name', 
-      cellStyle: (value, row) => row.name_col_span > 1 ? 'background-color: yellow;' : '', 
+      cellStyle: (value, row) => row.name_col_span > 1 ? 'background-color: rgba(255,255,0, 0.5);' : '', 
     },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },

@@ -11,6 +11,7 @@ const DATA: People[] = [
 ]
 
 @Component({
+  selector: 'app-multiline-column',
   templateUrl: 'multiline-column.component.html',
   imports: [PanemuTableComponent],
   standalone: true,
