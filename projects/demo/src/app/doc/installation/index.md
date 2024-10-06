@@ -45,7 +45,7 @@ Delete the content of `app.component.ts` and paste the following code.
 ```typescript name="app.component.ts"
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 
 interface People {
   id: number
@@ -70,7 +70,7 @@ const DATA: People[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+  imports: [RouterOutlet, PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

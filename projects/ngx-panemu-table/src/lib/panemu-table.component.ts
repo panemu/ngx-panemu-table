@@ -81,7 +81,6 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     
 
     effect(() => {
-      console.log('colElements effect')
       if (this.colElements() && this.colElements().length) {
         setTimeout(() => {
           this.initColumnWidth();
