@@ -1,23 +1,21 @@
-import { Component, inject, OnInit, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColumnType,
+  GroupCellPipe,
   PanemuQueryComponent,
-  DefaultRowGroupRenderer,
   PanemuTableComponent,
   PanemuTableController,
   PanemuTableDataSource,
   PanemuTableService,
-  GroupCellPipe,
-  TableQuery,
   RowGroup,
-  RowGroupFooter
+  RowGroupFooter,
+  TableQuery
 } from 'ngx-panemu-table';
+import { tap } from 'rxjs';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
-import { CountryRowGroup } from './country-row-group.component';
-import { tap } from 'rxjs';
-import { BooleanRowGroupContentComponent } from './boolean-row-group-content.component';
 import { CountryRowGroupFooter } from './country-row-group-footer.component';
+import { CountryRowGroup } from './country-row-group.component';
 
 @Component({
   standalone: true,

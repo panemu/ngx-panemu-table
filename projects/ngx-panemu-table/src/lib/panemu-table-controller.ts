@@ -594,7 +594,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     }
 
     this.columnDefinition.mutatedStructure = newStructure;
-    this.relayout();
+    this.relayout?.();
   }
 
   private copyState(clmState: ColumnState, actualColumn: BaseColumn<any>) {

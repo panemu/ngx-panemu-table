@@ -9,7 +9,7 @@ keyword: BasicUsagePage
 
 2. A function to get the data. For basic usage, in which the sorting, filtering and grouping are done in client side, use `PanemuTableDataSource`.
 
-```typescript file="../../example/basic.component.ts"#L21-L36 {13}
+```typescript file="../../example/basic.component.ts"#L38-L45 {3}
 
 ```
 
