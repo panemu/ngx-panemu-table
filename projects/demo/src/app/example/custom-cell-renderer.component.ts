@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, inject, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, PLATFORM_ID, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { ColumnType, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { ChartCellComponent } from './custom-cell/chart-cell.component';
+import { isPlatformBrowser } from '@angular/common';
 
 interface People2 extends People {
   amountHistory: WritableSignal<number[]>
@@ -50,6 +51,7 @@ export class CustomCellRendererComponent {
   cdr = inject(ChangeDetectorRef);
   dataService = inject(DataService);
   inv: any;
+  platformId = inject(PLATFORM_ID);
 
   constructor() { }
 
@@ -75,28 +77,36 @@ export class CustomCellRendererComponent {
 
     this.controller.reloadData();
 
-    this.inv = setInterval(() => {
-      for (const dt of this.datasource.getAllData()) {
-        dt.amount = Math.floor(Math.random() * 10);
-        let amounts = [...dt.amountHistory()];
-        if (amounts.length > 9) {
-          amounts.shift();
+
+    /**
+     * SSR related. Check if this component is running on browser.
+     */
+    if (isPlatformBrowser(this.platformId)) {
+      this.inv = setInterval(() => {
+        for (const dt of this.datasource.getAllData()) {
+          dt.amount = Math.floor(Math.random() * 10);
+          let amounts = [...dt.amountHistory()];
+          if (amounts.length > 9) {
+            amounts.shift();
+          }
+          amounts.push(dt.amount);
+          console.log('..length', amounts.length)
+          dt.amountHistory.set(amounts);
         }
-        amounts.push(dt.amount);
-        console.log('..length', amounts.length)
-        dt.amountHistory.set(amounts);
-      }
-
-      //this markForCheck is required by the first Amount column. It force the table
-      //to re-render the new amount value
-      this.controller.markForCheck();
-
-    }, 1000);
+        
+        //this markForCheck is required by the first Amount column. It force the table
+        //to re-render the new amount value
+        this.controller.markForCheck();
+        
+      }, 1000);
+    }
 
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.inv)
+    if (this.inv) {
+      clearInterval(this.inv)
+    }
   }
 
 
