@@ -6,7 +6,7 @@ const FilterExamplesPage: NgDocPage = {
   title: `Filter Examples`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 100,
+  order: 120,
   demos: { FilterExamplesComponent }
 };
 

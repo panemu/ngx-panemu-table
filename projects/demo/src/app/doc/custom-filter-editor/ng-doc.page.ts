@@ -6,7 +6,7 @@ const CustomFilterEditorPage: NgDocPage = {
   title: `Custom Filter Editor`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 70,
+  order: 80,
   demos: { CustomFilterEditorComponent }
 };
 

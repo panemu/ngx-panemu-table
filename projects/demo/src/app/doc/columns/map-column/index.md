@@ -24,7 +24,6 @@ columns = this.pts.buildColumns<Data>([
 
 ngOnInit() {
 	this.genderMap.set({ F: 'Girl', M: 'Boy' })
-	this.controller.refreshTable();
 }
 ```
 

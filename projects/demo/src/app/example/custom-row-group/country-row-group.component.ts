@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GroupCellPipe, PanemuPaginationComponent, RowGroup, RowGroupComponent } from 'ngx-panemu-table';
 
 @Component({

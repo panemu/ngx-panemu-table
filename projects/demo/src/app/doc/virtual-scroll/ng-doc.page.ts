@@ -6,7 +6,7 @@ const VirtualScrollPage: NgDocPage = {
   title: `Virtual Scroll`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 90,
+  order: 110,
   demos: { VirtualScrollComponent }
 };
 

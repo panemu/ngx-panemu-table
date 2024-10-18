@@ -37,7 +37,6 @@ export class ColumnTypeComponent implements OnInit {
     setTimeout(() => {
       //pretend it calls backend API
       this.genderMap.set({ F: "Female", M: "Male" });
-      this.controller.refreshTable();
     }, 2000);
   }
 

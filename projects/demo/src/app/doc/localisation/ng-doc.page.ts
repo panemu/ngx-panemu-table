@@ -5,7 +5,7 @@ const LocalisationPage: NgDocPage = {
   title: `Localisation`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 40
+  order: 150
 };
 
 export default LocalisationPage;

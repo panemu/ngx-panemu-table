@@ -2,7 +2,7 @@
 keyword: CustomColumnPage
 ---
 
-To create custom column, specify the value of `cellRenderer` to your own component or an `ng-template`.
+To create custom column, specify the value of `BaseColumn.cellRenderer` to your own component or an `ng-template`.
 
 {{ NgDocActions.demo("CustomCellComponent") }}
 

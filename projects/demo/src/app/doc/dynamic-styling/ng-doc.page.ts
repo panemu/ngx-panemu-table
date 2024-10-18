@@ -7,7 +7,7 @@ const DynamicStylingPage: NgDocPage = {
   title: `Dynamic Styling`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 110,
+  order: 90,
   demos: { DynamicRowStyleComponent, DynamicCellStyleComponent }
 };
 

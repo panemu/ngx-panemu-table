@@ -26,6 +26,7 @@ import { PaginationComponent } from './example/pagination.component';
 import { StickyColumnComponent } from './example/sticky-column.component';
 import { FullBorderComponent } from './example/full-border.component';
 import { PersistStateComponent } from './example/persist-state.component';
+import { CustomCellRendererComponent } from './example/custom-cell-renderer.component';
 
 export const routes: Routes = [
 	{ path: 'basic', component: BasicComponent },
@@ -57,5 +58,6 @@ export const routes: Routes = [
 	{ path: 'sticky-column', component: StickyColumnComponent },
 	{ path: 'full-border', component: FullBorderComponent },
 	{ path: 'persist-state', component: PersistStateComponent },
+	{ path: 'custom-cell-renderer', component: CustomCellRendererComponent },
 	{ path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

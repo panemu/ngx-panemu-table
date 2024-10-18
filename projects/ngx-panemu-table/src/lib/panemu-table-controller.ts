@@ -42,19 +42,10 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   private data = signal<(T | RowGroup | RowGroupFooter | ExpansionRow<T>)[]>([]);
 
-  // private __regularData = computed(() => {
-  //   if (this.data?.()) {
-  //     const result = this.data().filter(item => isDataRow(item)) as T[]
-  //     return result;
-  //   }
-  //   return []
-  // })
-
   private selectedRow = signal<T | null>(null)
   groupByColumns: GroupBy[] = [];
   criteria: TableCriteria[] = [];
   private _loading = new BehaviorSubject<boolean>(false);
-  // __tableRelayout?: Function;
 
   /**
    * @internal
@@ -77,11 +68,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   private pts: PanemuTableService;
   private stateManager: TableStateManager;
 
-  /**
-   * Force refresh the table.
-   */
-  refreshTable!: Function;
-  // columns: BaseColumn<T>[];
+  private _markForCheck!: Function;
 
   private constructor(public columnDefinition: ColumnDefinition<T>, 
     private retrieveDataFunction: RetrieveDataFunction<T>, 
@@ -223,10 +210,6 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   get afterReloadEvent() {
     return this.afterReload$.asObservable()
   }
-
-  // relayout() {
-  //   this.__tableRelayout?.();
-  // }
 
   /**
    * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup` and `ExpansionRow`. 
@@ -460,7 +443,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   /**
-   * Expand cell. Only works of the column `BaseColumn.expansion` is defined.
+   * Expand cell. Only works if the column `BaseColumn.expansion` is defined.
    * @param row 
    * @param column 
    * @param expanded a signal to listen to expand/collapse state.
@@ -524,10 +507,14 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     return csv.join('\n');
   }
 
+  private _relayout?: Function;
+
   /**
    * Called by setting component to repaint table header
    */
-  relayout!: Function;
+  relayout() {
+    this._relayout?.()
+  }
 
   /**
    * Save table states. The states are:
@@ -594,7 +581,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     }
 
     this.columnDefinition.mutatedStructure = newStructure;
-    this.relayout?.();
+    this.relayout();
   }
 
   private copyState(clmState: ColumnState, actualColumn: BaseColumn<any>) {
@@ -630,5 +617,12 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       }
     }
     return result;
+  }
+
+  /**
+   * Call angular `ChangeDetectorRef.markForCheck`
+   */
+  markForCheck() {
+    this._markForCheck?.();
   }
 }

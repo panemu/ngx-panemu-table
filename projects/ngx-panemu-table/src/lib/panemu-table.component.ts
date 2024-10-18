@@ -81,7 +81,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     
 
     effect(() => {
-      if (this.colElements() && this.colElements().length) {
+      if (this.colElements() && this.colElements().length && this.tableOptions?.calculateColumWidthDelay) {
         setTimeout(() => {
           this.initColumnWidth();
           this.resetStickyColumn();
@@ -182,7 +182,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
       this.controller['tableDisplayData'] = this.displayData.bind(this);
       // this.controller.__data = this.data.asReadonly();
       this.controller['expandCell'] = this.expandCell.bind(this);
-      this.controller.relayout = this.relayout.bind(this);
+      this.controller['_relayout'] = this.relayout.bind(this);
       this._controllerSelectedRowSignal = this.controller.getSelectedRowSignal();
       this.loading = this.controller.loading;
       
@@ -196,7 +196,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
       this.tableOptions = this.controller.tableOptions;
       
 
-      this.controller.refreshTable = this.refresh.bind(this);
+      this.controller['_markForCheck'] = this.markForCheck.bind(this);
 
       if (this.matTable?.nativeElement) {
         this.matTable.nativeElement.style.width = '';
@@ -420,4 +420,10 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     this.cdr.markForCheck();
   }
 
+  /**
+   * Call angular `ChangeDetectorRef.markForCheck`
+   */
+  private markForCheck() {
+    this.cdr.markForCheck();
+  }
 }

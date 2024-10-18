@@ -6,7 +6,7 @@ const CustomColumnHeaderPage: NgDocPage = {
   title: `Custom Column Header`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 50,
+  order: 60,
   demos: { CustomHeaderComponent }
 };
 

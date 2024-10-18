@@ -132,6 +132,8 @@ export interface TableOptions<T> {
    * the widths and put it in col element width style. It is required tu support multiple
    * sticky columns. It also allows us to only specify width to certain columns
    * while other columns get browser calculated width.
+   * 
+   * If its value is 0, this feature is disabled.
    */
   calculateColumWidthDelay: number
 

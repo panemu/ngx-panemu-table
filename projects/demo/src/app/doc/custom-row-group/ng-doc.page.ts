@@ -7,7 +7,7 @@ const CustomRowGroupPage: NgDocPage = {
   title: `Custom Row Group`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 60,
+  order: 70,
   demos: { CustomRowGroupComponent, CustomRowGroup2Component }
 };
 

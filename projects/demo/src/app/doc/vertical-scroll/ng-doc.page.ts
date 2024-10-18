@@ -7,7 +7,7 @@ const VerticalScrollPage: NgDocPage = {
   title: `Vertical Scroll`,
   mdFile: './index.md',
   category: UsagesCategory,
-  order: 80,
+  order: 100,
   demos: { BasicComponent, VerticalScrollComponent }
 };
 
