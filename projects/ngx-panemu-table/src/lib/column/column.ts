@@ -117,6 +117,8 @@ export interface BaseColumn<T> {
 
   /**
    * Column header renderer.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/custom-column-header
    */
   headerRenderer?: HeaderRenderer;
 
@@ -231,9 +233,16 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
 
   /**
    * Custom component to edit filter. Only relevant if `filterable` property is true.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/custom-filter-editor
    */
   filterEditor?: Type<FilterEditor>
 
+  /**
+   * Consider to use `DefaultRowGroupRenderer.create` static method to customize it.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/custom-row-group
+   */
   rowGroupRenderer?: RowGroupRenderer
 }
 
@@ -246,6 +255,8 @@ export interface MapColumn<T> extends PropertyColumn<T> {
 
   /**
    * Key-Value pair to format the cell value as key, into it's corresponding value.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/columns/map-column
    */
   valueMap: WritableSignal<{ [key: string]: any }> | { [key: string]: any }
 }

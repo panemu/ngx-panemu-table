@@ -48,7 +48,7 @@ export interface RowGroupComponent {
    * to `PanemuTableComponent` that will expand the row and eventually trigger the datasource 
    * to get the row group children data.
    */
-  expandAction: (group: RowGroup) => void;
+  expandAction: (group: RowGroup, usePagination?: boolean) => void;
   parameter?: any;
 }
 
@@ -97,14 +97,14 @@ export interface RowGroupRenderer {
 export class DefaultRowGroupRenderer implements OnInit, RowGroupComponent {
   colSpan!: number;
   rowGroup!: RowGroup;
-  expandAction!: (group: RowGroup) => void;
+  expandAction!: (group: RowGroup, usePagination?: boolean) => void;
   parameter?: any;
   contentComponent?: Type<RowGroupContentComponent>
-  showPagination = true;
+  showPagination?: boolean;
   contentTemplate = viewChild<TemplateRef<any>>('defaultContent');
 
   ngOnInit(): void {
-    this.showPagination = this.parameter?.showPagination ?? true;
+    this.showPagination = this.parameter?.showPagination;
     if (this.parameter?.contentRenderer) {
       if (isSignal(this.parameter?.contentRenderer)) {
         this.contentTemplate = this.parameter.contentRenderer;
@@ -117,7 +117,7 @@ export class DefaultRowGroupRenderer implements OnInit, RowGroupComponent {
 
   /**
    * Customize DefaultRowGroupRenderer. Provided customization is
-   * - show/hide pagination
+   * - show/hide pagination. If undefined, it will adapt to the table whether the table use pagination or not.
    * - content component
    * - footer component
    * @param parameter

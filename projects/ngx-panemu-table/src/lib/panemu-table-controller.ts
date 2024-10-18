@@ -135,7 +135,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         let tq = this.createTableQuery();
         let start = this._startIndex;
         let rowsToLoad = this._maxRows;
-        if (!this.refreshPagination && !this.hasPagination) {
+        if (!this.hasPagination) {
           start = 0;
           rowsToLoad = 0;
         }
@@ -178,7 +178,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   initPaginationComponent(refreshAction: RefreshPagination) {
     this.refreshPagination = refreshAction;
-
+    this.hasPagination = true;
     /**
      * If the controller has loaded data before the pagination is connected,
      * then tell pagination component to display the pagination info. It happens
@@ -287,16 +287,17 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @param group
    * @internal 
    */
-  reloadGroup(group: RowGroup) {
+  reloadGroup(group: RowGroup, usePagination?: boolean) {
     if (!group.controller) {
       group.controller = this.createGroupController(group);
     }
-    group.controller.hasPagination = true;
+    group.controller.hasPagination = usePagination ?? this.hasPagination;
     group.controller.reloadCurrentPage();
   }
 
   private createGroupController(group: RowGroup) {
     let groupController = new PanemuTableController({header: [], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts}, this.retrieveDataFunction);
+    groupController._maxRows = this._maxRows;
     let slicedGroupByColumn = group.parent ? group.parent.controller!.groupByColumns.slice(1) : this.groupByColumns.slice(1);
     groupController.groupByColumns = slicedGroupByColumn;
     groupController.createTableQuery = () => {

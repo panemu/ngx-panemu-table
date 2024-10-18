@@ -7,7 +7,7 @@ export interface PanemuPaginationController {
   initPaginationComponent: (refreshEvent: RefreshPagination) => void
   startIndex: number
   maxRows: number
-  reloadGroup: (group: RowGroup) => void
+  reloadGroup: (group: RowGroup, usePagination?: boolean) => void
   reloadCurrentPage: Function
   saveState: Function
 }

@@ -77,9 +77,20 @@ export interface RowOptions<T> {
    */
   rowStyle?: (row: T) => string;
 
+  /**
+   * It provides a way to build your own tr-td tags in the table body for example
+   * if you need to implement cell or row spanning.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/cell-spanning
+   */
   rowRenderer?: Signal<TemplateRef<RowRenderer<T>> | undefined>
 }
 
+/**
+ * Interface for table footer.
+ * 
+ * @see https://ngx-panemu-table.panemu.com/usages/virtual-scroll
+ */
 export interface FooterRenderer {
   /**
    * Template or component for the footer. It should contains one or more td or th elements.
@@ -116,7 +127,9 @@ export interface TableOptions<T> {
   autoHeight: boolean;
 
   /**
-   * Table footer component/template
+   * Table footer component/template.
+   * 
+   * @see https://ngx-panemu-table.panemu.com/usages/virtual-scroll
    */
   footer?: FooterRenderer | null,
 
@@ -129,7 +142,7 @@ export interface TableOptions<T> {
    * Delay in milliseconds to calculate the width of table columns. Default value is 500.
    * If `BaseColumn.width` is not specified, we'll let browser to calculate
    * the optimum width for the column. After this delay, we run a logic to get
-   * the widths and put it in col element width style. It is required tu support multiple
+   * the width and put it in col element width style. It is required to support multiple
    * sticky columns. It also allows us to only specify width to certain columns
    * while other columns get browser calculated width.
    * 

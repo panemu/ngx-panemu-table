@@ -24,3 +24,12 @@ controller = PanemuTableController.create<People>(this.columns,
 Below is an example of table with 10,000 rows with virtual scroll enabled. If it is not enabled, the browser will be very sluggish even crash.
 
 {{ NgDocActions.demo("VirtualScrollComponent") }}
+
+Below is the component footer used in above example.
+
+
+```typescript file="../../example/custom-table-footer.component.ts" name="custom-table-footer.component.ts" group="g1"
+```
+
+```html file="../../example/custom-table-footer.component.html" name="custom-table-footer.component.html" group="g1"
+```

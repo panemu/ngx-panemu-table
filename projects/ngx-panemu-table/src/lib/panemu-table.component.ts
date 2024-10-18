@@ -274,10 +274,10 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
    */
   expandAction = this.groupHeaderClick.bind(this);
 
-  groupHeaderClick(row: RowGroup) {
+  groupHeaderClick(row: RowGroup, usePagination?: boolean) {
     row.expanded = !row.expanded;
     if (row.expanded) {
-      this.controller['reloadGroup'](row);
+      this.controller.reloadGroup(row, usePagination);
     } else {
       this.keepColumnWidth();
 

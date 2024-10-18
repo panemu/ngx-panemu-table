@@ -214,6 +214,8 @@
       display: flex;
       align-items: center;
       cursor: default;
+      position: sticky;
+      left: 0;
 
       .group-label {
         font-weight: 500;
@@ -221,7 +223,7 @@
     }
 
     .row-group-pagination {
-      position: absolute;
+      position: sticky;
       right: 0.5rem;
     }
   }

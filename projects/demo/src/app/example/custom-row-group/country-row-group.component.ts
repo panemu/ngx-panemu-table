@@ -16,7 +16,7 @@ import { GroupCellPipe, PanemuPaginationComponent, RowGroup, RowGroupComponent }
 export class CountryRowGroup implements OnInit, RowGroupComponent {
   colSpan!: number;
   rowGroup!: RowGroup;
-  expandAction!: (group: RowGroup) => void;
+  expandAction!: (group: RowGroup, usePagination?: boolean) => void;
   parameter?: any;
   
   disableInteraction = false;

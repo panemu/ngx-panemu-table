@@ -50,7 +50,7 @@ export class PanemuPaginationComponent implements OnChanges {
     this.controller.startIndex = start - 1;
     this.controller.maxRows = end + 1 - start;
     if (this.group) {
-      this.controller.reloadGroup(this.group)
+      this.controller.reloadGroup(this.group, true)
     } else {
       this.controller.reloadCurrentPage();
     }

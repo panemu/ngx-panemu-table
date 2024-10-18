@@ -1,8 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AllFeaturesClientComponent } from './all-features-client.component';
-import { DebugElement } from '@angular/core';
-import { PanemuTableController } from 'ngx-panemu-table';
 
 //ng test demo --include="projects/demo/src/app/example/all-features-client.component.spec.ts"
 
@@ -12,9 +11,9 @@ describe('AllFeaturesClientComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-			imports: [AllFeaturesClientComponent],
-			providers: [provideHttpClient()]
-		}).compileComponents();
+      imports: [AllFeaturesClientComponent],
+      providers: [provideHttpClient()]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -27,20 +26,20 @@ describe('AllFeaturesClientComponent', () => {
     expect(component).toBeDefined();
   });
 
-	it('should has data', async () => {
-		await fixture.whenStable();
-		const data = [...component.datasource.getAllData()];
-		expect(data?.length).toBeTruthy();
-    
+  it('should has data', async () => {
+    await fixture.whenStable();
+    const data = [...component.datasource.getAllData()];
+    expect(data?.length).toBeTruthy();
+
     fixture.detectChanges();//render the UI
 
-		//======== Check initial grouping and filtering
-		const de: DebugElement = fixture.debugElement;
+    //======== Check initial grouping and filtering
+    const de: DebugElement = fixture.debugElement;
     const componentEl: HTMLElement = de.nativeElement;
     let groupChip = componentEl.querySelector('.panemu-query .group .chip-label');
     const filterChip = componentEl.querySelector('.panemu-query .filter .chip-label');
 
-    
+
     expect(groupChip?.textContent).toBe('Country');
     expect(filterChip?.textContent).toBe('true');
     const countries = new Set(data.filter(item => item.verified).map(item => item.country));
@@ -58,20 +57,20 @@ describe('AllFeaturesClientComponent', () => {
     //displayed data should be 100
     expect(component.controller.getAllData().length).toBe(100);
     expect(componentEl.querySelectorAll('table tbody tr').length).toBe(100);
-	})
+  })
 
   it('pagination on row group should works', async () => {
 
-    const oriMaxRows = component.pts.getPaginationMaxRows;
+    const oriMaxRows = component.controller.maxRows;
     const paginationSize = 5;
-    component.pts.getPaginationMaxRows = () => paginationSize;
+    component.controller.maxRows = paginationSize;
     component.controller.criteria = [];
     component.controller.reloadData();
-		await fixture.whenStable();
+    await fixture.whenStable();
     fixture.detectChanges();
 
-		//======== Check initial grouping and filtering
-		const de: DebugElement = fixture.debugElement;
+    //======== Check initial grouping and filtering
+    const de: DebugElement = fixture.debugElement;
     const componentEl: HTMLElement = de.nativeElement;
     let firstCell = componentEl.querySelector('tbody tr td');
     let groupLabelEl = firstCell?.querySelector('.group-label') as HTMLElement;
@@ -83,7 +82,7 @@ describe('AllFeaturesClientComponent', () => {
 
     let paginationEl = firstCell?.querySelector('panemu-pagination');
     expect(paginationEl).toBeDefined();
-    
+
     const expandedRowsEl = componentEl.querySelectorAll('tbody tr.row');
     expect(expandedRowsEl.length).toBe(paginationSize);
     fixture.detectChanges();
@@ -91,12 +90,12 @@ describe('AllFeaturesClientComponent', () => {
     expect(paginationEl!.querySelector('span')?.textContent?.trim()).toBe(`/ ${philippinesCount}`);
     const inputEl = paginationEl!.querySelector('input') as HTMLInputElement;
     expect(inputEl.value).toBe('1-5');
-    component.pts.getPaginationMaxRows = oriMaxRows;
-	})
+    component.controller.maxRows = oriMaxRows;
+  })
 
   it('2 level grouping. first level with month modifier', async () => {
     component.controller.criteria = [];
-    component.controller.groupByColumns = [{field: 'enrolled', modifier: 'month'}, {field: 'gender'}];
+    component.controller.groupByColumns = [{ field: 'enrolled', modifier: 'month' }, { field: 'gender' }];
     component.controller.reloadData();
     await fixture.whenStable();
     fixture.detectChanges();

@@ -3,7 +3,7 @@ keyword: ComputedColumnPage
 ---
 
 Computed column doesn't have predefined way to know what value to display in it cells. It is our job to define it.
-Computed column has `ColumnType.COMPUTED` type. It doesn't have `field` property. Insted, we have to specify `formatter`
+Computed column has `ColumnType.COMPUTED` type. It doesn't have `field` property. Instead, we have to specify `formatter`
 property containing logic about what to display in the cell.
 
 

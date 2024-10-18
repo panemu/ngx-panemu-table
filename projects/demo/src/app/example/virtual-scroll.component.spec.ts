@@ -69,14 +69,12 @@ describe('VirtualScrollComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     fixture.detectChanges();
-    console.log('abc')
 
     // const btnUp = componentEl.querySelector('button[data-test-id="btn-up"]') as HTMLElement;
     // btnUp.click();
     // fixture.detectChanges();
     // await fixture.whenStable();
 
-    console.log('def')
     // await fixture.whenStable();
     // fixture.detectChanges();
 

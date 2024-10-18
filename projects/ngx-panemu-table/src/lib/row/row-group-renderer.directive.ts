@@ -10,7 +10,7 @@ export class RowGroupRendererDirective implements OnChanges {
   @Input() rowGroupRenderer?: RowGroupRenderer;
   @Input() colSpan!: number;
   @Input() rowGroup!: RowGroup;
-  @Input() expandAction!: (group: RowGroup) => void;
+  @Input() expandAction!: (group: RowGroup, usePagination?: boolean) => void;
   componentRef?: ComponentRef<RowGroupComponent> | null;
   constructor(private container: ViewContainerRef) { }
 

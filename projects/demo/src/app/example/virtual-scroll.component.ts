@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { CustomTableFooter } from './custom-table-footer.component';
@@ -17,7 +17,7 @@ export class VirtualScrollComponent {
     { field: 'name' },
     { field: 'email'},
     { field: 'gender'},
-    { field: 'country'},
+    { field: 'country', rowGroupRenderer: DefaultRowGroupRenderer.create({ header: { showPagination: true } }) },
     { field: 'amount'},
     { field: 'enrolled'},
     { field: 'last_login'},
