@@ -8,7 +8,8 @@ import {
   PanemuTableDataSource,
   PanemuTableService,
   GroupCellPipe,
-  TableQuery
+  TableQuery,
+  PanemuPaginationComponent
 } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -20,7 +21,7 @@ import { CountryRowGroupFooter } from './country-row-group-footer.component';
 @Component({
   selector: 'app-custom-row-group',
   standalone: true,
-  imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe],
+  imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe, PanemuPaginationComponent],
   templateUrl: './custom-row-group.component.html',
   styleUrl: './custom-row-group.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -34,7 +35,7 @@ export class CustomRowGroupComponent implements OnInit {
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
-    { field: 'name' },
+    { field: 'name', width: 200 },
     {
       field: 'gender',
       rowGroupRenderer: DefaultRowGroupRenderer.create(
@@ -53,8 +54,8 @@ export class CustomRowGroupComponent implements OnInit {
       rowGroupRenderer: DefaultRowGroupRenderer.create({ header: { contentRenderer: BooleanRowGroupContentComponent } })
     },
     { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'enrolled', type: ColumnType.DATE, width: 200 },
+    { field: 'last_login', type: ColumnType.DATETIME, width: 300 },
     { field: 'email' },
   ])
 

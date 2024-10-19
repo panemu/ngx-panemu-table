@@ -10,14 +10,20 @@ Texts displayed in NgxPanemuTable is using `LabelTranslation` interface. The def
 
 ```typescript
 DEFAULT_LABEL_TRANSLATION: LabelTranslation = {
-  search: 'Search',
+  search: 'Type here or double click to search',
   loading: 'Loading...',
   day: 'Day',
   month: 'Month',
   year: 'Year',
   groupBy: 'Group By',
   noData: 'No data to display',
-  searcForValueInColumn: 'Search for "{par0}" in:'
+  searcForValueInColumn: 'Search for "{par0}" in:',
+  selectColumnToSearchOn: 'Select a column to search on',
+  columns: 'Columns',
+  visibility_position_stickiness: 'Visibility, Position and Stickiness',
+  stickyStart: 'Sticky Start',
+  stickyEnd: 'Sticky End',
+  reset: 'Reset'
 };
 ```
 

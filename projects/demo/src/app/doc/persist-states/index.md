@@ -14,7 +14,7 @@ controller = PanemuTableController.create<People>(
 The `stateKey` should be unique app-wide to avoid collition. By default it is saved to browser's local storage.
 
 Try to change the following states on below example:
-- Resize columns width. Or click the cog button at the top right corner to change columns visibility, position
+- Resize columns width. Or click the cog button next to pagination control to change columns visibility, position
 and stickiness.
 - Click some row headers to sort.
 - Specify search criteria and grouping.
