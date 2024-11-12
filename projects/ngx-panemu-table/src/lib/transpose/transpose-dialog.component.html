@@ -1,0 +1,33 @@
+<div class="panemu-transpose-dialog">
+  <div class="header">
+    <div class="title">
+      {{labelTranslation.transpose}}
+    </div>
+  </div>
+
+  <div class="close" (click)="close()">
+    <span class="material-symbols-outlined">
+      close
+    </span>
+  </div>
+  @if (data()) {
+
+    <div>
+      <input class="input-field" type="text" [placeholder]="labelTranslation.transposeSearch" [formControl]="txtSearch">
+    </div>
+    <div class="body">
+      <table class="table">
+        <tbody>
+          @for (clm of filteredColumns; track $index) {
+            <tr>
+              <th>{{clm.label}}</th>
+              <td>{{clm.formatter?.(data()[clm.field], data(), clm) || data()[clm.field]}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="no-data">Please select a row to display here</div>
+  }
+</div>

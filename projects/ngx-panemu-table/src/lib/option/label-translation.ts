@@ -13,4 +13,9 @@ export interface LabelTranslation {
   stickyStart: string
   stickyEnd: string
   reset: string
+  setting: string
+  export: string
+  transpose: string
+  transposeSearch: string
+  pleaseSelectARowToDisplay: string
 }

@@ -479,50 +479,38 @@
 }
 
 .panemu-query, .panemu-setting-dialog {
-  .header {
-    text-align: center;
-    margin-bottom: 1rem;
 
-    .title {
-      font-size: 1.5rem;
+  .hover-parent {
+    .hover-child {
+      visibility: hidden;
     }
 
-    .sub-title {
-      font-size: 0.875rem;
+    .hover-child-inverse {
+      visibility: visible;
+    }
+
+    .hover-child-flex {
+      display: none;
     }
   }
-    // -------------
-    .hover-parent {
-      .hover-child {
-        visibility: hidden;
-      }
-  
-      .hover-child-inverse {
-        visibility: visible;
-      }
 
-      .hover-child-flex {
-        display: none;
-      }
+  .hover-parent:hover {
+    .hover-child {
+      visibility: visible;
     }
-  
-    .hover-parent:hover {
-      .hover-child {
-        visibility: visible;
-      }
 
-      .hover-child-flex {
-        display: flex;
-      }
-
-      .hover-child-inverse {
-        visibility: hidden;
-      }
-
-      .hover-child-inverse-display {
-        display: none;
-      }
+    .hover-child-flex {
+      display: flex;
     }
+
+    .hover-child-inverse {
+      visibility: hidden;
+    }
+
+    .hover-child-inverse-display {
+      display: none;
+    }
+  }
 }
 
 .panemu-query-menu {
@@ -591,6 +579,7 @@
     padding-right: 2rem;
     align-items: center;
     text-align: left;
+    color: rgba(0, 0, 0, 0.87);
     cursor: pointer;
 
     &:hover {
@@ -656,6 +645,39 @@
     display: block;
   }
 }
+
+
+.panemu-setting-menu .mat-mdc-menu-content {
+  button {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    display: flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    text-align: left;
+    color: rgba(0, 0, 0, 0.87);
+    outline: none;
+    background: none;
+    border: none;
+    width: 100%;
+    letter-spacing: 0.4375px;
+    &:hover {
+      background-color: #F3F4F6;
+    }
+
+    &:active {
+      background-color: #F9FAFB;
+    }
+
+    &:disabled {
+      color: rgba(0, 0, 0, 0.5);;
+    }
+
+    >span {
+      margin-right: 0.25rem
+    }
+  }
+}
 .panemu-setting {
 
   .cdk-dialog-container {
@@ -671,16 +693,7 @@
     right: 0px;
     display: flex;
     flex-direction: column;
-
-    .close {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      cursor: default;
-      &:hover {
-        color: red;
-      }
-    }
+    
     .group-container:has(.draggable:hover):hover {
       border-color: transparent;
     }
@@ -844,5 +857,78 @@
 
   .panemu-setting-dialog .cdk-drop-list-dragging .panemu-setting.draggable:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.panemu-transpose-dialog {
+  padding: 1rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .body {
+    overflow: auto;
+  }
+  .input-field {
+    background-color: transparent;
+    padding: 0 .25rem 0 .25rem;
+    width: 100%;
+    border-width: 0 0 1px 0;
+    outline: 0;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    border-spacing: 0;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-family: Roboto, sans-serif;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    
+    tr:hover {
+      background-color: #f1f5f9;
+    }
+
+    tr td{
+      padding-left: 1rem;
+    }
+    
+    th {
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+
+  .no-data {
+    color: #95979c;
+    margin-top: 1rem;
+    text-align: center;
+  }
+}
+
+.panemu-setting-dialog, .panemu-transpose-dialog {
+  .header {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    .title {
+      font-size: 1.5rem;
+    }
+
+    .sub-title {
+      font-size: 0.875rem;
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    cursor: default;
+    &:hover {
+      color: red;
+    }
   }
 }

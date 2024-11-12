@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../../model/people';
 
 const DATA: People[] = [
@@ -13,7 +13,7 @@ const DATA: People[] = [
 @Component({
   selector: 'app-multiline-column',
   templateUrl: 'multiline-column.component.html',
-  imports: [PanemuTableComponent],
+  imports: [PanemuTableComponent, PanemuSettingComponent],
   standalone: true,
   styleUrl: 'multiline-column.component.scss',
   encapsulation: ViewEncapsulation.None

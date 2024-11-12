@@ -36,7 +36,12 @@ export class PanemuTableService {
     visibility_position_stickiness: 'Visibility, Position and Stickiness',
     stickyStart: 'Sticky Start',
     stickyEnd: 'Sticky End',
-    reset: 'Reset'
+    reset: 'Reset',
+    transpose: 'Transpose',
+    transposeSearch: 'Search...',
+    setting: 'Setting',
+    export: 'Export',
+    pleaseSelectARowToDisplay: 'Please select a row to display here'
   };
 
   constructor(@Inject(LOCALE_ID) protected locale: string) {
@@ -492,4 +497,5 @@ export class PanemuTableService {
     localStorage.removeItem(stateKey);
     return of(null);
   }
+
 }

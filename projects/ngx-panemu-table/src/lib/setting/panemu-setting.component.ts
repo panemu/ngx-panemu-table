@@ -1,14 +1,13 @@
-import { Dialog } from '@angular/cdk/dialog';
-import { Overlay } from '@angular/cdk/overlay';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { PanemuTableController } from '../panemu-table-controller';
-import { SettingDialogComponent } from './setting-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { PanemuTableService } from '../panemu-table.service';
 
 /**
  * A simple button that if clicked, will execute
  * 
  * ```
- * SettingDialogComponent.show(this.dialog, this.overlay, this.controller)
+ * PanemuTableController.showSettingDialog()
  * ```
  * 
  * That dialog provide a UI to change column visibility, position and stickiness.
@@ -22,20 +21,26 @@ import { SettingDialogComponent } from './setting-dialog.component';
 @Component({
   selector: 'panemu-setting',
   templateUrl: 'panemu-setting.component.html',
-  standalone: true
+  standalone: true,
+  imports: [MatMenuModule]
 })
-export class PanemuSettingComponent implements OnInit {
+export class PanemuSettingComponent {
   @Input({ required: true }) controller!: PanemuTableController<any>;
-  dialog = inject(Dialog);
-  overlay = inject(Overlay);
-  constructor() { }
-
-  ngOnInit() { }
+  pts = inject(PanemuTableService);
+  labelTranslaction = this.pts.getLabelTranslation();
 
   /**
    * Show the setting dialog.
    */
-  showPanel() {
-    SettingDialogComponent.show(this.dialog, this.overlay, this.controller);
+  showSettingPanel() {
+    this.controller.showSettingDialog();
+  }
+
+  exportToCsv() {
+    this.controller.exportToCsv();
+  }
+
+  transposeSelectedRow() {
+    this.controller.transposeSelectedRow();
   }
 }

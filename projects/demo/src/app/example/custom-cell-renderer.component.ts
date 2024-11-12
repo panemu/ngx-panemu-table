@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, PLATFORM_ID, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, DefaultCellRenderer, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { ChartCellComponent } from './custom-cell/chart-cell.component';
@@ -11,7 +11,7 @@ interface People2 extends People {
 @Component({
   selector: 'app-custom-cell-renderer',
   standalone: true,
-  imports: [PanemuTableComponent],
+  imports: [PanemuTableComponent, PanemuSettingComponent],
   templateUrl: './custom-cell-renderer.component.html',
   styleUrl: './custom-cell-renderer.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -26,7 +26,9 @@ export class CustomCellRendererComponent {
     { field: 'amount', cellRenderer: DefaultCellRenderer.create(this.amountTemplate), width: 150 },
     {
       type: ColumnType.COMPUTED, 
-      formatter: (val: any, rowData?: any) => '', 
+      formatter: (val: any, rowData?: any) => {
+        return rowData.amountHistory?.().join(',')
+      }, 
       cellRenderer: ChartCellComponent.create('amountHistory'),
       label: 'Amount History',
       width: 250
@@ -90,7 +92,6 @@ export class CustomCellRendererComponent {
             amounts.shift();
           }
           amounts.push(dt.amount);
-          console.log('..length', amounts.length)
           dt.amountHistory.set(amounts);
         }
         

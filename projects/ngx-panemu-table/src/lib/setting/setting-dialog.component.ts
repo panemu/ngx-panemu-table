@@ -30,8 +30,6 @@ export class SettingDialogComponent implements OnInit {
       positionStrategy: overlay.position().global().right(),
       minWidth: 300,
       panelClass: 'panemu-setting',
-      backdropClass: 'no-background',
-
     })
     ref.componentInstance!.controller = controller;
   }

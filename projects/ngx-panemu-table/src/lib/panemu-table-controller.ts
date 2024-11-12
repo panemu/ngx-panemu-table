@@ -1,4 +1,4 @@
-import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
+import { inject, Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { BehaviorSubject, catchError, delay, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, NonGroupColumn } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
@@ -69,6 +69,17 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   private stateManager: TableStateManager;
 
   private _markForCheck!: Function;
+
+  /**
+   * Show dialog to customize column position, visibility and stickiness
+   */
+  showSettingDialog!: Function;
+
+  /**
+   * Transpose selected row and displayed in a dialog. While the dialog is shown
+   * user can select a different row in the table.
+   */
+  transposeSelectedRow!: Function;
 
   private constructor(public columnDefinition: ColumnDefinition<T>, 
     private retrieveDataFunction: RetrieveDataFunction<T>, 
@@ -394,7 +405,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Get selected row as signal. A row is selected if user click it. RowGroup cannot be selected.
    * @returns 
    */
-  getSelectedRowSignal() {
+  get selectedRowSignal() {
     return this.selectedRow.asReadonly()
   }
 
@@ -466,6 +477,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   /**
    * Get data as comma separated string. By default it includes the header and `RowGroup`s.
    * 
+   * Take a look at `exportToCsv` function as well.
+   * 
    * @param options provide a way to exclude header or `RowGroup` rows.
    * @returns csv string
    */
@@ -496,7 +509,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         const dataRow = row as T;
         for (const col of visibleCols) {
           if (col.formatter) {
-            csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field])))
+            csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field], dataRow)))
           } else {
             csvRow.push(this.escapeCsvText(dataRow[col.field] + ''))
           }
@@ -625,5 +638,18 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   markForCheck() {
     this._markForCheck?.();
+  }
+
+  /**
+   * It calls `getCsvData` method and instructs browser to download the data
+   * as csv file.
+   * 
+   * @param options provide a way to exclude header or `RowGroup` rows.
+   */
+  exportToCsv(options?: {includeHeader?: boolean, includeRowGroup?: boolean}) {
+    const csvString = this.getCsvData(options);
+
+    const dl = "data:text/csv;charset=utf-8," + csvString;
+    window.open(encodeURI(dl))
   }
 }

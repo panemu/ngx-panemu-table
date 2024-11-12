@@ -64,10 +64,10 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 - Customizable table cell.
   - Support custom cell using `ng-template` or angular component.
   - Support custom cell formatting and styling
-  - Cell expansion. See `*CellExpansionPage`. ✨ 
+  - Cell expansion. See `*CellExpansionPage`. 
 - Sticky column, header and footer
 - Cell colspan and rowspan. See `*CellSpanningPage`.
-- Export to CSV. See `PanemuTableController.getcsvdata` . ✨ 
+- Export to CSV. See `PanemuTableController.getcsvdata` .
 - Handle huge data using [virtual scroll](usages/virtual-scroll). Now it doesn't support variable row height. But it will in the future.
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}

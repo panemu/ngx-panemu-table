@@ -35,7 +35,7 @@ export class ChartCellComponent implements CellComponent<any> {
       high: 10,
       low: 0,
       height: 48,
-      chartPadding: { top: 0, right: -20, left: -30, bottom: -15 },
+      chartPadding: { top: 0, right: -15, left: -30, bottom: -15 },
 
     }
   }

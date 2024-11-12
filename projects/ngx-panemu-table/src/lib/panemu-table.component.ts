@@ -26,6 +26,10 @@ import { RowStylingPipe } from './row/row-styling.pipe';
 import { TableFooterRendererDirective } from './table-footer-renderer.directive';
 import { GroupBy } from './table-query';
 import { initTableWidth } from './util';
+import { Dialog } from "@angular/cdk/dialog";
+import { Overlay } from "@angular/cdk/overlay";
+import { SettingDialogComponent } from "./setting/setting-dialog.component"
+import { TransposeDialogComponent } from './transpose/transpose-dialog.component';
 
 @Component({
   selector: 'panemu-table',
@@ -77,6 +81,9 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   headerTop = '0px';
   footerBottom = '0px';
   colElements = viewChildren<ElementRef<HTMLElement>>('colEl');
+  dialog = inject(Dialog);
+  overlay = inject(Overlay);
+
   constructor() {
     
 
@@ -183,7 +190,9 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
       // this.controller.__data = this.data.asReadonly();
       this.controller['expandCell'] = this.expandCell.bind(this);
       this.controller['_relayout'] = this.relayout.bind(this);
-      this._controllerSelectedRowSignal = this.controller.getSelectedRowSignal();
+      this.controller.showSettingDialog = this.showSettingDialog.bind(this);
+      this.controller.transposeSelectedRow = this.transposeSelectedRow.bind(this);
+      this._controllerSelectedRowSignal = this.controller.selectedRowSignal;
       this.loading = this.controller.loading;
       
       this.headers = this.columnDefinition.header;
@@ -425,5 +434,15 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
    */
   private markForCheck() {
     this.cdr.markForCheck();
+  }
+
+  showSettingDialog() {
+    SettingDialogComponent.show(this.dialog, this.overlay, this.controller);
+  }
+
+  transposeSelectedRow() {
+    TransposeDialogComponent.show(this.dialog, this.overlay, this.columnDefinition.body, this._controllerSelectedRowSignal)
+    // if (this._controllerSelectedRowSignal()) {
+    // }
   }
 }
