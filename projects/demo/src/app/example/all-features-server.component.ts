@@ -38,8 +38,6 @@ export class AllFeaturesServerComponent implements OnInit {
     const map: any = {}
     CountryCode.forEach(item => map[item.code] = item.name);
     this.countryMap.set(map);
-    // this.controller.groupByColumns = [
-    // { field: 'enrolled', modifier:'month' }]
     this.controller.reloadData()
   }
 

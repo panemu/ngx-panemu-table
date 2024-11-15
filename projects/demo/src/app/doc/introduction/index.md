@@ -77,10 +77,13 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 These features are not developed yet. Please create a ticket in [our repository](https://github.com/panemu/ngx-panemu-table) if you need them so we know what to prioritize.
 
 - Global search.
-- Display transposed row in a dialog.
 - Virtual scroll with variable row height.
 
 ## Releases:
+
+### v.0.2.0
+
+* Transpose selected row.
 
 ### v.0.0.9
 
@@ -93,16 +96,6 @@ These features are not developed yet. Please create a ticket in [our repository]
 * Virtual scroll
 * Table footer
 * RowGroup now customizable and can have footer
-
-### v.0.0.6
-
-* Cell expansion
-* Export to CSV
-
-### v.0.0.5
-
-* Group multiple columns under one cell header
-
 
 ### Support Us
 

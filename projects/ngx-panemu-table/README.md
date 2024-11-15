@@ -28,6 +28,10 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ## New Features:
 
+### v.0.2.0
+
+* Transpose selected row.
+
 ### v.0.0.9
 
 * New `PanemuSettingComponent` as the UI to change columns visibility, position and stickiness.
@@ -39,16 +43,6 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 * Virtual scroll
 * Table footer
 * RowGroup now customizable and can have footer
-
-### v.0.0.6
-
-* Cell expansion ✨
-* Export to CSV ✨
-
-### v.0.0.5
-
-* Group multiple columns under one cell header
-
 
 ### Support Us
 
