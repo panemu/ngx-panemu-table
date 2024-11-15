@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.component';
@@ -7,7 +7,7 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
   templateUrl: 'all-features-client.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
   standalone: true,
   styleUrl: 'all-features-client.component.scss'
 })
@@ -92,17 +92,6 @@ export class AllFeaturesClientComponent implements OnInit {
   delete(row: People) {
     alert('Delete ' + JSON.stringify(row))
 
-  }
-
-  exportCsv() {
-    /**
-     * The getCsvData() can accept parameter to exclude header or row group.
-     * {includeRowGroup: false, includeHeader: false}
-     */
-    const csvString = this.controller.getCsvData();
-
-    const dl = "data:text/csv;charset=utf-8," + csvString;
-    window.open(encodeURI(dl))
   }
 
 }

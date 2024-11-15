@@ -1,8 +1,10 @@
 <div class="flex flex-col h-[500px] gap-4">
   <div class="flex justify-between items-center">
     <panemu-query [controller]="controller"></panemu-query>
-    <button class="flex items-center" (click)="exportCsv()"><span class="material-symbols-outlined leading-5 block">download</span> CSV</button>
-    <panemu-pagination [controller]="controller"></panemu-pagination>
+    <div class="flex space-x-2">
+      <panemu-pagination [controller]="controller"></panemu-pagination>
+      <panemu-setting [controller]="controller"/>
+    </div>
   </div>
   <div class="flex-grow">
     <panemu-table [controller]="controller"></panemu-table>
