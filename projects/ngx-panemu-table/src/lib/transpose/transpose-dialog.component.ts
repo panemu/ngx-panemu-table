@@ -62,6 +62,7 @@ export class TransposeDialogComponent implements OnInit {
     })
     ref.componentInstance!.columns = columns.filter(item => item.visible);
     ref.componentInstance!.data = data;
+    return ref;
   }
 
   close() {

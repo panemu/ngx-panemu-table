@@ -1,6 +1,6 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -26,7 +26,7 @@ import { RowStylingPipe } from './row/row-styling.pipe';
 import { TableFooterRendererDirective } from './table-footer-renderer.directive';
 import { GroupBy } from './table-query';
 import { initTableWidth } from './util';
-import { Dialog } from "@angular/cdk/dialog";
+import { Dialog, DialogRef } from "@angular/cdk/dialog";
 import { Overlay } from "@angular/cdk/overlay";
 import { SettingDialogComponent } from "./setting/setting-dialog.component"
 import { TransposeDialogComponent } from './transpose/transpose-dialog.component';
@@ -58,7 +58,7 @@ import { TransposeDialogComponent } from './transpose/transpose-dialog.component
   templateUrl: './panemu-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
+export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDestroy {
   @Input({required: true}) controller!: PanemuTableController<T>;
   dataSource: (T | RowGroup | RowGroupFooter | ExpansionRow<T>)[] = [];
   dataObservable = new BehaviorSubject<any[]>([])
@@ -83,6 +83,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   colElements = viewChildren<ElementRef<HTMLElement>>('colEl');
   dialog = inject(Dialog);
   overlay = inject(Overlay);
+  dialogRef?: DialogRef<any, any>;
 
   constructor() {
     
@@ -437,12 +438,16 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   }
 
   showSettingDialog() {
-    SettingDialogComponent.show(this.dialog, this.overlay, this.controller);
+    this.dialogRef?.close();
+    this.dialogRef = SettingDialogComponent.show(this.dialog, this.overlay, this.controller);
   }
 
   transposeSelectedRow() {
-    TransposeDialogComponent.show(this.dialog, this.overlay, this.columnDefinition.body, this._controllerSelectedRowSignal)
-    // if (this._controllerSelectedRowSignal()) {
-    // }
+    this.dialogRef?.close();
+    this.dialogRef = TransposeDialogComponent.show(this.dialog, this.overlay, this.columnDefinition.body, this._controllerSelectedRowSignal)
+  }
+
+  ngOnDestroy(): void {
+    this.dialogRef?.close();
   }
 }

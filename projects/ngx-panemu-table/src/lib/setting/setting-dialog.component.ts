@@ -32,6 +32,7 @@ export class SettingDialogComponent implements OnInit {
       panelClass: 'panemu-setting',
     })
     ref.componentInstance!.controller = controller;
+    return ref;
   }
 
   repaint() {
