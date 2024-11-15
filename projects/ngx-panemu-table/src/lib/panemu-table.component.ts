@@ -84,22 +84,34 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   dialog = inject(Dialog);
   overlay = inject(Overlay);
   dialogRef?: DialogRef<any, any>;
+  colWidthInitiated = false;
 
   constructor() {
     
 
     effect(() => {
-      if (this.colElements() && this.colElements().length && this.tableOptions?.calculateColumWidthDelay) {
-        setTimeout(() => {
-          this.initColumnWidth();
-          this.resetStickyColumn();
-        }, this.tableOptions?.calculateColumWidthDelay ?? 500);
+      if (this.colElements() && this.colElements().length) {
+        this.colWidthInitiated = false;
+        this.scheduleInitColumnWidth();
       }
     })
     
   }
 
+  private scheduleInitColumnWidth() {
+    if (this.dataSource.length) {
+      if (this.tableOptions?.calculateColumWidthDelay) {
+        setTimeout(() => {
+          this.initColumnWidth()
+        }, this.tableOptions?.calculateColumWidthDelay ?? 500);
+      } else {
+        this.initColumnWidth();
+      }
+    }
+  }
+
   private initColumnWidth() {
+    this.colWidthInitiated = true;
     const result = initTableWidth(this.matTable.nativeElement, true);
     if (this._visibleColumns.length) {
       Object.keys(result).forEach(k => {
@@ -109,6 +121,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
         }
       })
     }
+    this.resetStickyColumn();
   }
 
   ngAfterViewInit(): void {
@@ -272,6 +285,9 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
       this.controller.clearSelection();
     }
     this.cdr.markForCheck();
+    if (!this.colWidthInitiated) {
+      this.scheduleInitColumnWidth();
+    }
   }
 
   getDisplayedData() {
@@ -372,13 +388,6 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
       return;
     }
     this.controller.selectRow(row)
-  }
-
-  private refresh() {
-    // const oriData = [...this.dataSource.data];
-    // this.dataSource.data = [];
-    // this.dataSource.data = oriData;
-    this.onControllerChange();
   }
 
   isExpansionRow(item: any) {

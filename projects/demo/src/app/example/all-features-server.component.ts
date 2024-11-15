@@ -16,7 +16,7 @@ export class AllFeaturesServerComponent implements OnInit {
   countryMap = signal({});
   countryCell = viewChild<TemplateRef<any>>('countryCell')
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: ColumnType.INT},
     { field: 'name' },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
@@ -38,7 +38,8 @@ export class AllFeaturesServerComponent implements OnInit {
     const map: any = {}
     CountryCode.forEach(item => map[item.code] = item.name);
     this.countryMap.set(map);
-    this.controller.groupByColumns = [{ field: 'enrolled', modifier:'month' }]
+    // this.controller.groupByColumns = [
+    // { field: 'enrolled', modifier:'month' }]
     this.controller.reloadData()
   }
 

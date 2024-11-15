@@ -30,7 +30,7 @@ export class AllFeaturesClientComponent implements OnInit {
 
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>({ width: 50 }),
-    { field: 'id', type: ColumnType.INT, width: 50},
+    { field: 'id', type: ColumnType.INT, width: 60},
     { field: 'name', width: 150 },
     {
       field: 'email', width: 230, expansion: {
