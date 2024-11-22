@@ -100,10 +100,10 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
 
   private scheduleInitColumnWidth() {
     if (this.dataSource.length) {
-      if (this.tableOptions?.calculateColumWidthDelay) {
+      if (this.tableOptions?.calculateColumnWidthDelay) {
         setTimeout(() => {
           this.initColumnWidth()
-        }, this.tableOptions?.calculateColumWidthDelay ?? 500);
+        }, this.tableOptions?.calculateColumnWidthDelay ?? 500);
       } else {
         this.initColumnWidth();
       }

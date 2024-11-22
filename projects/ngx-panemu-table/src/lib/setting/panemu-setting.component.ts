@@ -4,13 +4,14 @@ import { MatMenuModule } from '@angular/material/menu';
 import { PanemuTableService } from '../panemu-table.service';
 
 /**
- * A simple button that if clicked, will execute
+ * A simple button provides a way to:
+ *
+ * 1. Display transpose panel.
+ * 2. Export data to CSV.
+ * 3. Display panel to change column visibility, position and stickiness.
  * 
- * ```
- * PanemuTableController.showSettingDialog()
- * ```
- * 
- * That dialog provide a UI to change column visibility, position and stickiness.
+ * All those actions can be found in `PanemuTableController`.
+ *
  * 
  * To use it, in your html file put this code:
  * 

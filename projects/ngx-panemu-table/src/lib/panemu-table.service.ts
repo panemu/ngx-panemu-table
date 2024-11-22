@@ -386,7 +386,7 @@ export class PanemuTableService {
       virtualScroll: false,
       virtualScrollRowHeight: 32,
       footer: null,
-      calculateColumWidthDelay: 500,
+      calculateColumnWidthDelay: 500,
       stateKey: ''
     };
     return defaultOptions;
@@ -451,7 +451,7 @@ export class PanemuTableService {
   handleError(err: any) {
     return (err: any) => {
       console.error(err)
-      alert('There is an error when loading table. Override this error handler by setting PanemuTableController.DEFAULT_ERROR_HANDLER at the start of the application ')
+      alert('There is an error when loading table. Override this error handler in PanemuTableService.handleError')
     }
   }
 
