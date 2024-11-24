@@ -1,6 +1,8 @@
-<div class="h-[500px]">
+<div class="h-[500px] flex flex-col">
 	<panemu-setting [controller]="controller" />
-	<panemu-table [controller]="controller"></panemu-table>
+	<div class="flex-grow">
+		<panemu-table [controller]="controller"></panemu-table>
+	</div>
 </div>
 <ng-template #amountTemplate let-column="column" let-row="row">
 	<div>

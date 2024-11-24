@@ -81,15 +81,16 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    */
   transposeSelectedRow!: Function;
 
-  private constructor(public columnDefinition: ColumnDefinition<T>, 
-    private retrieveDataFunction: RetrieveDataFunction<T>, 
+  private constructor(public columnDefinition: ColumnDefinition<T>,
+    private retrieveDataFunction: RetrieveDataFunction<T>,
     tableOptions?: Partial<TableOptions<T>>) {
+
     this.pts = columnDefinition.__tableService;
     this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
     this.tableOptions = this.pts.getTableOptions();
     this.stateManager = new TableStateManager(this.pts);
     mergeDeep(this.tableOptions, tableOptions);
-    this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;  
+    this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;
     this.tableOptions.autoHeight = this.tableOptions.virtualScroll ? false : this.tableOptions.autoHeight;
     this.initReloadCueListener();
   }

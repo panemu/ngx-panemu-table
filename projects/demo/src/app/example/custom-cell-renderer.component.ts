@@ -50,7 +50,6 @@ export class CustomCellRendererComponent {
     },
     
   );
-  cdr = inject(ChangeDetectorRef);
   dataService = inject(DataService);
   inv: any;
   platformId = inject(PLATFORM_ID);
