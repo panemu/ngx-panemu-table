@@ -8,7 +8,7 @@
 </div>
 
 <ng-template #sendEmailTemplate let-row="row" let-column="column" let-close="close">
-  <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px]">
+  <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px] sticky left-4">
     <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>
     <label>Message</label>
     <textarea rows="5" class="w-80"></textarea>

@@ -44,7 +44,11 @@ export class RowDetailComponent {
         component: NestedTableComponent,
       }
     },
-
+    {field: 'last_login'},
+    {field: 'last_login'},
+    {field: 'last_login'},
+    {field: 'last_login'},
+    {field: 'last_login'},
     this.clmEditInExpansion,
   ])
   datasource = new PanemuTableDataSource<People>();
