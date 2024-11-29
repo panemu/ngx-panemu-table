@@ -270,6 +270,9 @@ export class PanemuTableService {
    */
   getDecimalCellFormatter(): CellFormatter {
     return (val) => {
+      if (val === undefined || val == null || val == '') {
+        return '';
+      }
       return formatNumber(val, this.locale, '.2') || ''
     }
   }
@@ -288,8 +291,10 @@ export class PanemuTableService {
    */
   getDateTimeCellFormatter(): CellFormatter {
     return (val) => {
-
-      return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) || ''
+      if (val) {
+        return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) || ''
+      }
+      return '';
     }
   }
 
@@ -299,7 +304,10 @@ export class PanemuTableService {
    */
   getDateCellFormatter(): CellFormatter {
     return (val) => {
-      return formatDate(val, 'EEE, d MMM yyyy', this.locale) || ''
+      if (val) {
+        return formatDate(val, 'EEE, d MMM yyyy', this.locale) || ''
+      }
+      return '';
     }
   }
 
@@ -316,7 +324,10 @@ export class PanemuTableService {
    */
   getMonthCellFormatter(): CellFormatter {
     return (val: any) => {
-      if (val && (val + '').length <= 7) {
+      if (!val) {
+        return '';
+      }
+      if ((val + '').length <= 7) {
         val = val + '-01';
       }
       return formatDate(val, 'MMM yyyy', this.locale) || '';
@@ -330,7 +341,10 @@ export class PanemuTableService {
    */
   getYearCellFormatter(): CellFormatter {
     return (val: any) => {
-      if (val && (val + '').length <= 4) {
+      if (!val) {
+        return '';
+      }
+      if ((val + '').length <= 4) {
         val = val + '-01-01';
       }
       return formatDate(val, 'yyyy', this.locale) || '';
