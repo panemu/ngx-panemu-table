@@ -105,7 +105,7 @@ export class AppComponent {
 
 Delete the content of `app.component.html` replace it with this template:
 
-```html name="app.component.ts"
+```html name="app.component.html"
 <div style="height: 90vh; display: flex; flex-direction: column;">
   <div style="display: flex; justify-content: space-between;">
     <panemu-query [controller]="controller" />
