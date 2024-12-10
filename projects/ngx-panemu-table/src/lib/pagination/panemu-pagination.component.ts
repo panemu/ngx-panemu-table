@@ -1,7 +1,7 @@
-import { Component, effect, input, Input, model, OnChanges, signal, SimpleChanges } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, effect, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { PanemuTableController } from '../panemu-table-controller';
 import { RowGroup } from '../row/row-group';
-import { PanemuPaginationController } from './panemu-pagination-controller';
 
 @Component({
   selector: 'panemu-pagination',
@@ -11,11 +11,22 @@ import { PanemuPaginationController } from './panemu-pagination-controller';
 })
 
 export class PanemuPaginationComponent implements OnChanges {
-  @Input({required: true}) controller!: PanemuPaginationController;
+  @Input({required: true}) controller!: PanemuTableController<any>;
   @Input() group!: RowGroup;
   txt = new FormControl('');
   totalRows = signal(0);
   prevValue = '';
+  disabled = computed(() => this.controller?.mode() != 'browse')
+
+  constructor() {
+    effect(() => {
+      if (this.disabled()) {
+        this.txt.disable();
+      } else {
+        this.txt.enable();
+      }
+    })
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['controller'] && this.controller) {

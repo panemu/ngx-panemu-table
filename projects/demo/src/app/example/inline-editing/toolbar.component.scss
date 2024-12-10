@@ -1,0 +1,14 @@
+button {
+	@apply border-r px-2
+}
+
+button:hover:not(:disabled) {
+	@apply bg-gray-200;
+}
+
+button:hover:active {
+	@apply bg-gray-100;
+}
+button:disabled{
+	@apply opacity-50;
+}

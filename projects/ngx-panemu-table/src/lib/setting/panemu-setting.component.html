@@ -1,3 +1,9 @@
-<button class="panemu-setting-button" (click)="showPanel()">
-	<span class="material-symbols-outlined">settings</span>
+<button class="panemu-setting-button" [matMenuTriggerFor]="menu">
+  <span class="material-symbols-outlined">settings</span>
 </button>
+
+<mat-menu #menu="matMenu" class="panemu-setting-menu">
+  <button (click)="transposeSelectedRow()">{{labelTranslaction.transpose}}</button>
+  <button (click)="exportToCsv()">{{labelTranslaction.export}}</button>
+  <button (click)="showSettingPanel()">{{labelTranslaction.setting}}</button>
+</mat-menu>

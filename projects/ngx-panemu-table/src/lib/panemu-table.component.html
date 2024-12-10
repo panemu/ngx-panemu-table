@@ -137,14 +137,19 @@
   (click)="selectRow(row)">
     @for (column of _visibleColumns; track column) {
       <td
-      class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+      class="default-cell {{column.__key!}} {{row[column.field] | cellClass:row:_controllerSelectedRowSignal() == row:column.__key!:controller.mode():controller.editingController:column.cellClass}}"
       [style]="row[column.field] | cellStyling:row:column.cellStyle"
       [class.sticky]="!!column.sticky"
       [style.left.px]="column.sticky == 'start' ? column.__leftStyle : null"
       [style.right.px]="column.sticky == 'end' ? column.__rightStyle : null"
       >
-      <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
-    </td>
+
+      @if(_controllerSelectedRowSignal() == row && controller.mode() != 'browse' && editingInfo) {
+        <ng-template [cellEditorRenderer]="column" [row]="row" [editor]="editingInfo.editor[column.__key!]" ></ng-template>
+      } @else {
+        <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
+      }
+      </td>
     }
   </tr>
 </ng-template>

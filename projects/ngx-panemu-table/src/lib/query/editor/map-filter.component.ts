@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, isSignal, OnChanges, OnInit, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, isSignal, OnChanges, OnInit, SimpleChanges, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MapColumn } from '../../column/column';
 import { FilterEditor } from './filter-editor';

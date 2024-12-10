@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { input, AfterViewInit, Component, OnDestroy, OnInit, ViewChild, effect, isSignal, Signal } from '@angular/core';
+import { input, AfterViewInit, Component, OnDestroy, OnInit, ViewChild, effect, isSignal, Signal, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
@@ -22,6 +22,7 @@ import { Filter } from './filter';
 })
 export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   controller = input.required<PanemuTableController<any>>();
+  disabled = computed(() => this.controller().mode() != 'browse')
   groupByLabel = '';
   _columns!: PropertyColumn<any>[];
   _filterableColumns!: PropertyColumn<any>[];
@@ -38,6 +39,13 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.labelTranslation = service.getLabelTranslation();
 
     effect(() => this.onControllerChange())
+    effect(() => {
+      if (this.disabled()) {
+        this.txtCriteria.disable()
+      } else {
+        this.txtCriteria.enable()
+      }
+    })
   }
 
   ngOnInit(): void {

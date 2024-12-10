@@ -1,13 +1,13 @@
-<div class="panemu-pagination">
+<div class="panemu-pagination" [class.disabled]="disabled()">
   <input [formControl]="txt" (keyup.enter)="applyChange()" (blur)="applyChange()"
     class="input-field"><span> / {{totalRows()}}</span>
   <div class="button-wrapper">
-    <button class="btn btn-left" (click)="prev()">
+    <button class="btn btn-left" (click)="prev()" [disabled]="disabled()">
       <span class="icon material-symbols-outlined">
         west
       </span>
     </button>
-    <button class="btn btn-right" (click)="next()">
+    <button class="btn btn-right" (click)="next()" [disabled]="disabled()">
       <span class="icon material-symbols-outlined">
         east
       </span>

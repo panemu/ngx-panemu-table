@@ -1,0 +1,17 @@
+.mat-mdc-dialog-content {
+  max-width: 90vw;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: flex-end;
+  background-color: #f7f7f7;
+  border-top: 1px solid #dfdfdf;
+}
+
+button {
+  min-width: 60px;
+}
+
+/*:host {
+	color: grey;
+}*/

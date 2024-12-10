@@ -1,0 +1,11 @@
+<div class="map-cell-editor">
+  <select [formControl]="formControl" class="editor-select" [title]="errorMessage() || ''">
+    <option></option>
+    @for (item of options?.(); track $index) {
+    <option [value]="item.value">{{item.label}}</option>
+    }
+  </select>
+  @if (loading?.()) {
+    <pnm-spinning-icon class="busy-indicator"/>
+  }
+</div>

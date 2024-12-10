@@ -1,19 +1,20 @@
+import { Dialog, DialogRef } from "@angular/cdk/dialog";
+import { Overlay } from "@angular/cdk/overlay";
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indicator.component';
-import { SpinningIconComponent } from './busy-indicator/spinning-icon.component';
-import { CellFormatterPipe } from './cell/cell-formatter.pipe';
+import { CellClassPipe } from "./cell/cell-class.pipe";
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
-import { GroupCellPipe } from './cell/group-cell.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
 import { BaseColumn, ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
+import { CellEditorRendererDirective } from "./editing/cell-editor-renderer.directive";
+import { EditingInfo } from "./editing/editing-info";
 import { TableOptions } from './option/options';
-import { PanemuPaginationComponent } from './pagination/panemu-pagination.component';
 import { PanemuTableController } from './panemu-table-controller';
 import { PanemuTableService } from './panemu-table.service';
 import { ResizableComponent } from './resizable.component';
@@ -23,8 +24,10 @@ import { RowGroup, RowGroupData, RowGroupFooter } from './row/row-group';
 import { RowGroupFooterRendererDirective } from './row/row-group-footer-renderer.directive';
 import { RowGroupRendererDirective } from './row/row-group-renderer.directive';
 import { RowStylingPipe } from './row/row-styling.pipe';
+import { SettingDialogComponent } from "./setting/setting-dialog.component";
 import { TableFooterRendererDirective } from './table-footer-renderer.directive';
 import { GroupBy } from './table-query';
+import { TransposeDialogComponent } from './transpose/transpose-dialog.component';
 import { initTableWidth } from './util';
 
 @Component({
@@ -36,17 +39,15 @@ import { initTableWidth } from './util';
     MatButtonModule,
     ResizableComponent,
     CellRendererDirective,
+    CellEditorRendererDirective,
     HeaderRendererDirective,
     RowGroupRendererDirective,
     PanemuBusyIndicatorComponent,
-    PanemuPaginationComponent,
-    SpinningIconComponent,
     RowStylingPipe,
     CellStylingPipe,
-    GroupCellPipe,
+    CellClassPipe,
     ExpansionRowRendererDirective,
     ScrollingModule,
-    CellFormatterPipe,
     RowGroupFooterRendererDirective,
     TableFooterRendererDirective,
 ],
@@ -54,10 +55,9 @@ import { initTableWidth } from './util';
   templateUrl: './panemu-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
+export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDestroy {
   @Input({required: true}) controller!: PanemuTableController<T>;
   dataSource: (T | RowGroup | RowGroupFooter | ExpansionRow<T>)[] = [];
-  dataObservable = new BehaviorSubject<any[]>([])
   _visibleColumns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
   loading!: Observable<boolean>
@@ -65,7 +65,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   _controllerSelectedRowSignal!: Signal<T | null>;
   tableOptions!: TableOptions<T>;
   headers!:HeaderRow[];
-  ready = false;
+  editingInfo: EditingInfo<T> | null = null;
+
   cdr = inject(ChangeDetectorRef);
   pts = inject(PanemuTableService);
   labelTranslation = this.pts.getLabelTranslation();
@@ -77,21 +78,40 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   headerTop = '0px';
   footerBottom = '0px';
   colElements = viewChildren<ElementRef<HTMLElement>>('colEl');
+  dialog = inject(Dialog);
+  overlay = inject(Overlay);
+  dialogRef?: DialogRef<any, any>;
+  colWidthInitiated = false;
+
   constructor() {
     
 
     effect(() => {
-      if (this.colElements() && this.colElements().length && this.tableOptions?.calculateColumWidthDelay) {
-        setTimeout(() => {
-          this.initColumnWidth();
-          this.resetStickyColumn();
-        }, this.tableOptions?.calculateColumWidthDelay ?? 500);
+      if (this.colElements() && this.colElements().length) {
+        this.colWidthInitiated = false;
+        this.scheduleInitColumnWidth();
       }
     })
     
+    effect(() => {
+      this.resetEditingInfo();
+    })
+  }
+
+  private scheduleInitColumnWidth() {
+    if (this.dataSource.length) {
+      if (this.tableOptions?.calculateColumnWidthDelay) {
+        setTimeout(() => {
+          this.initColumnWidth()
+        }, this.tableOptions?.calculateColumnWidthDelay ?? 500);
+      } else {
+        this.initColumnWidth();
+      }
+    }
   }
 
   private initColumnWidth() {
+    this.colWidthInitiated = true;
     const result = initTableWidth(this.matTable.nativeElement, true);
     if (this._visibleColumns.length) {
       Object.keys(result).forEach(k => {
@@ -101,6 +121,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
         }
       })
     }
+    this.resetStickyColumn();
   }
 
   ngAfterViewInit(): void {
@@ -183,7 +204,11 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
       // this.controller.__data = this.data.asReadonly();
       this.controller['expandCell'] = this.expandCell.bind(this);
       this.controller['_relayout'] = this.relayout.bind(this);
-      this._controllerSelectedRowSignal = this.controller.getSelectedRowSignal();
+      this.controller.showSettingDialog = this.showSettingDialog.bind(this);
+      this.controller.transposeSelectedRow = this.transposeSelectedRow.bind(this);
+      this.controller['insertRowToTable'] = this.insertRow.bind(this)
+      this.controller['deleteRowFromTable'] = this.deleteRow.bind(this)
+      this._controllerSelectedRowSignal = this.controller.selectedRowSignal;
       this.loading = this.controller.loading;
       
       this.headers = this.columnDefinition.header;
@@ -202,10 +227,37 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
         this.matTable.nativeElement.style.width = '';
         this.matTable.nativeElement.removeAttribute('resized');
       }
-      // setTimeout(() => {
-      //   this.ready = true;
-      // });
+      
       this.cdr.markForCheck();
+    }
+  }
+
+  private resetEditingInfo() {
+    if (this.controller.mode() == "browse") {
+      this.controller.editingController?._reset();
+      this.editingInfo = null;
+    } else {
+      if (this.controller.editingController) {
+        if (this._controllerSelectedRowSignal()) {
+          let columns = this.columnDefinition.body.filter(item => item.visible && item.field);
+          this.editingInfo = this.controller.editingController?._createEditingInfo(columns,this._controllerSelectedRowSignal()!, this.controller.mode()) || null;
+          
+          setTimeout(() => {
+            /**
+             * This logic can update a signal. Since this method was triggered
+             * by an effect, we use a setTimeout here. Otherwise it might raise this error:
+             * 
+             * "Writing to signals is not allowed in a `computed` or an `effect` by default. 
+             * Use `allowSignalWrites` in the `CreateEffectOptions` to enable this inside effects.""
+             */
+            this.controller.editingController?._startEdit(this._controllerSelectedRowSignal()!)
+          });
+
+        }
+        
+      } else {
+        console.error('No PanemuTableEditingController assigned to PanemuTableController.editingController');
+      }
     }
   }
 
@@ -256,12 +308,39 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
 
   private resetDataSourceData(data: (T | RowGroup | RowGroupFooter | ExpansionRow<T>)[]) {
     this.dataSource = [...data];
-    this.dataObservable.next(data);
     this.controller['data'].set(data);
     if (this.controller.getSelectedRow() && !this.controller['data']().includes(this.controller.getSelectedRow()!)) {
       this.controller.clearSelection();
     }
     this.cdr.markForCheck();
+    if (!this.colWidthInitiated) {
+      this.scheduleInitColumnWidth();
+    }
+  }
+
+  private insertRow(aRow: Partial<T>) {
+    this.dataSource.unshift(aRow as T);
+    if (this.tableOptions.virtualScroll) {
+      this.dataSource = [...this.dataSource];//virtual scroll needs this to trigger repaint
+    }
+    this.controller['data'].set(this.dataSource);
+    let columns = this.columnDefinition.body.filter(item => item.visible && item.field);
+    this.controller.editingController?._createEditingInfo(columns, aRow as T, this.controller.mode());
+    this.selectRow(aRow as T);
+
+    this.markForCheck(); //this is only needed when grouping is active. Don't know why.
+  }
+
+  private deleteRow(aRow: T) {
+    const index = this.dataSource.indexOf(aRow);
+    if (index > -1) {
+      this.controller.editingController?._deleteEditingInfo(aRow);
+      this.dataSource.splice(index, 1);
+      if (this._controllerSelectedRowSignal() == aRow) {
+        this.controller.clearSelection();
+      }
+      this.cdr.markForCheck();
+    }
   }
 
   getDisplayedData() {
@@ -275,6 +354,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
   expandAction = this.groupHeaderClick.bind(this);
 
   groupHeaderClick(row: RowGroup, usePagination?: boolean) {
+    if (this.controller.mode() != 'browse') return;
     row.expanded = !row.expanded;
     if (row.expanded) {
       this.controller.reloadGroup(row, usePagination);
@@ -343,7 +423,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
 
   sort(column: PropertyColumn<T>) {
     if (!column.sortable) return;
-
+    if (this.controller.mode() != 'browse') return;
+    
     let initialDirection = this.controller.sortedColumn[column.field.toString()] || '';
     if (initialDirection == 'asc') {
       this.controller.sortedColumn[column.field.toString()] = 'desc';
@@ -361,14 +442,13 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
     if (!this.tableOptions.rowOptions.rowSelection) {
       return;
     }
-    this.controller.selectRow(row)
-  }
-
-  private refresh() {
-    // const oriData = [...this.dataSource.data];
-    // this.dataSource.data = [];
-    // this.dataSource.data = oriData;
-    this.onControllerChange();
+    if (this.controller.mode() == 'insert') {
+      if (this.controller.editingController?._getEditingInfo(row)) {
+        this.controller.selectRow(row)
+      }
+    } else {
+      this.controller.selectRow(row);
+    }
   }
 
   isExpansionRow(item: any) {
@@ -425,5 +505,25 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges {
    */
   private markForCheck() {
     this.cdr.markForCheck();
+  }
+
+  showSettingDialog() {
+    this.dialogRef?.close();
+    this.dialogRef = SettingDialogComponent.show(this.dialog, this.overlay, this.controller);
+  }
+
+  transposeSelectedRow() {
+    this.dialogRef?.close();
+    this.dialogRef = TransposeDialogComponent.show(this.dialog, this.overlay, this.columnDefinition.body, this._controllerSelectedRowSignal)
+  }
+
+  ngOnDestroy(): void {
+    this.dialogRef?.close();
+
+    /**
+     * Fix unit test problem when the component is destroyed
+     * before this table has a controller
+     */
+    this.controller?.editingController?._reset();
   }
 }

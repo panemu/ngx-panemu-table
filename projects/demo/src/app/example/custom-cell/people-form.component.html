@@ -1,8 +1,8 @@
-<div class="relative p-4">
-  @if(!ready) {
-    <panemu-busy-indicator></panemu-busy-indicator>
+<div class="p-4">
+  @if(!ready()) {
+    <panemu-busy-indicator class="absolute block ml-auto w-full mt-8"></panemu-busy-indicator>
   }
-  <div class="grid grid-cols-2 gap-4 w-[300px]" [class.invisible]="!ready">
+  <div class="grid grid-cols-2 gap-4 w-[300px] sticky left-4" [class.invisible]="!ready()">
     <label class="text-right">Name</label>
     <input [formControl]="form.controls.name">
     <label class="text-right">Email</label>

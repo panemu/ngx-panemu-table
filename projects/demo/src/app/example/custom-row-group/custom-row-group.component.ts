@@ -34,10 +34,10 @@ export class CustomRowGroupComponent implements OnInit {
 
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id' },
+    { field: 'id', width: 60 },
     { field: 'name', width: 200 },
     {
-      field: 'gender',
+      field: 'gender', type: ColumnType.MAP, valueMap: {M: 'Male', F: 'Female'}, width: 100,
       rowGroupRenderer: DefaultRowGroupRenderer.create(
         { 
           header: { contentRenderer: this.genderGroupTemplate, showPagination: false },
@@ -46,17 +46,17 @@ export class CustomRowGroupComponent implements OnInit {
       })
     },
     {
-      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(),
+      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), width: 100,
       rowGroupRenderer: { component: CountryRowGroup, footerComponent: CountryRowGroupFooter }
     },
     {
       field: 'verified',
       rowGroupRenderer: DefaultRowGroupRenderer.create({ header: { contentRenderer: BooleanRowGroupContentComponent } })
     },
-    { field: 'amount', type: ColumnType.DECIMAL },
+    { field: 'amount', type: ColumnType.DECIMAL, width: 100 },
     { field: 'enrolled', type: ColumnType.DATE, width: 200 },
-    { field: 'last_login', type: ColumnType.DATETIME, width: 300 },
-    { field: 'email' },
+    { field: 'last_login', type: ColumnType.DATETIME, width: 200 },
+    { field: 'email', width: 250 },
   ])
 
   datasource = new PanemuTableDataSource<People>;
@@ -77,7 +77,7 @@ export class CustomRowGroupComponent implements OnInit {
           const allAdata = this.datasource.getAllData();
           for (const people of allAdata) {
             if (people.country) {
-              totalMap[people.country] = totalMap[people.country] ? totalMap[people.country] + people.amount : people.amount;
+              totalMap[people.country] = totalMap[people.country] ? totalMap[people.country] + (people.amount || 0) : people.amount || 0;
             }
           }
           for (const item of tableData.rows) {

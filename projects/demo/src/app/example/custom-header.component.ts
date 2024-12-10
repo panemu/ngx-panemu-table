@@ -44,7 +44,6 @@ export class CustomHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.controller.reloadData();
-    this.controller.selectFirst();
     
     this.cmbColumnHeader.valueChanges.subscribe({
       next: val => {

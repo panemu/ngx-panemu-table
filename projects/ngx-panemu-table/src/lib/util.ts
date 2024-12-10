@@ -65,7 +65,7 @@ export function initTableWidth(tableElement: HTMLElement, keepColWidth = false) 
        * has round number. The browser rounded it down. It can lead to ellipsis appears.
        * So let's add 1px.
        */
-      width += 1;
+      // width += 1; //it causing horizontal scrollbar for
       
       result[colId] = width;
       setElementWidth(width, colEl)

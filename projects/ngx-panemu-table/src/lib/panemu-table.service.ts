@@ -36,7 +36,21 @@ export class PanemuTableService {
     visibility_position_stickiness: 'Visibility, Position and Stickiness',
     stickyStart: 'Sticky Start',
     stickyEnd: 'Sticky End',
-    reset: 'Reset'
+    reset: 'Reset',
+    transpose: 'Transpose',
+    transposeSearch: 'Search...',
+    setting: 'Setting',
+    export: 'Export',
+    pleaseSelectARowToDisplay: 'Please select a row to display here',
+    validationError: {
+      required: 'This field is required',
+      minlength: 'Minimum {par0} characters, actual {par1} characters',
+      maxlength: 'Max {par0} characters, actual {par1} characters',
+      email: 'Invalid Email',
+      min: 'Min value is {par0}, actual value is {par1}',
+      max: 'Max value is {par0}, actual value is {par1}',
+      pattern: 'Invalid value'
+    }
   };
 
   constructor(@Inject(LOCALE_ID) protected locale: string) {
@@ -265,7 +279,10 @@ export class PanemuTableService {
    */
   getDecimalCellFormatter(): CellFormatter {
     return (val) => {
-      return formatNumber(val, this.locale, '.2') || ''
+      if (val === undefined || val == null || val == '') {
+        return '';
+      }
+      return formatNumber(val, this.locale, '.2') ?? ''
     }
   }
 
@@ -274,7 +291,7 @@ export class PanemuTableService {
    * @returns 
    */
   getIntCellFormatter(): CellFormatter {
-    return (val: any) => val || '';
+    return (val: any) => val ?? '';
   }
 
   /**
@@ -283,8 +300,10 @@ export class PanemuTableService {
    */
   getDateTimeCellFormatter(): CellFormatter {
     return (val) => {
-
-      return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) || ''
+      if (val) {
+        return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) ?? ''
+      }
+      return '';
     }
   }
 
@@ -294,7 +313,10 @@ export class PanemuTableService {
    */
   getDateCellFormatter(): CellFormatter {
     return (val) => {
-      return formatDate(val, 'EEE, d MMM yyyy', this.locale) || ''
+      if (val) {
+        return formatDate(val, 'EEE, d MMM yyyy', this.locale) ?? ''
+      }
+      return '';
     }
   }
 
@@ -311,10 +333,13 @@ export class PanemuTableService {
    */
   getMonthCellFormatter(): CellFormatter {
     return (val: any) => {
-      if (val && (val + '').length <= 7) {
+      if (!val) {
+        return '';
+      }
+      if ((val + '').length <= 7) {
         val = val + '-01';
       }
-      return formatDate(val, 'MMM yyyy', this.locale) || '';
+      return formatDate(val, 'MMM yyyy', this.locale) ?? '';
     }
   }
 
@@ -325,10 +350,13 @@ export class PanemuTableService {
    */
   getYearCellFormatter(): CellFormatter {
     return (val: any) => {
-      if (val && (val + '').length <= 4) {
+      if (!val) {
+        return '';
+      }
+      if ((val + '').length <= 4) {
         val = val + '-01-01';
       }
-      return formatDate(val, 'yyyy', this.locale) || '';
+      return formatDate(val, 'yyyy', this.locale) ?? '';
     }
   }
 
@@ -381,7 +409,7 @@ export class PanemuTableService {
       virtualScroll: false,
       virtualScrollRowHeight: 32,
       footer: null,
-      calculateColumWidthDelay: 500,
+      calculateColumnWidthDelay: 500,
       stateKey: ''
     };
     return defaultOptions;
@@ -444,10 +472,8 @@ export class PanemuTableService {
    * @returns 
    */
   handleError(err: any) {
-    return (err: any) => {
-      console.error(err)
-      alert('There is an error when loading table. Override this error handler by setting PanemuTableController.DEFAULT_ERROR_HANDLER at the start of the application ')
-    }
+    console.error(err);
+    alert(err.message || 'There is an error when loading table. Override this error handler in PanemuTableService.handleError')
   }
 
   /**
@@ -492,4 +518,5 @@ export class PanemuTableService {
     localStorage.removeItem(stateKey);
     return of(null);
   }
+
 }

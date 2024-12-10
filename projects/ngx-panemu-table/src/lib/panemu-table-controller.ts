@@ -1,17 +1,18 @@
 import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
-import { BehaviorSubject, catchError, delay, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
+import { BehaviorSubject, catchError, finalize, Observable, of, skip, switchMap } from "rxjs";
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, NonGroupColumn } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
+import { TABLE_MODE } from "./editing/table-mode";
 import { TableOptions } from "./option/options";
-import { PanemuPaginationController, RefreshPagination } from "./pagination/panemu-pagination-controller";
+import { PanemuTableService } from "./panemu-table.service";
 import { ExpansionRow, ExpansionRowRenderer } from "./row/expansion-row";
 import { RowGroup, RowGroupData, RowGroupFooter } from "./row/row-group";
+import { TableStateManager } from "./state/table-state-manager";
+import { ColumnState, TableState } from "./state/table-states";
 import { TableData } from "./table-data";
 import { GroupBy, TableCriteria, TableQuery } from "./table-query";
 import { formatDateToIso, isDataRow, mergeDeep, toDate } from "./util";
-import { ColumnState, TableState } from "./state/table-states";
-import { TableStateManager } from "./state/table-state-manager";
-import { PanemuTableService } from "./panemu-table.service";
+import { PanemuTableEditingController } from "./editing/panemu-table-editing-controller";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -25,6 +26,8 @@ import { PanemuTableService } from "./panemu-table.service";
  */
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
 
+export type RefreshPagination = (start: number, maxRows: number, totalRows: number) => void;
+
 type DisplayDataFunction<T> = (data: T[] | RowGroupData[], parent?: RowGroup, groupField?: GroupBy) => void;
 
 type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>, column: BaseColumn<T>, expanded?: WritableSignal<boolean>) => void
@@ -33,7 +36,7 @@ type ExpandCell<T> = (row: T, ExpansionRowComponent: Signal<TemplateRef<any> | u
  * This class provide a way to interact with `PanemuTableComponent`. It requires columns information and a way
  * to get data.
  */
-export class PanemuTableController<T> implements PanemuPaginationController {
+export class PanemuTableController<T> {
 
   /**
    * The value of this signal is set by table component. The table knows how to agregate the
@@ -45,13 +48,16 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   private selectedRow = signal<T | null>(null)
   groupByColumns: GroupBy[] = [];
   criteria: TableCriteria[] = [];
+  private _mode = signal<TABLE_MODE>('browse');
+
   private _loading = new BehaviorSubject<boolean>(false);
 
   /**
    * @internal
    */
   private tableDisplayData?: DisplayDataFunction<T>;
-
+  private insertRowToTable?: (rowData: Partial<T>) => void;
+  private deleteRowFromTable?: (rowData: T) => void;
   private expandCell?: ExpandCell<T>
 
   private refreshPagination?: RefreshPagination;
@@ -70,15 +76,29 @@ export class PanemuTableController<T> implements PanemuPaginationController {
 
   private _markForCheck!: Function;
 
-  private constructor(public columnDefinition: ColumnDefinition<T>, 
-    private retrieveDataFunction: RetrieveDataFunction<T>, 
+  /**
+   * Show dialog to customize column position, visibility and stickiness
+   */
+  showSettingDialog!: Function;
+
+  /**
+   * Transpose selected row and displayed in a dialog. While the dialog is shown
+   * user can select a different row in the table.
+   */
+  transposeSelectedRow!: Function;
+
+  private _editingController?: PanemuTableEditingController<T>;
+
+  private constructor(public columnDefinition: ColumnDefinition<T>,
+    private retrieveDataFunction: RetrieveDataFunction<T>,
     tableOptions?: Partial<TableOptions<T>>) {
+
     this.pts = columnDefinition.__tableService;
     this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
     this.tableOptions = this.pts.getTableOptions();
     this.stateManager = new TableStateManager(this.pts);
     mergeDeep(this.tableOptions, tableOptions);
-    this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;  
+    this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;
     this.tableOptions.autoHeight = this.tableOptions.virtualScroll ? false : this.tableOptions.autoHeight;
     this.initReloadCueListener();
   }
@@ -139,7 +159,9 @@ export class PanemuTableController<T> implements PanemuPaginationController {
           start = 0;
           rowsToLoad = 0;
         }
-        
+
+        this._mode.set('browse');
+
         return this.retrieveDataFunction(start, rowsToLoad, tq).pipe(
           finalize(() => this._loading.next(false)),
           catchError(err => {
@@ -186,8 +208,8 @@ export class PanemuTableController<T> implements PanemuPaginationController {
      * and pagination component is recreated.
      */
     if (this.data().length) {
-      this.refreshPagination(this.startIndex, 
-        Math.min(this.lastReloadTotalRows, this.maxRows), 
+      this.refreshPagination(this.startIndex,
+        Math.min(this.lastReloadTotalRows, this.maxRows),
         this.lastReloadTotalRows)
     }
   }
@@ -296,8 +318,9 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   }
 
   private createGroupController(group: RowGroup) {
-    let groupController = new PanemuTableController({header: [], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts}, this.retrieveDataFunction);
+    let groupController = new PanemuTableController({ header: [], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts }, this.retrieveDataFunction);
     groupController._maxRows = this._maxRows;
+    groupController._mode = this._mode;
     let slicedGroupByColumn = group.parent ? group.parent.controller!.groupByColumns.slice(1) : this.groupByColumns.slice(1);
     groupController.groupByColumns = slicedGroupByColumn;
     groupController.createTableQuery = () => {
@@ -319,7 +342,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
       groupController.data.set(data as any);
       this.tableDisplayData!(data, group, groupField);
     };
-    
+
     return groupController;
   }
 
@@ -365,20 +388,32 @@ export class PanemuTableController<T> implements PanemuPaginationController {
           }
 
         },
-        error : e => {
+        error: e => {
           console.error(e);
         }
       })
 
-      return;
+      return; //return here because the reloadCurrentPage() is called inside observable's pipe above.
     }
 
     if (this.tableDisplayData) {
-      this.reloadCue.next(this.reloadCue.getValue() + 1)
+      this.triggerReloadCue();
     } else {
       setTimeout(() => {
-        this.reloadCue.next(this.reloadCue.getValue() + 1)
+        this.triggerReloadCue();
       });
+    }
+  }
+
+  private triggerReloadCue() {
+    if (this._mode() != 'browse' && this._editingController?._getChangedData(this._mode()).length) {
+      this._editingController?.canReload(this._editingController?._getChangedData(this._mode()), this._mode()).then(result => {
+        if (result) {
+          this.reloadCue.next(this.reloadCue.getValue() + 1)      
+        }
+      })
+    } else {
+      this.reloadCue.next(this.reloadCue.getValue() + 1)
     }
   }
 
@@ -394,7 +429,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * Get selected row as signal. A row is selected if user click it. RowGroup cannot be selected.
    * @returns 
    */
-  getSelectedRowSignal() {
+  get selectedRowSignal() {
     return this.selectedRow.asReadonly()
   }
 
@@ -404,19 +439,31 @@ export class PanemuTableController<T> implements PanemuPaginationController {
    * @returns true if the row index or row object is successfully selected. Return false if the object in selected index is a RowGroup or the row object is not in table data
    */
   selectRow(rowOrIndex: T | number) {
-    if (!this.data || !this.tableOptions.rowOptions.rowSelection) return false;
+    if (!this.data) {
+      return false;
+    }
+
+    if (!this.tableOptions.rowOptions.rowSelection && this._mode() == 'browse') {
+      return false;
+    }
+
+    let result = false;
+    let previouslySelected = this.selectedRow();
 
     if (typeof rowOrIndex == 'number') {
       const row = this.data!()[rowOrIndex as number];
       if (row && isDataRow(row)) {
         this.selectedRow.set(row as T);
-        return true;
+        result = true;
       }
     } else if (this.data().includes(rowOrIndex)) {
       this.selectedRow.set(rowOrIndex);
-      return true;
+      result = true;
     }
-    return false;
+    // if (result && this._editingController && this._mode() != 'browse' && previouslySelected !== this.selectedRow()) {
+    //   this._editingController?._startEdit(this.selectedRow()!);
+    // }
+    return result;
   }
 
   /**
@@ -466,16 +513,18 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   /**
    * Get data as comma separated string. By default it includes the header and `RowGroup`s.
    * 
+   * Take a look at `exportToCsv` function as well.
+   * 
    * @param options provide a way to exclude header or `RowGroup` rows.
    * @returns csv string
    */
-  getCsvData(options?: {includeHeader?: boolean, includeRowGroup?: boolean}) {
-    const csvOption = {includeHeader: true, includeRowGroup: true};
+  getCsvData(options?: { includeHeader?: boolean, includeRowGroup?: boolean }) {
+    const csvOption = { includeHeader: true, includeRowGroup: true };
     if (options) {
       Object.assign(csvOption, options);
     }
     const csv: string[] = [];
-    
+
     const visibleCols = this.columnDefinition.body.filter(item => item.visible && item.type != ColumnType.TICK);
 
     if (csvOption.includeHeader) {
@@ -483,9 +532,9 @@ export class PanemuTableController<T> implements PanemuPaginationController {
     }
 
     for (const row of this.data()) {
-      
+
       const csvRow: string[] = [];
-      
+
       if (row instanceof RowGroup && csvOption.includeRowGroup) {
         csvRow.push(this.escapeCsvText(row.formatter(row.data.value) + ` (${row.data.count || 0})`));
         for (let index = 1; index < visibleCols.length; index++) {
@@ -496,7 +545,7 @@ export class PanemuTableController<T> implements PanemuPaginationController {
         const dataRow = row as T;
         for (const col of visibleCols) {
           if (col.formatter) {
-            csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field])))
+            csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field], dataRow) ?? ''))
           } else {
             csvRow.push(this.escapeCsvText(dataRow[col.field] + ''))
           }
@@ -544,9 +593,10 @@ export class PanemuTableController<T> implements PanemuPaginationController {
           window.location.reload()
         };
       }
-    , error: e => {
-      this.pts.handleError(e)
-    }})
+      , error: e => {
+        this.pts.handleError(e)
+      }
+    })
   }
 
   /**
@@ -626,4 +676,124 @@ export class PanemuTableController<T> implements PanemuPaginationController {
   markForCheck() {
     this._markForCheck?.();
   }
+
+  /**
+   * It calls `getCsvData` method and instructs browser to download the data
+   * as csv file.
+   * 
+   * @param options provide a way to exclude header or `RowGroup` rows.
+   */
+  exportToCsv(options?: { includeHeader?: boolean, includeRowGroup?: boolean }) {
+    const csvString = this.getCsvData(options);
+
+    const dl = "data:text/csv;charset=utf-8," + csvString;
+    window.open(encodeURI(dl))
+  }
+
+  set editingController(ec: PanemuTableEditingController<T> | undefined) {
+    this._editingController = ec
+    if (this._editingController) {
+      this._editingController.pts = this.pts;
+    }
+  }
+
+  get editingController() {
+    return this._editingController;
+  }
+
+  get mode() {
+    return this._mode.asReadonly()
+  }
+
+  private assertEditingController() {
+    if (!this._editingController) {
+      throw new Error('No PanemuTableEditingController assigned to PanemuTableController.editingController')
+    }
+  }
+  
+  edit() {
+    this.assertEditingController();
+    if (this._mode() == "browse") {
+      this._mode.set('edit')
+    }
+  }
+
+  insert() {
+    this.assertEditingController();
+    if (this._mode() == 'browse') {
+      this._mode.set('insert');
+    }
+    if (this._mode() == 'insert') {
+      this.insertRowToTable?.(this._editingController?.createNewRowData() || {} as T)
+    }
+  }
+
+  save() {
+    this.assertEditingController();
+    if (this._loading.getValue()) return;
+    if (this._mode() != 'browse') {
+      let changed = this._editingController?._getChangedData(this._mode());
+
+      if (changed?.length) {
+        for (const row of changed) {
+          let valid = this._editingController?._validate(row);
+          if (!valid) {
+            this.selectRow(row)
+            return;
+          }
+        }
+        this._loading.next(true)
+        this._editingController?.saveData(changed, this.mode()).pipe(
+          finalize(() => this._loading.next(false))
+        ).subscribe({
+          next: savedRowData => {
+            if (savedRowData?.length) {
+              for (let index = 0; index < savedRowData.length; index++) {
+                const saved = savedRowData[index];
+                mergeDeep(changed[index], saved)
+              }
+            }
+            this._editingController?.afterSuccessfulSave(changed, this._mode());
+            this._mode.set('browse')
+          },
+          error: e => this.pts.handleError(e)
+        })
+      } else {
+        this._mode.set('browse');
+      }
+    }
+  }
+
+  /**
+   * In browse mode, it will execute `PanemuTableEditingController.deleteData` method.
+   * In insert mode, it will just remove the inserted row from the table.
+   */
+  deleteSelectedRow() {
+    this.assertEditingController();
+    let rowToDel = this.selectedRowSignal();
+    if (!rowToDel) return;
+    if (this._loading.getValue()) return;
+    this._editingController?.canDelete(rowToDel, this._mode()).then(result => {
+      if (result) {
+        if (this._mode() == 'insert') {
+          this.deleteRowFromTable?.(rowToDel)
+          if (!this._editingController?._getChangedData(this._mode())?.length) {
+            this._mode.set('browse');
+          }
+        } else if (this._mode() == 'browse') {
+          this._loading.next(true)
+          this._editingController?.deleteData(rowToDel).pipe(
+            finalize(() => this._loading.next(false))
+          ).subscribe({
+            next: _ => {
+              this.deleteRowFromTable?.(rowToDel);
+              this._editingController?.afterSuccessfulDelete(_);
+            },
+            error: e => this.pts.handleError(e)
+          })
+        }
+      }
+    })
+  }
+
 }

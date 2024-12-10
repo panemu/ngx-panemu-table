@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PanemuTableDataSource, TableQuery } from 'ngx-panemu-table';
-import { delay, mergeMap, of, tap } from 'rxjs';
+import { delay, map, mergeMap, of, tap } from 'rxjs';
 import { People } from '../model/people';
 import { CountryCode } from '../model/country-code';
 
@@ -17,7 +17,7 @@ export interface Car {
   providedIn: 'root'
 })
 export class DataService {
-  mockedServerDatasource = new PanemuTableDataSource<People>()
+  private mockedServerDatasource = new PanemuTableDataSource<People>()
 
   constructor(
     private http: HttpClient,
@@ -38,9 +38,10 @@ export class DataService {
     );
 
     return observable.pipe(
-      delay(2000),
+      delay(500),
 
-      mergeMap(_ => this.mockedServerDatasource.getData(start, maxRows, tableQuery))
+      mergeMap(_ => this.mockedServerDatasource.getData(start, maxRows, tableQuery)),
+      map(item => JSON.parse(JSON.stringify(item)))
     )
 
   }

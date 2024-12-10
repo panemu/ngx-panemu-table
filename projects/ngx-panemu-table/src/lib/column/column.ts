@@ -111,7 +111,7 @@ export interface BaseColumn<T> {
 
   /**
    * Column width in px. If undefined, it is up to the browser to calculate the optimum size.
-   * If you find the browser doesn't calculate it properly, try to increase the value of `TableOptions.calculateColumWidthDelay`.
+   * If you find the browser doesn't calculate it properly, try to increase the value of `TableOptions.calculateColumnWidthDelay`.
    */
   width?: number
 
@@ -151,7 +151,6 @@ export interface BaseColumn<T> {
 
   /**
    * Automatically generated. Must be unique. It allows table to have multiple columns with the same field.
-   * @internal
    */
   __key?: string
 

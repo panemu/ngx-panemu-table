@@ -1,14 +1,17 @@
-<div class="h-[500px]">
-	<panemu-table [controller]="controller"></panemu-table>
+<div class="h-[500px] flex flex-col">
+  <panemu-setting [controller]="controller" />
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
 </div>
 <ng-template #amountTemplate let-column="column" let-row="row">
-	<div>
-		<div style="border: 1px solid gray; width: 100%;">
-			<div style="background-color: aqua;" [style.width]="(row[column.field] * 10) + '%'">
-				<span style="margin-left: 2px;">
-					{{row[column.field]}}
-				</span>
-			</div>
-		</div>
-	</div>
+  <div>
+    <div style="border: 1px solid gray; width: 100%;">
+      <div style="background-color: aqua;" [style.width]="(row[column.field] * 10) + '%'">
+        <span style="margin-left: 2px;">
+          {{row[column.field]}}
+        </span>
+      </div>
+    </div>
+  </div>
 </ng-template>

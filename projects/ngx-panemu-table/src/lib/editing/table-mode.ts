@@ -1,0 +1,1 @@
+export type TABLE_MODE = 'edit' | 'insert' | 'browse';

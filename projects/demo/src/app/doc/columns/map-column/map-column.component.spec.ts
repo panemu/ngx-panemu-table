@@ -15,7 +15,6 @@ describe('MapColumnComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MapColumnComponent);
     component = fixture.componentInstance;
-    
   });
 
   it('should create', () => {

@@ -148,7 +148,7 @@ export interface TableOptions<T> {
    * 
    * If its value is 0, this feature is disabled.
    */
-  calculateColumWidthDelay: number
+  calculateColumnWidthDelay: number
 
   /**
    * Key to save and restore the state of the columns to localstorage.

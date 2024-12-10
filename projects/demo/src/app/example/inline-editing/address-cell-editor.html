@@ -1,0 +1,12 @@
+<div class="flex space-x-2 pb-1">
+	<div class="flex flex-col">
+
+		<label>Street</label>
+		<input [formControl]="$any(formControl.controls['street'])" class="editor-input w-auto" [title]="streetError() || formGroupError()">
+	</div>
+	<div class="flex flex-col">
+
+		<label>Zip Code</label>
+		<input [formControl]="$any(formControl.controls['zipCode'])" class="editor-input w-auto" [title]="zipError() || formGroupError()">
+	</div>
+</div>

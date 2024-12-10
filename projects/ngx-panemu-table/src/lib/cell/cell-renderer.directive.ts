@@ -1,5 +1,6 @@
 import { ComponentRef, Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { PropertyColumn } from '../column/column';
+import { CellComponent } from './cell';
 
 @Directive({
   selector: '[cellRenderer]',
@@ -8,7 +9,7 @@ import { PropertyColumn } from '../column/column';
 export class CellRendererDirective implements OnChanges, OnDestroy {
   @Input({alias: 'cellRenderer'}) column!: PropertyColumn<any>;
   @Input() row: any;
-  componentRef?: ComponentRef<any> | null;
+  componentRef?: ComponentRef<CellComponent<any>> | null;
   constructor(private container: ViewContainerRef) { }
   
   ngOnChanges(changes: SimpleChanges): void {
@@ -24,7 +25,6 @@ export class CellRendererDirective implements OnChanges, OnDestroy {
     if (this.componentRef) {
       this.componentRef.destroy();
     }
-    
     this.componentRef = this.container.createComponent(this.column.cellRenderer!.component);
     this.componentRef.instance.column = this.column;
     this.componentRef.instance.row = this.row;

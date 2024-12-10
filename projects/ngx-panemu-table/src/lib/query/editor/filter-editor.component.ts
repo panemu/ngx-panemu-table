@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 import { PropertyColumn } from '../../column/column';
 import { TableCriteria } from '../../table-query';
 import { FilterEditor } from './filter-editor';
-import { StringFilterComponent } from './string-filter.component';
 import { FilterEditorDirective } from './filter-editor.directive';
 import { PanemuTableService } from '../../panemu-table.service';
 

@@ -32,7 +32,7 @@ export class CustomRowGroup2Component implements OnInit {
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
-    { field: 'gender' },
+    { field: 'gender', type: ColumnType.MAP, valueMap: {M: 'Male', F: 'Female'} },
     {
       field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), visible: false,
       rowGroupRenderer: { component: CountryRowGroup, footerComponent: CountryRowGroupFooter, parameter: { alwaysExpanded: true } }

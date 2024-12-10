@@ -1,0 +1,21 @@
+<div class="flex flex-col h-[500px]">
+  <panemu-query [controller]="controller" class="mb-2"/>
+  <toolbar-component [controller]="controller" class="border border-b-0">
+    <div class="flex justify-end flex-grow items-center mr-4">
+      <panemu-pagination [controller]="controller"/>
+    </div>
+  </toolbar-component>
+  <div class="flex-grow overflow-auto border">
+      <panemu-table [controller]="controller"/>
+  </div>
+</div>
+
+<ng-template #countryCell let-row="row" let-column="column">
+  <div class="flex items-center gap-2">
+    <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
+     @if (row[column.field]) {
+       <img width="24px" src="assets/flags/{{row[column.field].toLowerCase()}}.svg">
+     }
+    <span>{{row[column.field] | cellFormatter:row:column:column.formatter}}</span>
+  </div>
+</ng-template>

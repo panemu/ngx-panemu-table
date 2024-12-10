@@ -37,3 +37,13 @@ export * from './lib/setting/panemu-setting.component';
 export * from './lib/setting/setting-dialog.component';
 
 export * from './lib/state/table-states';
+
+export * from './lib/editing/panemu-table-editing-controller';
+export * from './lib/editing/table-mode';
+export * from './lib/editing/editing-info';
+
+export * from './lib/editing/map-cell-editor';
+export * from './lib/editing/number-cell-editor';
+export * from './lib/editing/date-cell-editor';
+export * from './lib/editing/date-time-cell-editor';
+export * from './lib/editing/string-cell-editor';
