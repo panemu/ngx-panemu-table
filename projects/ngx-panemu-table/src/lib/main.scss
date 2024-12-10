@@ -768,7 +768,6 @@
     border: none;
     width: 100%;
     letter-spacing: 0.4375px;
-
     &:hover {
       background-color: #F3F4F6;
     }
@@ -779,7 +778,6 @@
 
     &:disabled {
       color: rgba(0, 0, 0, 0.5);
-      ;
     }
 
     >span {
@@ -803,7 +801,7 @@
     right: 0px;
     display: flex;
     flex-direction: column;
-
+    
     .group-container:has(.draggable:hover):hover {
       border-color: transparent;
     }
@@ -982,7 +980,7 @@
   .body {
     overflow: auto;
   }
-
+  
   .input-field {
     background-color: transparent;
     padding: 0 .25rem 0 .25rem;
@@ -1000,7 +998,7 @@
     line-height: 20px;
     font-size: 14px;
     font-weight: 400;
-
+    
     tr:hover {
       background-color: #f1f5f9;
     }
@@ -1042,7 +1040,7 @@
     top: 0.5rem;
     right: 0.5rem;
     cursor: default;
-
+    
     &:hover {
       color: red;
     }

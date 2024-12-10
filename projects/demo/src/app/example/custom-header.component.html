@@ -4,7 +4,7 @@
   <div>
     <div>Select Column To Display</div>
     <div>
-      <select [formControl]="cmbColumnHeader">
+      <select class="form-select" [formControl]="cmbColumnHeader">
         @for (item of customColumns.body; track $index) {
           <option [value]="item.__key">{{item.label}}</option>
         }

@@ -22,9 +22,9 @@
   <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px]">
     <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>
     <label>Message</label>
-    <textarea rows="5" class="w-80"></textarea>
+    <textarea rows="5" class="w-80 form-input"></textarea>
     <div></div>
-    <button (click)=close()>Send</button>
+    <button class="btn" (click)=close()>Send</button>
   </div>
 </ng-template>
 
