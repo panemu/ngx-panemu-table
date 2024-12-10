@@ -4,11 +4,11 @@
   }
   <div class="grid grid-cols-2 gap-4 w-[300px] sticky left-4" [class.invisible]="!ready()">
     <label class="text-right">Name</label>
-    <input [formControl]="form.controls.name">
+    <input class="form-input" [formControl]="form.controls.name">
     <label class="text-right">Email</label>
-    <input class="w-80" [formControl]="form.controls.email">
+    <input class="form-input w-80" [formControl]="form.controls.email">
     <div></div>
-    <button class="" (click)="save()">Save</button>
+    <button class="btn" (click)="save()">Save</button>
   </div>
   
 </div>

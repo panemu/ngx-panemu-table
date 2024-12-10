@@ -11,9 +11,9 @@
   <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px] sticky left-4">
     <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>
     <label>Message</label>
-    <textarea rows="5" class="w-80"></textarea>
+    <textarea rows="5" class="w-80 form-input"></textarea>
     <div></div>
-    <button (click)=close()>Send</button>
+    <button class="btn" (click)=close()>Send</button>
   </div>
 </ng-template>
 
@@ -31,8 +31,8 @@
       Are you sure to delete above data?
     </div>
     <div class="flex gap-4  justify-end">
-      <button (click)="doDelete(row); close()">Yes</button>
-      <button (click)="close()">No</button>
+      <button class="btn" (click)="doDelete(row); close()">Yes</button>
+      <button class="btn" (click)="close()">No</button>
     </div>
   </div>
 </ng-template>
