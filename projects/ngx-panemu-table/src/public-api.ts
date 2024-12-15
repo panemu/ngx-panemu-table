@@ -22,6 +22,7 @@ export * from './lib/cell/header';
 export * from './lib/table-query';
 export * from './lib/column/tick-column-class';
 export * from './lib/option/label-translation';
+export * from './lib/option/default-label-translation';
 export * from './lib/option/options';
 export * from './lib/row/row-group';
 export * from './lib/row/row-styling.pipe';

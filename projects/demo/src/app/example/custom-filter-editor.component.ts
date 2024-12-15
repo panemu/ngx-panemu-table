@@ -24,6 +24,7 @@ export class CustomFilterEditorComponent {
       valueMap: { true: 'Yes', false: 'No' },
       filterEditor: BooleanFilterComponent
     },
+    { field: 'last_login', width: 150, type: ColumnType.DATETIME },
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);

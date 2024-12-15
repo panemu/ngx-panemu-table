@@ -1,5 +1,5 @@
 <div>
-	<select [formControl]="cmb" cdkFocusInitial>
+	<select class="select" [formControl]="cmb" cdkFocusInitial>
 		@for (item of options; track $index) {
 			<option [value]="item[0]">{{item[1]}}</option>
 		}

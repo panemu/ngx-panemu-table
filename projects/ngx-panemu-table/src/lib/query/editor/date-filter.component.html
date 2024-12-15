@@ -1,10 +1,10 @@
 <div>
-	<div>
-		<button (click)="today(-1)">Yesterday</button>
-		<button (click)="today(0)">Today</button>
-		<button (click)="today(1)">Tomorrow</button>
-	</div>
-	<div>
-		<input type="date" [formControl]="txt">
-	</div>
+  <div>
+    <button class="btn" (click)="today(-1)">Yesterday</button>
+    <button class="btn" (click)="today(0)">Today</button>
+    <button class="btn" (click)="today(1)">Tomorrow</button>
+  </div>
+  <div>
+    <input class="input" type="date" [formControl]="txt">
+  </div>
 </div>

@@ -30,8 +30,34 @@ ng-doc-page {
     font-weight: 200;
     src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v205/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDAvHOej.woff2) format('woff2');
   }
-  
 
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+  }
+
+  ul ul {
+    list-style-type: circle;
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+  }
+
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+  }
 }
 
 .material-symbols-outlined {
@@ -52,7 +78,7 @@ ng-doc-page {
 
 
 .panel-shadow {
-	box-shadow: var(--app-shadow);
+  box-shadow: var(--app-shadow);
 }
 
 
@@ -107,83 +133,73 @@ ng-doc-page {
 }
 
 .form-select {
-	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%239fa6b2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	-webkit-print-color-adjust: exact;
-	color-adjust: exact;
-	background-repeat: no-repeat;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3e%3cpath d='M7 7l3-3 3 3m0 6l-3 3-3-3' stroke='%239fa6b2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e");
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+  background-repeat: no-repeat;
 
-	border-radius: 3px;
-	border: 1px solid transparent;
-	border-top: none;
-	border-bottom: 1px solid #f7f8fa;
-	box-shadow: inset 0 1px 2px rgba(30, 40, 100, 0.5), 0 -1px 1px #FFF, 0 1px 0 #FFF;
-	background-color: #f8f9fd;
-	padding: 0.2rem 2.5rem 0.2rem 0.3rem;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom: 1px solid #f7f8fa;
+  box-shadow: inset 0 1px 2px rgba(30, 40, 100, 0.5), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+  background-color: #f8f9fd;
+  padding: 0.2rem 2.5rem 0.2rem 0.3rem;
 
-	background-position: right 0.5rem center;
-	background-size: 1.5em 1.5em;
-	font-size: 0.875rem;
+  background-position: right 0.5rem center;
+  background-size: 1.5em 1.5em;
+  font-size: 0.875rem;
 }
 
 .form-select::-ms-expand {
-	color: #9fa6b2;
-	border: none;
+  color: #9fa6b2;
+  border: none;
 }
 
 @media not print {
-	.form-select::-ms-expand {
-		display: none;
-	}
+  .form-select::-ms-expand {
+    display: none;
+  }
 }
 
 @media print and (-ms-high-contrast: active),
 print and (-ms-high-contrast: none) {
-	.form-select {
-		padding-right: 0.75rem;
-	}
+  .form-select {
+    padding-right: 0.75rem;
+  }
 }
 
 .form-select:focus {
-	outline: none;
-	// box-shadow: 0 0 0 3px rgba(164, 202, 254, 0.45);
-	border-color: #a4cafe;
-}
-
-
-.btn:active:enabled {
-	background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+  // box-shadow: 0 0 0 3px rgba(164, 202, 254, 0.45);
+  border-color: #a4cafe;
 }
 
 .btn:disabled,
 input:disabled {
-	opacity: 0.5;
-	cursor: default;
+  opacity: 0.5;
+  cursor: default;
 }
 
 
 .btn {
-	background-color: rgb(234, 234, 234);
-	@apply py-1 px-3 rounded-md text-sm;
+  background-color: rgb(234, 234, 234);
+  @apply py-1 px-3 rounded-md text-sm;
 }
 
 .btn:hover:enabled,
 a.btn:hover {
-	background-color: rgb(207, 216, 228);
+  background-color: rgb(207, 216, 228);
 }
 
-.btn:focus:enabled, .btn-action:focus:enabled {
-	outline: 1px solid #aaaaaa;
+.btn:focus:enabled,
+.btn-action:focus:enabled {
+  outline: 1px solid #aaaaaa;
 }
 
 .btn:active:enabled {
-	background-color: rgb(215, 215, 215);
-}
-
-.btn:disabled{
-	background-color: var(--app-accent-color-light);
-	color: var(--app-accent-color);
-	cursor: default;
+  background-color: rgb(215, 215, 215);
 }

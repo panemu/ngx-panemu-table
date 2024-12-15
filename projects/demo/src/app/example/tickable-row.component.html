@@ -1,9 +1,9 @@
 <div class="flex flex-col h-[500px] gap-4">
   <div class="flex gap-4">
-    <button (click)="tickAll()">Tick All</button>
-    <button (click)="untickAll()">Untick All</button>
-    <button (click)="toggleFirstRow()">Toggle 1st Row</button>
-    <button (click)="getTickedRows()">Get Ticked Rows</button>
+    <button class="btn" (click)="tickAll()">Tick All</button>
+    <button class="btn" (click)="untickAll()">Untick All</button>
+    <button class="btn" (click)="toggleFirstRow()">Toggle 1st Row</button>
+    <button class="btn" (click)="getTickedRows()">Get Ticked Rows</button>
   </div>
   <div class="flex relative justify-center">
     <panemu-query [controller]="controller"/>

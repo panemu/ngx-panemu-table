@@ -8,11 +8,13 @@ import { TableCriteria } from '../../table-query';
 import { FilterEditor } from './filter-editor';
 import { FilterEditorDirective } from './filter-editor.directive';
 import { PanemuTableService } from '../../panemu-table.service';
+import { StringCellEditor } from "../../editing/string-cell-editor";
+import { StringFilterComponent } from './string-filter.component';
 
 @Component({
   selector: 'panemu-filter-editor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective],
+  imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective, StringFilterComponent],
   templateUrl: './filter-editor.component.html',
 })
 export class FilterEditorComponent implements OnInit {
@@ -20,7 +22,8 @@ export class FilterEditorComponent implements OnInit {
   // criteria!: TableCriteria
   field = new FormControl('');
   filter!: TableCriteria;
-  editorComponent?: Type<FilterEditor> | null
+  editorComponent?: Type<FilterEditor> | null;
+  stringFilterComponent = StringFilterComponent;
   column!: PropertyColumn<any>
   value = signal<string|undefined|null>('');
   editor = viewChild<TemplateRef<any>>('editor');

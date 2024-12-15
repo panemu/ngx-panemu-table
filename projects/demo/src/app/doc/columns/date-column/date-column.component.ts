@@ -15,7 +15,8 @@ const DATA: Data[] = [
 @Component({
   templateUrl: 'date-column.component.html',
   imports: [PanemuTableComponent],
-  standalone: true
+  standalone: true,
+  providers: [{ provide: PanemuTableService, useClass: CustomPanemuTableService }]
 })
 
 export class DateColumnComponent implements OnInit {
@@ -35,6 +36,7 @@ export class DateColumnComponent implements OnInit {
   constructor(private pts: PanemuTableService) {}
 
   ngOnInit() {
+    console.log('translation', this.pts.getLabelTranslation());
     this.controller.reloadData();
   }
 

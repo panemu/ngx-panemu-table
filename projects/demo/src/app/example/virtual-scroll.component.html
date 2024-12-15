@@ -1,8 +1,8 @@
 <div class="flex flex-col h-[500px] gap-4">
   <div class="flex justify-between items-center">
     <panemu-query [controller]="controller"></panemu-query>
-    <button data-test-id="btn-down" (click)="scrollDown()">Scroll to bottom</button>
-    <button data-test-id="btn-up" (click)="scrollUp()">Scroll to top</button>
+    <button class="btn" data-test-id="btn-down" (click)="scrollDown()">Scroll to bottom</button>
+    <button class="btn" data-test-id="btn-up" (click)="scrollUp()">Scroll to top</button>
   </div>
   <div class="flex-grow">
     <panemu-table [controller]="controller"></panemu-table>
@@ -12,7 +12,7 @@
   <td [attr.colspan]="colSpan">
     <div class="flex items-center gap-16">
       <span>This is table footer template.</span>
-      <button (click)="toFooterComponent()">Switch To Component</button>
+      <button class="btn" (click)="toFooterComponent()">Switch To Component</button>
     </div>
   </td>
 </ng-template>

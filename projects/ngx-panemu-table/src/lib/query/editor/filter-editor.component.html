@@ -1,18 +1,26 @@
 <div class="panemu-query-editor">
-	<h3>Query Editor</h3>
-	<div class="column-selection">
-		<label>Column</label>
-		<select [formControl]="field">
-			@for (clm of columns; track $index) {
-				<option [value]="clm.field"> {{clm.label}} </option>
-			}
-		</select>
-	</div>
-	<div *ngIf="editorComponent" >
-		<ng-template #editor [filterEditor]="editorComponent" [column]="column" [filter]="filter" [value]="value"></ng-template>
-	</div>
-	<div style="display: flex; gap: 1rem; justify-content: flex-end;">
-		<button (click)="cancel()">Cancel</button>
-		<button (click)="apply()">Apply</button>
-	</div>
+  <h3>Query Editor</h3>
+  <div class="column-selection">
+    <label>Column</label>
+    <select class="select" [formControl]="field">
+      @for (clm of columns; track $index) {
+      <option [value]="clm.field"> {{clm.label}} </option>
+      }
+    </select>
+
+    <label>Search Value</label>
+    <div *ngIf="editorComponent">
+      <ng-template #editor [filterEditor]="editorComponent" [column]="column" [filter]="filter"
+      [value]="value"></ng-template>
+    </div>
+    
+    <ng-container *ngIf="stringFilterComponent != editorComponent" >
+      <label>String Representation</label>
+      <string-filter [column]="column" [filter]="filter"[value]="value"></string-filter>
+    </ng-container>
+  </div>
+  <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+    <button class="btn" (click)="cancel()">Cancel</button>
+    <button class="btn" (click)="apply()">Apply</button>
+  </div>
 </div>

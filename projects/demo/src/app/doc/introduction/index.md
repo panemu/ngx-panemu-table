@@ -5,9 +5,8 @@ keyword: IntroductionPage
 <br>
 <br>
 <div align="center" class="flex flex-col">
-    <img src="assets/ngx-panemu-table_logo.png" alt="Logo" height="150px">
-    <img src="assets/ngx-panemu-table_text.png" alt="Logo" height="64px">
-
+    <img src="assets/ngx-panemu-table_logo.png" alt="Logo" style="height: 150px">
+    <img src="assets/ngx-panemu-table_text.png" alt="Logo" style="height: 64px">
 </div>
 
 <br>

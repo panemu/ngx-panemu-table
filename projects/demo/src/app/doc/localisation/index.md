@@ -8,23 +8,8 @@ The service accept Angular `LOCALE_ID` global variable. Changing the default loc
 
 Texts displayed in NgxPanemuTable is using `LabelTranslation` interface. The default are:
 
-```typescript
-DEFAULT_LABEL_TRANSLATION: LabelTranslation = {
-  search: 'Type here or double click to search',
-  loading: 'Loading...',
-  day: 'Day',
-  month: 'Month',
-  year: 'Year',
-  groupBy: 'Group By',
-  noData: 'No data to display',
-  searcForValueInColumn: 'Search for "{par0}" in:',
-  selectColumnToSearchOn: 'Select a column to search on',
-  columns: 'Columns',
-  visibility_position_stickiness: 'Visibility, Position and Stickiness',
-  stickyStart: 'Sticky Start',
-  stickyEnd: 'Sticky End',
-  reset: 'Reset'
-};
+```typescript file="../../../../../ngx-panemu-table/src/lib/option/default-label-translation.ts"
+
 ```
 
 Notice the `searcForValueInColumn` has `{par0}` part. It is a variable that will be replaced by text entered in search input field.
