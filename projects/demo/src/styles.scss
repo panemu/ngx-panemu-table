@@ -86,9 +86,26 @@ ng-doc-page {
   border: 1px solid #dedede;
 }
 
-.toolbar-button {
-  padding: 0 0.5rem;
-  font-size: 0.875rem;
+.toolbar {
+  background-color: #F4F4F5;
+  @apply flex border-b;
+  
+  .toolbar-button {
+    font-size: 0.875rem;
+    @apply border-r px-2;
+    
+    &:hover:not(:disabled) {
+      @apply bg-gray-200;
+    }
+    
+    &:hover:active {
+      @apply bg-gray-100;
+    }
+    
+    &:disabled{
+      @apply opacity-50;
+    }
+  }
 }
 
 .form-input {

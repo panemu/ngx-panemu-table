@@ -4,8 +4,7 @@ import { PanemuTableController } from 'ngx-panemu-table';
 @Component({
   selector: 'toolbar-component',
   templateUrl: 'toolbar.component.html',
-  standalone: true,
-  styleUrl: 'toolbar.component.scss'
+  standalone: true
 })
 
 export class ToolbarComponent {

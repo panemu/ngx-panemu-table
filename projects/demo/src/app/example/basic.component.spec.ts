@@ -37,10 +37,10 @@ describe('BasicComponent', () => {
 
     console.log('selected row', selectedRow);
 
-    const bannerDe: DebugElement = fixture.debugElement;
-    const bannerEl: HTMLElement = bannerDe.nativeElement;
+    const componentDe: DebugElement = fixture.debugElement;
+    const componentEl: HTMLElement = componentDe.nativeElement;
 
-    let selectedTr = bannerEl.querySelector('table tr.selected-row td:nth-child(2)')
+    let selectedTr = componentEl.querySelector('table tr.selected-row td:nth-child(2)')
     console.log(`textContent ${selectedTr?.textContent}`)
     
     expect(selectedTr?.textContent?.trim()).toBe((component.controller.getData()[0] as People).name);
@@ -49,7 +49,7 @@ describe('BasicComponent', () => {
     const rowIdx = 2;
     component.controller.selectRow(rowIdx);
     fixture.detectChanges();
-    let lstTr = bannerEl.querySelectorAll('table tbody tr')
+    let lstTr = componentEl.querySelectorAll('table tbody tr')
     console.log(`lstTr size`, lstTr.length)
     console.log(`class list ${lstTr[rowIdx].classList}`);
     expect(lstTr[rowIdx].classList.contains('selected-row')).toBe(true);
@@ -59,7 +59,7 @@ describe('BasicComponent', () => {
     component.controller.clearSelection();
     expect(component.controller.getSelectedRow()).toBeFalsy();
     fixture.detectChanges();
-    selectedTr = bannerEl.querySelector('table tbody tr.selected-row');
+    selectedTr = componentEl.querySelector('table tbody tr.selected-row');
     expect(selectedTr).toBe(null);
     
   });
