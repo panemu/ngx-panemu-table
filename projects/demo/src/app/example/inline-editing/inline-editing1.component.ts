@@ -40,13 +40,6 @@ class EditingController extends SampleEditingController<People> {
     return { id: this.getNewRowId?.() || 0 }
   }
 
-  override onCommitEdit(field: keyof People, value: any, previousValue: any, rowData: People, formControl: FormControl): void {
-    console.log('on commit edit. field', field, 'value', value, 'prev value', previousValue);
-    console.log(formControl.errors)
-
-    super.onCommitEdit(field, value, previousValue, rowData, formControl);
-  }
-
   override createFormControl(field: keyof People, rowData: People, tableMode: TABLE_MODE): FormControl | null | undefined {
     return this.form[field]();
   }

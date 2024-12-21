@@ -32,6 +32,7 @@ the html file only needs to have a very simple `panemu-table` tag.
 
 ## Features
 
+- [NEW] [inline editing](../usages/inline-editing).
 - Declarative table definition in typescript. Very little code in html needed.
 - Sane defaults that can be overriden app-wide and per table basis.
 - Pagination. More flexible than common pagination.

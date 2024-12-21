@@ -6,7 +6,6 @@ const LocalisationPage: NgDocPage = {
   title: `Localisation`,
   mdFile: './index.md',
   category: UsagesCategory,
-  demos: {InlineEditing1Component},
   order: 150
 };
 

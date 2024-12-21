@@ -39,7 +39,6 @@ class EditingController extends PanemuTableEditingController<CustomData> {
   }
 
   override initCellEditorRenderer(renderer: CellEditorRenderer<CustomData>, column: PropertyColumn<CustomData>): CellEditorRenderer<CustomData> | null {
-    console.log('column key', column.__key)
     if (column.__key == 'amount_1') {
       return null;
     } else if (column.__key == 'amount_2') {
@@ -48,9 +47,6 @@ class EditingController extends PanemuTableEditingController<CustomData> {
     return renderer;
   }
 
-  protected override onCommitEdit(field: keyof CustomData, value: any, previousValue: any, rowData: CustomData, formControl: AbstractControl): void {
-      console.log('new val', value, 'old val', previousValue)
-  }
 }
 
 @Component({

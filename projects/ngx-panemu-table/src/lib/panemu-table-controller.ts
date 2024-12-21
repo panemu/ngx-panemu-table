@@ -366,6 +366,7 @@ export class PanemuTableController<T> {
 
   /**
    * Reload data but reset the pagination start index to 0 before hand.
+   *  It will cancel `edit` or `insert` mode and back to `browse` mode.
    */
   reloadData() {
     this.startIndex = 0;
@@ -373,7 +374,7 @@ export class PanemuTableController<T> {
   }
 
   /**
-   * Reload data without resetting pagination start index.
+   * Reload data without resetting pagination start index. It will cancel `edit` or `insert` mode and back to `browse` mode.
    */
   reloadCurrentPage() {
 
@@ -711,6 +712,10 @@ export class PanemuTableController<T> {
     }
   }
   
+  /**
+   * Change table mode to `edit`. It will throw an error if this controller
+   * doesn't have `editingController`.
+   */
   edit() {
     this.assertEditingController();
     if (this._mode() == "browse") {
@@ -718,17 +723,22 @@ export class PanemuTableController<T> {
     }
   }
 
+  /**
+   * Change table mode to `insert` and insert new row at the first index. It will throw an error if this controller
+   * doesn't have `editingController`.
+   */
   insert() {
     this.assertEditingController();
-    if (this._mode() == 'browse') {
+    let newRowData = this._editingController?.createNewRowData() as T;
+    if (this._mode() == 'browse' && newRowData) {
       this._mode.set('insert');
     }
-    if (this._mode() == 'insert') {
-      this.insertRowToTable?.(this._editingController?.createNewRowData() || {} as T)
+    if (this._mode() == 'insert' && newRowData) {
+      this.insertRowToTable?.(newRowData)
     }
   }
 
-  save() {
+  async save() {
     this.assertEditingController();
     if (this._loading.getValue()) return;
     if (this._mode() != 'browse') {
@@ -741,6 +751,9 @@ export class PanemuTableController<T> {
             this.selectRow(row)
             return;
           }
+        }
+        if (!(await this._editingController?.canSave(changed, this._mode()))) {
+          return;
         }
         this._loading.next(true)
         this._editingController?.saveData(changed, this.mode()).pipe(

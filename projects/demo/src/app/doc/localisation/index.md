@@ -2,7 +2,7 @@
 keyword: LocalisationPage
 ---
 
-Localisation is done by overriding functionalities in `PanemuTableService`. Please refer to `*ConfigurationPage` on how to set it up in regards with Angular Dependency Injection.
+Localisation is done by overriding functionalities in `PanemuTableService`. Please refer to `*CustomizationPage` on how to set it up in regards with Angular Dependency Injection.
 
 The service accept Angular `LOCALE_ID` global variable. Changing the default local will affect Date and DateTime cell formatter.
 

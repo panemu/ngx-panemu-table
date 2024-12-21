@@ -6,12 +6,12 @@ import { CellEditorComponent } from './editing-info';
   selector: 'string-cell-editor',
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `<input [formControl]="formControl"  class="editor-input" [title]="errorMessage() || ''">`
+  template: `<input [formControl]="formControl" [value]="formControl.value" class="editor-input" [title]="errorMessage() || ''">`
 })
 
 export class StringCellEditor implements CellEditorComponent {
   
   formControl!: FormControl;
   errorMessage!: WritableSignal<string>;
-  
+ 
 }

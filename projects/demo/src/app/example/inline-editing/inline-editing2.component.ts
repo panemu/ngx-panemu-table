@@ -45,13 +45,6 @@ class EditingController extends SampleEditingController<any> {
     }
   }
 
-  override onCommitEdit(field: keyof any, value: any, previousValue: any, rowData: any, formControl: FormControl): void {
-    console.log('on commit edit. field', field, 'value', value, 'prev value', previousValue);
-    console.log(formControl.errors)
-
-    super.onCommitEdit(field, value, previousValue, rowData, formControl);
-  }
-
   override initCellEditorRenderer(renderer: CellEditorRenderer<any>, column: PropertyColumn<any>): CellEditorRenderer<any> {
     if (renderer.field == 'address') {
       renderer.component = AddressCellEditor

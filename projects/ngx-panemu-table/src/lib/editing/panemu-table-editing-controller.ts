@@ -129,8 +129,8 @@ export class PanemuTableEditingController<T> {
   }
 
   /**
-   * If user change input in cell editor, this method is called. This is the place to put
-   * logic to modify the states of other cell editor, or to put set value to other field.
+   * If user change a value in cell editor, this method is called. This is the place to put
+   * logic to modify the states of other cell editor, or to set some values to other fields.
    * Please refer to 'helper_' methods of this class to get some handy functions.
    * @param field 
    * @param value 
@@ -190,7 +190,7 @@ export class PanemuTableEditingController<T> {
    * @param renderer 
    * @returns 
    */
-  initCellEditorRenderer(renderer: CellEditorRenderer<T>, column: PropertyColumn<T>): CellEditorRenderer<T> | null {
+  protected initCellEditorRenderer(renderer: CellEditorRenderer<T>, column: PropertyColumn<T>): CellEditorRenderer<T> | null {
     return renderer;
   }
 
@@ -414,7 +414,7 @@ export class PanemuTableEditingController<T> {
    * @param rowData 
    * @param editingInfo 
    */
-  onStartEdit(rowData: T, editingInfo: EditingInfo<T>) {}
+  protected onStartEdit(rowData: T, editingInfo: EditingInfo<T>) {}
 
   /**
    * This method create AbstractControl without validator specified. Override this method to:
@@ -461,10 +461,20 @@ export class PanemuTableEditingController<T> {
    * or to put logic to trigger table reload.
    * 
    * @param data Changed data that have been saved.
-   * @param tableMode `insert` or `update`
+   * @param tableMode `insert` or `edit`
    */
   afterSuccessfulSave(data: T[], tableMode: TABLE_MODE) { }
 
+  /**
+   * This method is called before calling saveData. Override this method to do some
+   * row level validations or preprocessing.
+   * @param data 
+   * @param tableMode `insert` or `edit`
+   * @returns by default return true promise. Return false promise to cancel save.
+   */
+  canSave(data: T[], tableMode: TABLE_MODE) {
+    return Promise.resolve(true)
+  }
 
   /**
    * This method called before deleting a row. Override this method to display a confirmation dialog

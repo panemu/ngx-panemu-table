@@ -66,7 +66,6 @@ class EditingController extends PanemuTableEditingController<CustomData> {
   }
 
   override onCommitEdit(field: keyof CustomData, value: any, previousValue: any, rowData: CustomData, formControl: AbstractControl): void {
-    console.log('inline3 onCommitEdit ', field)
     if (field == 'country') {
       if (value == 'WL') {
         this.helper_getFormControl('city', rowData)?.setValue('CT2');
@@ -90,7 +89,7 @@ class EditingController extends PanemuTableEditingController<CustomData> {
       setTimeout(() => {
         this.helper_updateMapCellOptions('city', rowData, newoptions);
         this.helper_updateMapCellLoading('city', rowData, false)
-      }, 2000);
+      }, 1000);
     } else {
       this.helper_updateMapCellOptions('city', rowData, []);
     }

@@ -31,7 +31,7 @@ class EditingController extends SampleEditingController<People> {
   }
 
   override afterSuccessfulSave(data: People[], tableMode: TABLE_MODE): void {
-    alert(`${data.length} data have been saved`)
+    this.docService.showDialogInfo(`${data.length} data have been saved`)
   }
 
   override deleteData(data: People): Observable<any> {

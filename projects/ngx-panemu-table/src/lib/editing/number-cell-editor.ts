@@ -6,7 +6,7 @@ import { CellEditorComponent } from './editing-info';
   selector: 'number-cell-editor',
   standalone: true,
   imports: [ReactiveFormsModule],
-  template: `<input type="number" [formControl]="formControl" class="editor-input" [title]="errorMessage() || ''">`
+  template: `<input type="number" [formControl]="formControl" [value]="formControl.value" class="editor-input" [title]="errorMessage() || ''">`
 })
 
 export class NumberCellEditor implements CellEditorComponent {

@@ -111,4 +111,54 @@ describe('InlineEditing1Component', () => {
     expect(component.controller.editingController!.saveData).toHaveBeenCalledWith([rowData], 'insert');
   });
 
+  //test click on edit button
+  it('edit', async () => {
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const de: DebugElement = fixture.debugElement;
+    const componentEl: HTMLElement = de.nativeElement;
+    const btnReload = componentEl.querySelector('button[data-test-id="btnReload"]') as HTMLButtonElement;
+    const btnInsert = componentEl.querySelector('button[data-test-id="btnInsert"]') as HTMLButtonElement;
+    const btnEdit = componentEl.querySelector('button[data-test-id="btnEdit"]') as HTMLButtonElement;
+    const btnSave = componentEl.querySelector('button[data-test-id="btnSave"]') as HTMLButtonElement;
+    const btnDelete = componentEl.querySelector('button[data-test-id="btnDelete"]') as HTMLButtonElement;
+    const btnExport = componentEl.querySelector('button[data-test-id="btnExport"]') as HTMLButtonElement;
+
+    expect(btnInsert.disabled).toBeFalse();
+    expect(btnSave.disabled).toBeTrue();
+    expect(btnDelete.disabled).toBeTrue();
+
+    let lstTr = componentEl.querySelectorAll('table tbody tr');
+    expect(lstTr.length).toBe(5);
+    btnEdit.click();
+    fixture.detectChanges();
+    expect(btnSave.disabled).toBeFalse();
+    expect(btnDelete.disabled).toBeTrue();
+
+    //find first row in table body then click it
+    lstTr = componentEl.querySelectorAll('table tbody tr');
+    expect(lstTr.length).toBe(5);
+    (lstTr[0] as HTMLTableRowElement).click();
+    fixture.detectChanges();
+    
+
+    //select the first row then assert cell editors are displayed
+    let selectedTr = componentEl.querySelector('table tr.selected-row') as HTMLTableRowElement;
+    let lstInput = selectedTr.querySelectorAll('input');
+    let lstSelect = selectedTr.querySelectorAll('select');
+    expect(lstInput.length).toBe(6);
+    expect(lstSelect.length).toBe(2);
+
+    //fill in proper values to the input elements above
+    lstInput[1].value = 'test@email.com';
+    lstSelect[0].value = 'M';
+    lstSelect[1].value = 'ID';
+
+    //click save
+    btnSave.click();
+    fixture.detectChanges();
+    expect(btnSave.disabled).toBeTrue();
+    expect(btnDelete.disabled).toBeFalse();
+  });
+
 })

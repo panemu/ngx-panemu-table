@@ -319,6 +319,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   }
 
   private insertRow(aRow: Partial<T>) {
+    if (aRow == null) return;
     this.dataSource.unshift(aRow as T);
     if (this.tableOptions.virtualScroll) {
       this.dataSource = [...this.dataSource];//virtual scroll needs this to trigger repaint

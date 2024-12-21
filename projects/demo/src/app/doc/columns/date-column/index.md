@@ -14,5 +14,5 @@ columns = this.pts.buildColumns<Data>([
 
 {{ NgDocActions.demo("DateColumnComponent") }}
 
-To set default format app-wide, override `PanemuTableService.getDateCellFormatter`. Take a look at `*ConfigurationPage` page
+To set default format app-wide, override `PanemuTableService.getDateCellFormatter`. Take a look at `*CustomizationPage` page
 on how to apply it globally.

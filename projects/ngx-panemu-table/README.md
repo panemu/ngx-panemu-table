@@ -28,6 +28,10 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ## New Features:
 
+### v.0.3.0
+
+* Inline editing
+
 ### v.0.2.0
 
 * Transpose selected row.
