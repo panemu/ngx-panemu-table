@@ -48,7 +48,7 @@
                   [class.sticky]="!!cell.sticky"
                   [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
                   [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
-                  [table]="matTable">
+                  [table]="matTable!">
                   <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
                 </th>
               </ng-container>

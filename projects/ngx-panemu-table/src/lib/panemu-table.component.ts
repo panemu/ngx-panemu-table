@@ -71,7 +71,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   pts = inject(PanemuTableService);
   labelTranslation = this.pts.getLabelTranslation();
   columnDefinition: ColumnDefinition<T> = {header:[], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts};
-  @ViewChild('panemuTable', { read: ElementRef }) matTable!: ElementRef<HTMLElement>;
+  @ViewChild('panemuTable', { read: ElementRef }) matTable?: ElementRef<HTMLElement>;
 
   @ViewChild(CdkVirtualScrollViewport)
   public viewPort!: CdkVirtualScrollViewport;
@@ -111,6 +111,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   }
 
   private initColumnWidth() {
+    if (!this.matTable?.nativeElement) return;
     this.colWidthInitiated = true;
     const result = initTableWidth(this.matTable.nativeElement, true);
     if (this._visibleColumns.length) {
