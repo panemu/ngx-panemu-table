@@ -8,13 +8,13 @@ To activate the save table states feature, specify the `TableOptions.stateKey` w
 controller = PanemuTableController.create<People>(
 	this.columns, 
 	this.datasource, 
-	{ stateKey: 'PersistStateComponent' });
+	{ stateKey: 'this_key_must_be_unique_app_wide' });
 ```
 
 The `stateKey` should be unique app-wide to avoid collition. By default it is saved to browser's local storage.
 
 Try to change the following states on below example:
-- Resize columns width. Or click the cog button next to pagination control to change columns visibility, position
+- Resize columns width. Or click the cog button and select *Setting* to change columns visibility, position
 and stickiness.
 - Click some row headers to sort.
 - Specify search criteria and grouping.

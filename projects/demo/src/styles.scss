@@ -204,6 +204,7 @@ input:disabled {
 
 .btn {
   background-color: rgb(234, 234, 234);
+  border: 1px solid transparent;
   @apply py-1 px-3 rounded-md text-sm;
 }
 
@@ -214,7 +215,8 @@ a.btn:hover {
 
 .btn:focus:enabled,
 .btn-action:focus:enabled {
-  outline: 1px solid #aaaaaa;
+  border: 1px solid #aaaaaa;
+  outline: none;
 }
 
 .btn:active:enabled {

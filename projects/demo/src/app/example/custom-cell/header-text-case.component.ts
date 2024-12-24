@@ -33,10 +33,6 @@ export class HeaderTextCaseComponent implements OnInit, HeaderComponent {
     } else if (textCase == 'normal') {
       this.column.formatter = (val: string) => val
     }
-    // const oriField = this.column.field;
-    // this.column.field = '';
-    // setTimeout(() => {
-    // 	this.column.field = oriField;	
-    // });
+
   }
 }

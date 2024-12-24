@@ -1,14 +1,19 @@
-<div>
-  {{column.label}}
-  <label (click)="$event.stopPropagation()">
-    <input type="radio" [formControl]="rdbCase" value="normal"> Normal
-  </label>
+<div class="flex flex-col">
+  <div>
 
-  <label (click)="$event.stopPropagation()">
-    <input type="radio" [formControl]="rdbCase" value="upper"> Upper
-  </label>
-
-  <label (click)="$event.stopPropagation()">
-    <input type="radio" [formControl]="rdbCase" value="lower"> Lower
-  </label>
+    {{column.label}}
+  </div>
+  <div class="flex gap-2">
+    <label (click)="$event.stopPropagation()">
+      <input type="radio" [formControl]="rdbCase" value="normal"> Normal
+    </label>
+    
+    <label (click)="$event.stopPropagation()">
+      <input type="radio" [formControl]="rdbCase" value="upper"> Upper
+    </label>
+    
+    <label (click)="$event.stopPropagation()">
+      <input type="radio" [formControl]="rdbCase" value="lower"> Lower
+    </label>
+  </div>
 </div>

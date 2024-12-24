@@ -123,8 +123,8 @@ export class PanemuTableEditingController<T> {
     }
     let existingEditingInfo = this.mapEditingInfos.find(item => item.rowData === rowData);
     if (existingEditingInfo?.editingInfo.originalRowData) {
-      let renderer = Object.values(existingEditingInfo.editingInfo.editor).find(item => item.field == field);
-      renderer?.isChanged.set(existingEditingInfo?.editingInfo.originalRowData[field] != rowData[field]);
+      let renderers = Object.values(existingEditingInfo.editingInfo.editor).filter(item => item.field == field);
+      renderers?.forEach(renderer => renderer.isChanged.set(existingEditingInfo?.editingInfo.originalRowData[field] != rowData[field]));
     }
   }
 

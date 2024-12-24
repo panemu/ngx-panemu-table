@@ -119,7 +119,7 @@ override initCellEditorRenderer(renderer: CellEditorRenderer<CustomData>, column
 
 ## Disabled sorting, filtering, grouping and pagination
 
-In below example, if table is not in `browse` mode, the pagination and quare components are disabled.
+The included pagination and query component listen to tables' mode. If table is not in `browse` mode, they are disabled.
 
 {{ NgDocActions.demo("InlineEditing7Component") }}
 

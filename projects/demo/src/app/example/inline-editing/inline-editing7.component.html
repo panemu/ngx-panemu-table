@@ -1,12 +1,14 @@
 <div class="flex flex-col h-[500px]">
   <panemu-query [controller]="controller" class="mb-2"/>
-  <toolbar-component [controller]="controller" class="border border-b-0">
-    <div class="flex justify-end flex-grow items-center mr-4">
-      <panemu-pagination [controller]="controller"/>
-    </div>
-  </toolbar-component>
-  <div class="flex-grow overflow-auto border">
+  <div class="flex flex-col border flex-grow">
+    <toolbar-component [controller]="controller">
+      <div class="flex justify-end flex-grow items-center mr-4">
+        <panemu-pagination [controller]="controller"/>
+      </div>
+    </toolbar-component>
+    <div class="flex-grow overflow-auto">
       <panemu-table [controller]="controller"/>
+    </div>
   </div>
 </div>
 

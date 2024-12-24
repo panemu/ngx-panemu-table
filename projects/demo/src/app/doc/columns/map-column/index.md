@@ -19,7 +19,7 @@ If the value map is retrieved asynchronously or later after table initialization
 genderMap = signal<any>({});
 
 columns = this.pts.buildColumns<Data>([
-  { field: 'last_login', type: ColumnType.MAP, valueMap: { F: 'Female', M: 'Male' }},
+  { field: 'last_login', type: ColumnType.MAP, valueMap: this.genderMap},
 ])
 
 ngOnInit() {

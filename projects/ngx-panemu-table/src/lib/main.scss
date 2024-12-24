@@ -65,7 +65,8 @@
     font-weight: 400;
     min-width: 100%;
     table-layout: fixed;
-
+    border-collapse: separate;
+    
     thead {
       position: sticky;
       top: 0;

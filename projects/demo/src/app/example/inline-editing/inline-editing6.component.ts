@@ -53,9 +53,9 @@ class EditingController extends PanemuTableEditingController<CustomData> {
   standalone: true,
   imports: [PanemuTableComponent, ToolbarComponent],
   template: `
-	<div class="border">
-	<div><toolbar-component [controller]="controller"/></div>
-	<panemu-table [controller]="controller"/>
+  <div class="border">
+    <div><toolbar-component [controller]="controller"/></div>
+    <panemu-table [controller]="controller"/>
 	</div>
   <ng-template #amountTemplate let-column="column" let-row="row">
     <div>

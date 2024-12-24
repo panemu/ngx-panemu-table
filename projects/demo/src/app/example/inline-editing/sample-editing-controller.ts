@@ -1,4 +1,4 @@
-import { CellValidationError, PanemuTableDataSource, PanemuTableEditingController, TABLE_MODE } from "ngx-panemu-table";
+import { CellEditorRenderer, CellValidationError, ColumnType, PanemuTableDataSource, PanemuTableEditingController, PropertyColumn, TABLE_MODE } from "ngx-panemu-table";
 import { DocumentationService } from "../documentation.service";
 
 export class SampleEditingController<T> extends PanemuTableEditingController<T> {
