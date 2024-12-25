@@ -67,6 +67,7 @@ class EditingController extends SampleEditingController<People> {
 }
 
 @Component({
+  selector: 'inline-editing1',
   standalone: true,
   imports: [PanemuTableComponent, ToolbarComponent],
   template: `

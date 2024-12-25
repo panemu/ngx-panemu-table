@@ -499,7 +499,6 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
       }
     }
     this.resetDataSourceData(oriData);
-    this.cdr.markForCheck();
   }
 
   /**
