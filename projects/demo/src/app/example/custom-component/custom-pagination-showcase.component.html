@@ -1,0 +1,12 @@
+<div class="flex flex-col h-[500px] gap-4">
+  <div class="flex justify-between items-center">
+    <custom-pagination [controller]="controller">
+      <button class="btn" (click)="goTo3rd()">
+        3rd page 20 rows
+      </button>
+    </custom-pagination>
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>

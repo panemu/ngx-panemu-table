@@ -1,0 +1,30 @@
+<div class="flex justify-between items-center gap-8">
+  <div class="pagination-button">
+    <button class="btn" (click)="first()" [disabled]="isFirstPage()">
+      &lt;&lt;
+    </button>
+    <button class="btn" (click)="previous()" [disabled]="isFirstPage()">
+      &lt;
+    </button>
+    <button class="btn" (click)="next()" [disabled]="isLastPage()">
+      &gt;
+    </button>
+    <button class="btn" (click)="last()" [disabled]="isLastPage()">
+      &gt;&gt;
+    </button>
+  </div>
+  <div>
+    Page {{pageIndex() + 1}} of {{totalPages()}} ( {{totalRows()}} rows )
+  </div>
+  <div>
+    Go to page <input type="number" [formControl]="txtGoto" (keyup.enter)="goToPage()" (blur)="onGotoBlur()" (focus)="onGotoFocus()" class="form-input w-16">
+  </div>
+  <div>
+    <select [formControl]="cmbMaxRow" class="form-select">
+      @for (opt of maxRowOptions; track opt) {
+        <option [value]="opt">Show {{opt}}</option>
+      }
+    </select>
+  </div>
+  <ng-content></ng-content>
+</div>

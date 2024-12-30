@@ -234,10 +234,10 @@ export class PanemuTableController<T> {
   }
 
   /**
-   * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup` and `ExpansionRow`. 
-   * It doesn't returns all data in datasource.
+   * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup`, 
+   * `RowGroupFooter` and `ExpansionRow`. 
    * 
-   * To get all date from table including of type `RowGroup` and `ExpansionRow` see `getAllData` method.
+   * To get all data from table including of type `RowGroup`, `RowGroupFooter` and `ExpansionRow` see `getAllData` method.
    * 
    * @returns 
    */
@@ -250,8 +250,8 @@ export class PanemuTableController<T> {
   }
 
   /**
-   * Get data being displayed in table including `ExpansionRow` and `RowGroup`. If a `RowGroup` is collapsed, its children
-   * are not included because they aren't visible in the table.
+   * Get data being displayed in table including `RowGroup`, `RowGroupFooter` and `ExpansionRow`.
+   * If a `RowGroup` is collapsed, its children are not included because they aren't visible in the table.
    * 
    * @returns 
    */
