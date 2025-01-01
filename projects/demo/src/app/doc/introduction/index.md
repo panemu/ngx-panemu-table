@@ -67,8 +67,8 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 - Customizable table cell.
   - Support custom cell using `ng-template` or angular component. For simple example see `*CustomColumnPage`.
 For more advanced, see `*CellRendererPage`.
-  - Support custom cell formatting and styling
-  - Cell expansion. See `*CellExpansionPage`. 
+  - Support [custom cell formatting](api/type-aliases/panemu/CellFormatter) and [styling](usages/dynamic-styling).
+  - `*CellExpansionPage`. 
 - Sticky column, header and footer. The footer usage example can be seen in `*VirtualScrollPage`.
 - Cell colspan and rowspan. See `*CellSpanningPage`.
 - Export to CSV. See `PanemuTableController.getcsvdata` .

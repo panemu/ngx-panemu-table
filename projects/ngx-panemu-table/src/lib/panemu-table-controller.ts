@@ -738,6 +738,19 @@ export class PanemuTableController<T> {
     }
   }
 
+  /**
+   * Save changed rows. This method does the followings:
+   * 
+   * 1. Call `editingController._getChangedData`
+   * 2. Call `editingController._validate`. It executes validation on cell basis.
+   * 3. Call `editingController.canSave`. It is a hook to allow user to cancel the save operation or
+   * doing row level validation.
+   * 4. Call `editingController.saveData`. It saves the data to server.
+   * 5. Call `editingController.afterSuccessfulSave`. It is a hook to do something after the data is saved.
+   * 6. Change mode to `browse`.
+   * 
+   * @returns 
+   */
   async save() {
     this.assertEditingController();
     if (this._loading.getValue()) return;

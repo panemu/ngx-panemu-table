@@ -8,6 +8,8 @@ displayed on the table. You can search on string, number, date, and datetime col
 
 {{ NgDocActions.demo("GlobalSearchComponent") }}
 
+That example uses custom pagination component explained in `*CustomPaginationPage` page.
+
 Below is the code of the datasource.
 
 ```typescript name="global-search-datasource.ts" file="../../example/custom-component/global-search-datasource.ts"
