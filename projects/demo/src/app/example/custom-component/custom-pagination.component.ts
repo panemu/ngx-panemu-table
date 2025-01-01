@@ -2,7 +2,7 @@ import { Component, input, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PanemuTableController } from 'ngx-panemu-table';
 
-const DEFAULT_MAX_ROWS = 10;
+const DEFAULT_MAX_ROWS = 100;
 
 @Component({
   selector: 'custom-pagination',
@@ -13,7 +13,7 @@ const DEFAULT_MAX_ROWS = 10;
 })
 
 export class CustomPaginationComponent implements OnInit {
-  maxRowOptions = [10, 20, 50];
+  maxRowOptions = [10, 20, 50, 100];
   cmbMaxRow = new FormControl(DEFAULT_MAX_ROWS);
   txtGoto = new FormControl(1);
   isFirstPage = signal(true);

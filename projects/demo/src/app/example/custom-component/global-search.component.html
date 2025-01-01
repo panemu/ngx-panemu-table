@@ -1,0 +1,15 @@
+<div class="flex flex-col h-[500px] gap-4">
+  <div class="flex justify-between items-center">
+    <custom-pagination [controller]="controller">
+      <input placeholder="Type to search" [formControl]="txtSearch" class="form-input w-auto">
+    </custom-pagination>
+    
+  </div>
+  <div class="flex-grow">
+    <panemu-table [controller]="controller"></panemu-table>
+  </div>
+</div>
+
+<ng-template #notSearchable let-column="column">
+  <span class="font-thin text-gray-400">{{column.label}}</span>
+</ng-template>

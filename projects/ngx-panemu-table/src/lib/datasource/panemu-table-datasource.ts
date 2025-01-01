@@ -57,7 +57,7 @@ export class PanemuTableDataSource<T> {
     }
     // const startTime = new Date()
     //filter
-    let result: T[] | RowGroupData[] = this.filter(this._data, tableQuery.tableCriteria);
+    let result: T[] | RowGroupData[] = this.filter([...this._data], tableQuery.tableCriteria);
 
     //sort
     this.sort(result, tableQuery.sortingInfos)
@@ -127,7 +127,7 @@ export class PanemuTableDataSource<T> {
 
   protected filter(result: T[], tableCriteria: TableCriteria[]) {
     if (!tableCriteria?.length) {
-      return [...result];
+      return result;
     }
 
     result = result.filter((a: any) => {

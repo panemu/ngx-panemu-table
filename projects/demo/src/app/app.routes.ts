@@ -35,6 +35,7 @@ import { InlineEditing5Component } from './example/inline-editing/inline-editing
 import { InlineEditing6Component } from './example/inline-editing/inline-editing6.component';
 import { InlineEditing7Component } from './example/inline-editing/inline-editing7.component';
 import { CustomPaginationShowcaseComponent } from './example/custom-component/custom-pagination-showcase.component';
+import { GlobalSearchComponent } from './example/custom-component/global-search.component';
 
 export const routes: Routes = [
   { path: 'basic', component: BasicComponent },
@@ -74,6 +75,7 @@ export const routes: Routes = [
   { path: 'inline-editing5', component: InlineEditing5Component },
   { path: 'inline-editing6', component: InlineEditing6Component },
   { path: 'inline-editing7', component: InlineEditing7Component },
-  { path: 'custom-pagination-showcase', component: CustomPaginationShowcaseComponent },
+  { path: 'custom-pagination', component: CustomPaginationShowcaseComponent },
+  { path: 'global-search', component: GlobalSearchComponent },
   { path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];
