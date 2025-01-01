@@ -2,9 +2,9 @@
 
 <ng-template #customHeader let-column="column">
   <div>
-    <div>Select Column To Display</div>
+    <div>Select Field To Display</div>
     <div>
-      <select class="form-select" [formControl]="cmbColumnHeader">
+      <select class="form-select font-normal" [formControl]="cmbColumnHeader">
         @for (item of customColumns.body; track $index) {
           <option [value]="item.__key">{{item.label}}</option>
         }

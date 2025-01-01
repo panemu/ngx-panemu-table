@@ -5,6 +5,7 @@
     .btn {
       border: 1px solid #dedede;
       border-radius: 0;
+      padding: 2px 8px;
 
       &:first-child {
         border-top-left-radius: 0.25rem;
@@ -18,5 +19,11 @@
         border-left-width: 0;
       }
     }
+  }
+
+  .info {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: rgb(107,114,128);
   }
 }

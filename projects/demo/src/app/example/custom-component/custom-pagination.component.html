@@ -1,4 +1,4 @@
-<div class="flex justify-between items-center gap-8">
+<div class="flex justify-between items-center gap-4">
   <div class="pagination-button">
     <button class="btn" (click)="first()" [disabled]="isFirstPage()">
       &lt;&lt;
@@ -13,11 +13,11 @@
       &gt;&gt;
     </button>
   </div>
-  <div>
+  <div class="info">
     Page {{pageIndex() + 1}} of {{totalPages()}} ( {{totalRows()}} rows )
   </div>
   <div>
-    Go to page <input type="number" [formControl]="txtGoto" (keyup.enter)="goToPage()" (blur)="onGotoBlur()" (focus)="onGotoFocus()" class="form-input w-16">
+    Go to page <input type="number" [formControl]="txtGoto" (keyup.enter)="goToPage()" (blur)="onGotoBlur()" (focus)="onGotoFocus()" class="form-input w-12">
   </div>
   <div>
     <select [formControl]="cmbMaxRow" class="form-select">

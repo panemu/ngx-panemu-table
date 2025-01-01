@@ -23,10 +23,10 @@ export class CustomPaginationComponent implements OnInit {
   controller = input<PanemuTableController<any>>();
   totalRows = signal(0);
   onFocusGotoPage = 0;
+  
   constructor() {
 
     this.cmbMaxRow.valueChanges.subscribe((val) => {
-      console.log(val)
       this.applyChange();
     });
 
@@ -37,6 +37,11 @@ export class CustomPaginationComponent implements OnInit {
   }
 
   private refresh(start: number, maxRows: number, totalRows: number) {
+    /**
+     * This method is called after table reloads data. It ensure that this component
+     * display correct data although the pagination information (start & maxRows) is
+     * set programmatically.
+     */
     this.isFirstPage.set(start == 0);
     this.isLastPage.set(start + maxRows >= totalRows);
     this.pageIndex.set(Math.floor(start / maxRows));

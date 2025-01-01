@@ -25,7 +25,7 @@ Below is an example of table with 10,000 rows with virtual scroll enabled. If it
 
 {{ NgDocActions.demo("VirtualScrollComponent") }}
 
-Below is the component footer used in above example.
+Below is the footer component used in above example.
 
 
 ```typescript file="../../example/custom-table-footer.component.ts" name="custom-table-footer.component.ts" group="g1"

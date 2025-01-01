@@ -39,21 +39,24 @@ the html file only needs to have a very simple `panemu-table` tag.
     - Previous page of first page overflow to last page and vice versa.
     - User can input arbitrary range.
     - Client or server side. Client side pagination is provided, server side implementation is up to you.
-
+    - Developer can create custom pagination component. See `*CustomPaginationPage`.
 - Filtering.
-    - Provided filter editors for string, date and key-value pair.
+    - Provided filter editors for string, date, datetime and key-value pair.
     - You can create custom filter editor.
+    - Filter behavior can be customized. See `*GlobalSearchPage`.
     - Support `between` operator using dot and comma. Dot represent `greater/less and equal`. Comma represent `greater/less` whithout equal.
+
 ```
 amount: 1.,10 is translated to `amount >= 1 and amount < 10`
 amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 ```
+
 - Row Grouping.
    - Support group level pagination.
    - Customizable row group header and footer. See `*CustomRowGroupPage`.
 - Column header
-  - Group multiple columns under one cell header.
-  - Support custom cell header renderer. You can put anything in column header.
+  - Group multiple columns under one cell header. See `*GroupedColumnPage`.
+  - Support custom cell header renderer. You can put anything in column header. See `*CustomColumnHeaderPage`.
 - Column Resizable.
 - User can change column visibility, position and stickiness at runtime. See `PanemuSettingComponent`.
 - Save table states:
@@ -62,13 +65,16 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
   
   If user changes any of those, go to other and back, the states are restored. See `*PersistStatesPage`.
 - Customizable table cell.
-  - Support custom cell using `ng-template` or angular component.
+  - Support custom cell using `ng-template` or angular component. For simple example see `*CustomColumnPage`.
+For more advanced, see `*CellRendererPage`.
   - Support custom cell formatting and styling
   - Cell expansion. See `*CellExpansionPage`. 
-- Sticky column, header and footer
+- Sticky column, header and footer. The footer usage example can be seen in `*VirtualScrollPage`.
 - Cell colspan and rowspan. See `*CellSpanningPage`.
 - Export to CSV. See `PanemuTableController.getcsvdata` .
 - Handle huge data using [virtual scroll](usages/virtual-scroll). Now it doesn't support variable row height. But it will in the future.
+
+This is a quick demo of `PanemuTableComponent`, `PanemuPaginationComponent`, `PanemuQueryComponent` and `PanemuSettingComponent`.
 
 {{ NgDocActions.demo("AllFeaturesClientComponent", {expanded: true}) }}
 
@@ -76,10 +82,13 @@ amount: 1,.10 is translated to `amount > 1 and amount <= 10`
 
 These features are not developed yet. Please create a ticket in [our repository](https://github.com/panemu/ngx-panemu-table) if you need them so we know what to prioritize.
 
-- Global search.
 - Virtual scroll with variable row height.
 
 ## Releases:
+
+### v.0.3.0
+
+* Inline editing
 
 ### v.0.2.0
 
