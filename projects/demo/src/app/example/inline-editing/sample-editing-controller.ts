@@ -36,21 +36,21 @@ export class SampleEditingController<T> extends PanemuTableEditingController<T> 
   protected dummySave(data: any[], tableMode: TABLE_MODE, datasource: PanemuTableDataSource<any>) {
     let dsData = datasource.getAllData();
     if (tableMode == 'edit') {
-        data.forEach(changedRow => {
-          let dsRow = dsData.find(item => item.id == changedRow.id);
-          if (dsRow) {
-            Object.assign(dsRow, changedRow);
-          }
-        })
-      } else {
-        data.forEach(item => {
-          if (!item.id) {
-            item.id = dsData.reduce((accumulator: number, row: any) => Math.max(accumulator, row.id), 0) + 1;
-            dsData.push(item)
-          }
-        })
-        datasource.setData(dsData);
-      }
+      data.forEach(changedRow => {
+        let dsRow = dsData.find(item => item.id == changedRow.id);
+        if (dsRow) {
+          Object.assign(dsRow, changedRow);
+        }
+      })
+    } else {
+      data.forEach(item => {
+        if (!item.id) {
+          item.id = dsData.reduce((accumulator: number, row: any) => Math.max(accumulator, row.id), 0) + 1;
+        }
+        dsData.push(item);
+      })
+      datasource.setData(dsData);
+    }
   }
   
   protected dummyDelete(data: any, datasource: PanemuTableDataSource<any>) {

@@ -1,15 +1,29 @@
 import { ChangeDetectorRef, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ColumnType, DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { SampleEditingController } from './sample-editing-controller';
 import { DocumentationService } from '../documentation.service';
 import { ToolbarComponent } from './toolbar.component';
+import { Observable, of } from 'rxjs';
 
 
 class EditingController extends SampleEditingController<People> {
+  constructor(private datasource: PanemuTableDataSource<People>, docService: DocumentationService) {
+    super(docService)
+  }
   override createNewRowData(): Partial<People> {
-      return {id: 0, name: 'name 0'}
+      return {name: 'name 0'}
+  }
+
+  override saveData(data: People[], tableMode: TABLE_MODE): Observable<People[]> {
+    this.dummySave(data, tableMode, this.datasource);
+    return of(data);
+  }
+
+  override deleteData(data: People) {
+    this.dummyDelete(data, this.datasource)
+    return of({});
   }
 }
 
@@ -65,23 +79,18 @@ export class InlineEditing5Component {
     }
     this.datasource.setData(data);
 
-    this.controller.editingController = new EditingController(this.docService);
+    this.controller.editingController = new EditingController(this.datasource, this.docService);
     this.controller.reloadData();
 
-    this.controller.afterReloadEvent.subscribe({
-      next: _ => {
-        console.log('after reload')
-      }
-    })
-
   }
-  
+
   scrollDown() {
     const viewport = document.getElementsByTagName('cdk-virtual-scroll-viewport')[0];
     // viewport.dispatchEvent(new Event('scroll'));
     viewport.scrollTo(0, viewport.scrollHeight);
     this.cdr.markForCheck();
   }
+  
   scrollUp() {
     const viewport = document.getElementsByTagName('cdk-virtual-scroll-viewport')[0];
     viewport.scrollTo(0, 0);

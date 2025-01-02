@@ -43,7 +43,18 @@ class EditingController extends PanemuTableEditingController<CustomData> {
   }
 
   override saveData(data: CustomData[], tableMode: TABLE_MODE): Observable<CustomData[]> {
+    if (tableMode == 'insert') {
+      DATA.push(...data);
+    }
     return of(data)
+  }
+
+  override deleteData(data: CustomData) {
+    let idx = DATA.findIndex(item => item == data);
+    if (idx >= 0) {
+      DATA.splice(idx, 1);
+    }
+    return of({});
   }
 }
 

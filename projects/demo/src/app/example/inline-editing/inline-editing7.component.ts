@@ -27,7 +27,7 @@ class EditingController extends SampleEditingController<People> {
   }
 
   override saveData(data: People[], tableMode: TABLE_MODE): Observable<People[]> {
-      return of(data)
+    return of(data)
   }
 
   override afterSuccessfulSave(data: People[], tableMode: TABLE_MODE): void {
