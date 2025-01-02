@@ -1,9 +1,13 @@
 <div class="toolbar">
 	<button data-test-id="btnReload" class="toolbar-button" (click)="reload()"><span class="material-symbols-outlined leading-8 block">refresh</span></button>
-	<button data-test-id="btnInsert" class="toolbar-button" [disabled]="!canInsert()" (click)="insert()"><span class="material-symbols-outlined leading-8 block">add</span></button>
+	@if (allowInsert()) {
+		<button data-test-id="btnInsert" class="toolbar-button" [disabled]="!canInsert()" (click)="insert()"><span class="material-symbols-outlined leading-8 block">add</span></button>
+	}
 	<button data-test-id="btnEdit" class="toolbar-button" [disabled]="!browse()" (click)="edit()"><span class="material-symbols-outlined leading-8 block">edit</span></button>
 	<button data-test-id="btnSave" class="toolbar-button" [disabled]="!canSave()" (click)="save()"><span class="material-symbols-outlined leading-8 block">save</span></button>
-	<button data-test-id="btnDelete" class="toolbar-button" [disabled]="!canDelete()" (click)="deleteRow()"><span class="material-symbols-outlined leading-8 block">delete</span></button>
+	@if (allowDelete()) {
+		<button data-test-id="btnDelete" class="toolbar-button" [disabled]="!canDelete()" (click)="deleteRow()"><span class="material-symbols-outlined leading-8 block">delete</span></button>
+	}
 	<button data-test-id="btnExport" class="toolbar-button" [disabled]="!browse()" (click)="export()"><span class="material-symbols-outlined leading-8 block">description</span></button>
 	<ng-content></ng-content>
 </div>

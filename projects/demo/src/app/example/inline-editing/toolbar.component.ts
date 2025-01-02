@@ -4,11 +4,13 @@ import { PanemuTableController } from 'ngx-panemu-table';
 @Component({
   selector: 'toolbar-component',
   templateUrl: 'toolbar.component.html',
-  standalone: true
+  standalone: true,
 })
 
 export class ToolbarComponent {
   controller = input<PanemuTableController<any>>();
+  allowInsert = input<boolean>(true);
+  allowDelete = input<boolean>(true);
   canDelete = computed(() => this.controller()?.mode() != 'edit' && this.controller()?.selectedRowSignal());
   browse = computed(() => this.controller()?.mode() == 'browse')
   canInsert = computed(() => this.controller()?.mode() != 'edit')

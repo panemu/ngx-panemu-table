@@ -3,6 +3,7 @@ import { AbstractControl, FormControl } from '@angular/forms';
 import { ColumnType, EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
 import { DataService } from '../../service/data.service';
 import { ToolbarComponent } from './toolbar.component';
+import { take } from 'rxjs';
 
 interface CustomData {
   id: number
@@ -101,7 +102,7 @@ class EditingController extends PanemuTableEditingController<CustomData> {
   imports: [PanemuTableComponent, ToolbarComponent],
   template: `
 	<div class="border">
-	<div><toolbar-component [controller]="controller"/></div>
+	<div><toolbar-component [controller]="controller" [allowInsert]="false" [allowDelete]="false"/></div>
 	<panemu-table [controller]="controller"/>
 	</div>
 	`,
@@ -146,6 +147,14 @@ export class InlineEditing3Component implements OnInit {
     let editingController = new EditingController();
     editingController.getNewRowId = () => this.controller.getData().length + 1;
     this.controller.editingController = editingController;
+
+    //set initial mode to be edit mode
+    this.controller.afterReloadEvent.pipe(
+      take(1)
+    ).subscribe(() => {
+      this.controller.edit();
+    });
+    
     this.controller.reloadData();
   }
 }
