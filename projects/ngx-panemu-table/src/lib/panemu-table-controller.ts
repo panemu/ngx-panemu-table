@@ -1,5 +1,5 @@
 import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
-import { BehaviorSubject, catchError, finalize, Observable, of, skip, switchMap } from "rxjs";
+import { BehaviorSubject, catchError, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
 import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, NonGroupColumn } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { TABLE_MODE } from "./editing/table-mode";
@@ -62,7 +62,7 @@ export class PanemuTableController<T> {
 
   private refreshPagination?: RefreshPagination;
   private reloadCue = new BehaviorSubject(0);
-  private afterReload$ = new BehaviorSubject<TableData<T> | null>(null);
+  private afterReload$ = new Subject<TableData<T> | null>();
   private _startIndex = 0;
   private lastReloadTotalRows = 0;
   private _maxRows;
