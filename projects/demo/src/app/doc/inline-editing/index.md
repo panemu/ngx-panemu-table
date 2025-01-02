@@ -81,7 +81,8 @@ That example also shows how to create a custom cell editor, in this case is `Add
 ## Listening To Cell Edit
 
 In the example below, the Country and City cells are logically connected. If the user selects a country, the options
-in City are updated. It is achieved by overriding `PanemuTableEditingController.onCommitEdit`.
+in City are updated. It is achieved by overriding `PanemuTableEditingController.onCommitEdit`. Also this table is
+on edit mode initially.
 
 {{ NgDocActions.demo("InlineEditing3Component") }}
 
