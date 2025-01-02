@@ -322,10 +322,9 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   private insertRow(aRow: Partial<T>) {
     if (aRow == null) return;
     this.dataSource.unshift(aRow as T);
-    if (this.tableOptions.virtualScroll) {
-      this.dataSource = [...this.dataSource];//virtual scroll needs this to trigger repaint
-    }
-    this.controller['data'].set(this.dataSource);
+    
+    this.resetDataSourceData(this.dataSource);
+
     let columns = this.columnDefinition.body.filter(item => item.visible && item.field);
     this.controller.editingController?._createEditingInfo(columns, aRow as T, this.controller.mode());
     this.selectRow(aRow as T);
@@ -337,11 +336,11 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     const index = this.dataSource.indexOf(aRow);
     if (index > -1) {
       this.controller.editingController?._deleteEditingInfo(aRow);
-      this.dataSource.splice(index, 1);
       if (this._controllerSelectedRowSignal() == aRow) {
         this.controller.clearSelection();
       }
-      this.cdr.markForCheck();
+      this.dataSource.splice(index, 1);
+      this.resetDataSourceData(this.dataSource);
     }
   }
 
