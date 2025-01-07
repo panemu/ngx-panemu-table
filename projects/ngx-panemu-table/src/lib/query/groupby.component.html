@@ -1,8 +1,6 @@
 <div class="panemu-groupby">
   <div class="header">
-    <span class="material-symbols-outlined">
-      splitscreen_top
-    </span>
+    <span class="ngx-panemu-table-icon icon-splitscreen_top"></span>
     {{labelTranslation.groupBy}}
   </div>
   <div class="body">
@@ -10,17 +8,13 @@
       <div *ngIf="item.type != _columnType.DATE && item.type != _columnType.DATETIME else pnlDate"
         class="menu-item"
         (click)="toggleGroup(item)">
-        <span class="material-symbols-outlined" [class.invisible]="!isInGroup(item)">
-          check
-        </span>
+        <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
         {{item.label}}
       </div>
       <ng-template #pnlDate>
         <div class="menu-item"
           [matMenuTriggerFor]="pnlDateMenu" [matMenuTriggerData]="{column: item}">
-          <span class="material-symbols-outlined" [class.invisible]="!isInGroup(item)">
-            check
-          </span>
+          <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
           {{item.label}}
         </div>
 
@@ -34,27 +28,21 @@
     <div 
       class="menu-item"
       (click)="toggleGroup(column, 'year')">
-      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'year')">
-        check
-      </span>
+      <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'year')"></span>
       {{labelTranslation.year}}
     </div>
 
     <div 
       class="menu-item"
       (click)="toggleGroup(column, 'month')">
-      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'month')">
-        check
-      </span>
+      <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'month')"></span>
       {{labelTranslation.month}}
     </div>
 
     <div 
       class="menu-item"
       (click)="toggleGroup(column, 'day')">
-      <span class="material-symbols-outlined mr-1" [class.invisible]="!isInGroup(column, 'day')">
-        check
-      </span>
+      <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'day')"></span>
       {{labelTranslation.day}}
     </div>
   </ng-template>

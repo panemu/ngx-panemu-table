@@ -1,31 +1,23 @@
 <div class="panemu-query" [class.disabled]="disabled()">
   <div class="input-panel">
     <div *ngIf="groupByLabel" class="group chip-panel">
-      <span class="material-symbols-outlined icon group-icon">
-        splitscreen_top
-      </span>
+      <span class="ngx-panemu-table-icon icon-splitscreen_top group-icon"></span>
       <div class="chip-label">{{groupByLabel}}</div>
 
       <button class="close-button" (click)="clearGroup()" [disabled]="disabled()">
-        <span class="material-symbols-outlined">
-          close
-        </span>
+        <span class="ngx-panemu-table-icon icon-close"></span>
       </button>
     </div>
     <div *ngFor="let item of _criteria;let i = index" class="filter chip-panel hover-parent">
       <div class="filter-chip" (click)="disabled() ? $event.stopPropagation() : editQuery(item)">
-        <div class="icon filter-label hover-child-inverse">
+        <div class="filter-label hover-child-inverse">
           {{item.label}}
         </div>
-        <span class="material-symbols-outlined icon filter-icon hover-child">
-          search
-        </span>
+        <span class="ngx-panemu-table-icon icon-search filter-icon hover-child"></span>
       </div>
       <div class="chip-label">{{item.value}}</div>
       <button class="close-button" (click)="deleteCriteria(i)" [disabled]="disabled()">
-        <span class="material-symbols-outlined">
-          close
-        </span>
+        <span class="ngx-panemu-table-icon icon-close"></span>
       </button>
     </div>
     <input class="input-field" 
@@ -42,9 +34,7 @@
      </mat-autocomplete>
   </div>
   <button *ngIf="hasGroupableColumn" class="group-button" [matMenuTriggerFor]="menu" [disabled]="disabled()">
-    <span class="material-symbols-outlined">
-      splitscreen_top
-    </span>
+    <span class="ngx-panemu-table-icon icon-splitscreen_top"></span>
   </button>
   <mat-menu #menu="matMenu">
     <panemu-groupby [controller]="controller()" (click)="$event.stopPropagation();"></panemu-groupby>

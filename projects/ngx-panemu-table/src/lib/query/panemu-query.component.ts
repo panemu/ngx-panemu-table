@@ -117,7 +117,7 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
             let clm = this._columns.find(item => item.field == g.field);
             this.groupByLabel = this.groupByLabel + clm?.label;
             if (g.modifier) {
-              this.groupByLabel = this.groupByLabel + ':' + g.modifier;
+              this.groupByLabel = this.groupByLabel + ': ' + g.modifier;
             }
             this.groupByLabel = this.groupByLabel + ' > '
           });

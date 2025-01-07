@@ -13,6 +13,8 @@ import { ColumnTypeComponent } from './example/column-type.component';
 import { ComputedComponent } from './example/computed.component';
 import { CustomCellRendererComponent } from './example/custom-cell-renderer.component';
 import { CustomCellComponent } from './example/custom-cell/custom-cell.component';
+import { CustomPaginationShowcaseComponent } from './example/custom-component/custom-pagination-showcase.component';
+import { GlobalSearchComponent } from './example/custom-component/global-search.component';
 import { CustomFilterEditorComponent } from './example/custom-filter-editor.component';
 import { CustomHeaderComponent } from './example/custom-header.component';
 import { CustomRowGroupComponent } from './example/custom-row-group/custom-row-group.component';
@@ -20,10 +22,14 @@ import { CustomRowGroup2Component } from './example/custom-row-group/custom-row-
 import { DelayedComponent } from './example/delayed.component';
 import { FilterExamplesComponent } from './example/filter-examples.component';
 import { FullBorderComponent } from './example/full-border.component';
+import { IconPreviewComponent } from './example/icon/icon-preview.component';
 import { InlineEditing1Component } from './example/inline-editing/inline-editing1.component';
 import { InlineEditing2Component } from './example/inline-editing/inline-editing2.component';
 import { InlineEditing3Component } from './example/inline-editing/inline-editing3.component';
 import { InlineEditing4Component } from './example/inline-editing/inline-editing4.component';
+import { InlineEditing5Component } from './example/inline-editing/inline-editing5.component';
+import { InlineEditing6Component } from './example/inline-editing/inline-editing6.component';
+import { InlineEditing7Component } from './example/inline-editing/inline-editing7.component';
 import { PaginationComponent } from './example/pagination.component';
 import { PersistStateComponent } from './example/persist-state.component';
 import { RowDetailComponent } from './example/row-detail.component';
@@ -31,11 +37,6 @@ import { StickyColumnComponent } from './example/sticky-column.component';
 import { TickableRowComponent } from './example/tickable-row.component';
 import { VerticalScrollComponent } from './example/vertical-scroll.component';
 import { VirtualScrollComponent } from './example/virtual-scroll.component';
-import { InlineEditing5Component } from './example/inline-editing/inline-editing5.component';
-import { InlineEditing6Component } from './example/inline-editing/inline-editing6.component';
-import { InlineEditing7Component } from './example/inline-editing/inline-editing7.component';
-import { CustomPaginationShowcaseComponent } from './example/custom-component/custom-pagination-showcase.component';
-import { GlobalSearchComponent } from './example/custom-component/global-search.component';
 
 export const routes: Routes = [
   { path: 'basic', component: BasicComponent },
@@ -77,5 +78,6 @@ export const routes: Routes = [
   { path: 'inline-editing7', component: InlineEditing7Component },
   { path: 'custom-pagination', component: CustomPaginationShowcaseComponent },
   { path: 'global-search', component: GlobalSearchComponent },
+  { path: 'icon-preview', component: IconPreviewComponent },
   { path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

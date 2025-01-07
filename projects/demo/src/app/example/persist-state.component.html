@@ -1,7 +1,7 @@
 <div class="flex flex-col h-[500px] gap-4">
   <div class="flex justify-between items-center">
     <panemu-query [controller]="controller"></panemu-query>
-    <div class="flex gap-2">
+    <div class="flex gap-2 items-center">
       <panemu-pagination [controller]="controller"/>
       <panemu-setting [controller]="controller"/>
     </div>
@@ -22,9 +22,9 @@
   <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px]">
     <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>
     <label>Message</label>
-    <textarea rows="5" class="w-80"></textarea>
+    <textarea rows="5" class="w-80 form-input"></textarea>
     <div></div>
-    <button (click)=close()>Send</button>
+    <button (click)="close()" class="btn">Send</button>
   </div>
 </ng-template>
 

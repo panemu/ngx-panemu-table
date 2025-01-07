@@ -3,20 +3,19 @@ import { CellComponent } from './cell';
 import { PropertyColumn } from '../column/column';
 import { CellFormatterPipe } from './cell-formatter.pipe';
 import { ExpansionRowRenderer } from '../row/expansion-row';
+import { NgClass } from '@angular/common';
 
 @Component({
   template: `
    <div class="detail-cell {{position}}">
      <button (click)="click()" [disabled]="disabled" class="">
-        <span class="material-symbols-outlined text-base leading-5 block">
-        {{expanded() ? 'expand_more' : 'chevron_right'}}
-        </span>
+        <span class="ngx-panemu-table-icon" [ngClass]="expanded() ? 'icon-expand_more' : 'icon-chevron_right'"></span>
      </button>
       <span>{{row[column.field] | cellFormatter:row:column:column.formatter}}</span>
    </div>
    `,
   standalone: true,
-  imports: [CellFormatterPipe]
+  imports: [CellFormatterPipe, NgClass]
 })
 
 export class ExpansionCellRenderer implements OnInit, CellComponent<any> {

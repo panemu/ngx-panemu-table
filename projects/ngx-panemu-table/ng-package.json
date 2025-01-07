@@ -6,6 +6,6 @@
   },
   "assets": [
     { "input": "generated", "glob": "**/*.css", "output": "styles" },
-    { "input": "src/lib", "glob": "indigo-pink.css", "output": "styles" }
+    { "input": "src/style", "glob": "indigo-pink.css", "output": "styles" }
   ]
 }

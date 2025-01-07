@@ -1,0 +1,94 @@
+.ngx-panemu-table-icon {
+
+  @font-face {
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-weight: 200;
+    src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v205/kJF1BvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzByHX9rA6RzaxHMPdY43zj-jCxv3fzvRNU22ZXGJpEpjC_1v-p_4MrImHCIJIZrDAvHOej.woff2) format('woff2');
+  }
+
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.125rem;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+
+  &.icon-small {
+    font-size: 1rem;
+  }
+
+  &.icon-big {
+    font-size: 1.5rem;
+  }
+
+  &.icon-settings::after {
+    content: "settings";
+  }
+
+  &.icon-arrow_drop_down::after {
+    content: "arrow_drop_down";
+  }
+
+
+  &.icon-arrow_drop_up::after {
+    content: "arrow_drop_up";
+  }
+
+  &.icon-splitscreen_top::after {
+    content: "splitscreen_top";
+  }
+
+  &.icon-close::after {
+    content: "close";
+  }
+
+  &.icon-search::after {
+    content: "search";
+  }
+
+  &.icon-check::after {
+    content: "check";
+  }
+
+  &.icon-arrow_right::after {
+    content: "arrow_right";
+  }
+
+  &.icon-expand_more::after {
+    content: "expand_more";
+  }
+
+  &.icon-chevron_right::after {
+    content: "chevron_right";
+  }
+
+  &.icon-west::after {
+    content: "west";
+  }
+
+  &.icon-east::after {
+    content: "east";
+  }
+
+  &.icon-align_horizontal_left::after {
+    content: "align_horizontal_left";
+  }
+
+  &.icon-align_horizontal_right::after {
+    content: "align_horizontal_right";
+  }
+
+  &.icon-horizontal_distribute::after {
+    content: "horizontal_distribute";
+  }
+
+}
