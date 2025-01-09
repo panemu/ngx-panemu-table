@@ -1,10 +1,10 @@
-import { Component, OnInit, TemplateRef, viewChild } from '@angular/core';
-import { CellFormatter, ColumnDefinition, ColumnType, DefaultHeaderRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TableCriteria } from 'ngx-panemu-table';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { CustomPaginationComponent } from './custom-pagination.component';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { GlobalSearchDataSource } from './global-search-datasource';
 
 @Component({

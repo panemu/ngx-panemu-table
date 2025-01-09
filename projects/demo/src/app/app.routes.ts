@@ -37,6 +37,7 @@ import { StickyColumnComponent } from './example/sticky-column.component';
 import { TickableRowComponent } from './example/tickable-row.component';
 import { VerticalScrollComponent } from './example/vertical-scroll.component';
 import { VirtualScrollComponent } from './example/virtual-scroll.component';
+import { ColumnSearchComponent } from './example/custom-component/column-search.component';
 
 export const routes: Routes = [
   { path: 'basic', component: BasicComponent },
@@ -79,5 +80,6 @@ export const routes: Routes = [
   { path: 'custom-pagination', component: CustomPaginationShowcaseComponent },
   { path: 'global-search', component: GlobalSearchComponent },
   { path: 'icon-preview', component: IconPreviewComponent },
+  { path: 'column-search', component: ColumnSearchComponent },
   { path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];
