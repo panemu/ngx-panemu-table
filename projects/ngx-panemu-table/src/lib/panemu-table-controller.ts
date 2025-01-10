@@ -23,8 +23,10 @@ import { PanemuTableEditingController } from "./editing/panemu-table-editing-con
  * 
  * `maxRows`: Maximum rows to fetch per page. To avoid user entering very big number that can bring server
  * or the browser down, override `PanemuTableService.getPaginationMaxRowsLimit`.
+ * 
+ * `groupController`: if true, then the request is triggered from a row group expansion
  */
-export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery) => Observable<TableData<T>>;
+export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery, groupController?: boolean) => Observable<TableData<T>>;
 
 export type RefreshPagination = (start: number, maxRows: number, totalRows: number) => void;
 
@@ -66,6 +68,7 @@ export class PanemuTableController<T> {
   private _startIndex = 0;
   private lastReloadTotalRows = 0;
   private _maxRows;
+  private isGroupController = false;
   private stateInitialized = false;
   tableOptions: TableOptions<T>;
   sortedColumn: { [key: string]: 'asc' | 'desc' } = {};
@@ -134,11 +137,21 @@ export class PanemuTableController<T> {
     if (this.groupByColumns?.length) {
       tq.groupBy = this.groupByColumns[0];
     }
-    for (const key in this.sortedColumn) {
-      tq.sortingInfos.push({ field: key, direction: this.sortedColumn[key] })
-    }
+    this.createSortingInfos(tq);
     tq.tableCriteria = [...this.criteria];
     return tq;
+  }
+
+  private createSortingInfos(tq: TableQuery) {
+    for (const key in this.sortedColumn) {
+      tq.sortingInfos.push({ field: key, direction: this.sortedColumn[key] });
+    }
+    if (tq.groupBy) {
+      /**
+       * Only include sorting info that match with group field because the other isn't relevant
+       */
+      tq.sortingInfos = tq.sortingInfos?.filter(item => item.field == tq.groupBy!.field);
+    }
   }
 
   // getColumn(field: keyof T) {
@@ -162,7 +175,7 @@ export class PanemuTableController<T> {
 
         this._mode.set('browse');
 
-        return this.retrieveDataFunction(start, rowsToLoad, tq).pipe(
+        return this.retrieveDataFunction(start, rowsToLoad, tq, this.isGroupController).pipe(
           finalize(() => this._loading.next(false)),
           catchError(err => {
             this.pts.handleError(err);
@@ -321,6 +334,7 @@ export class PanemuTableController<T> {
     let groupController = new PanemuTableController({ header: [], body: [], mutatedStructure: [], structureKey: '', __tableService: this.pts }, this.retrieveDataFunction);
     groupController._maxRows = this._maxRows;
     groupController._mode = this._mode;
+    groupController.isGroupController = true;
     let slicedGroupByColumn = group.parent ? group.parent.controller!.groupByColumns.slice(1) : this.groupByColumns.slice(1);
     groupController.groupByColumns = slicedGroupByColumn;
     groupController.createTableQuery = () => {
@@ -330,6 +344,7 @@ export class PanemuTableController<T> {
       } else {
         delete tq.groupBy;
       }
+      this.createSortingInfos(tq);
       tq.tableCriteria.push(...this.buildCriteriaRecursively(group, []));
       return tq;
     }
@@ -350,7 +365,12 @@ export class PanemuTableController<T> {
     if (group.parent) {
       this.buildCriteriaRecursively(group.parent, tableCriteria);
     }
-    let val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.data.value : `"${group.data.value}"`;
+    let val;
+    if (group.data.value === null || group.data.value === undefined) {
+      val = 'NULL'
+    } else {
+      val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.data.value : `"${group.data.value}"`;
+    }
     if (group.modifier == 'year') {
       let nextYear = +(group.data.value) + 1;
       val = `${group.data.value}-01-01.,${nextYear}-01-01`;
