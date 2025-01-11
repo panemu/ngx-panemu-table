@@ -15,3 +15,11 @@ Below is the code of the datasource.
 ```typescript name="global-search-datasource.ts" file="../../example/custom-component/global-search-datasource.ts"
 
 ```
+
+Below is an example of how to implement per-column search with search field in every column header.
+
+{{ NgDocActions.demo("ColumnSearchComponent") }}
+
+```typescript name="column-search-datasource.ts" file="../../example/custom-component/column-search-datasource.ts"
+
+```
