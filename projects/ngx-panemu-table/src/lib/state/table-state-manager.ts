@@ -47,7 +47,7 @@ export class TableStateManager {
   }
 
   saveTableState(controller: PanemuTableController<any>) {
-    if (!controller.tableOptions.stateKey) return;
+    if (!controller.tableOptions.saveState?.key) return;
 
     let columns: ColumnState[] = [];
     controller.columnDefinition.mutatedStructure.forEach(item => columns.push(this.convertColumnToTemplateColumn(item)))
@@ -61,7 +61,15 @@ export class TableStateManager {
       columns
     }
 
-    this.pts.saveTableState(controller.tableOptions.stateKey!, state);
+    if (controller.tableOptions.saveState.states) {
+      for (const key in state) {
+        if (key != 'structureKey' && !controller.tableOptions.saveState.states.includes(key as any)) {
+          delete state[key as keyof TableState];
+        }
+      }
+    }
+
+    this.pts.saveTableState(controller.tableOptions.saveState.key!, state);
   }
 
   deleteTableState(key?: string) {

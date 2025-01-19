@@ -510,7 +510,7 @@ export class PanemuTableEditingController<T> {
   }
 
   /**
-   * This method is called after successful deletion of persisted data. It isn't called in `insert` mode.
+   * This method is called after successful deletion of persisted data. It isn't called when deleting new row in `insert` mode.
    * Override this method to display information dialog if required.
    * 
    * @param data the data returned by `deleteData` observable. The type is unknown.

@@ -2,16 +2,23 @@
 keyword: PersistStatesPage
 ---
 
-To activate the save table states feature, specify the `TableOptions.stateKey` when instantiating table controller.
+To activate the save table states feature, specify the `TableOptions.saveState` when instantiating table controller.
 
 ```typescript {4}
 controller = PanemuTableController.create<People>(
 	this.columns, 
 	this.datasource, 
-	{ stateKey: 'this_key_must_be_unique_app_wide' });
+	{ saveState: {
+    key:'this_key_must_be_unique_app_wide',
+    
+    //leave states undefined to save all states. To only save, for example,
+    // which columns are sorted and column position, use ['sorting', 'columns']
+    states: undefined
+  }
+});
 ```
 
-The `stateKey` should be unique app-wide to avoid collition. By default it is saved to browser's local storage.
+The `saveState.key` should be unique app-wide to avoid collition. By default it is saved to browser's local storage.
 
 Try to change the following states on below example:
 - Resize columns width. Or click the cog button and select *Setting* to change columns visibility, position

@@ -23,3 +23,7 @@ Below is an example of how to implement per-column search with search field in e
 ```typescript name="column-search-datasource.ts" file="../../example/custom-component/column-search-datasource.ts"
 
 ```
+
+```typescript name="header-filter.component.ts" file="../../example/custom-component/header-filter.component.ts"
+
+```

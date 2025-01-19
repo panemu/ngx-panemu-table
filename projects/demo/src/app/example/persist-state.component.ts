@@ -53,7 +53,12 @@ export class PersistStateComponent implements OnInit {
   ]
   )
   datasource = new PanemuTableDataSource<People>;
-  controller = PanemuTableController.create<People>(this.columns, this.datasource, { stateKey: 'PersistStateComponent' });
+  controller = PanemuTableController.create<People>(this.columns, this.datasource, {
+    saveState: {
+      key:'PersistStateComponent',
+      states: undefined
+    }
+  });
 
   constructor(private dataService: DataService, private pts: PanemuTableService) { }
 

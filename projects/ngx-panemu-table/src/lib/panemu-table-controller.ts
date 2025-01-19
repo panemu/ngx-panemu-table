@@ -398,7 +398,7 @@ export class PanemuTableController<T> {
    */
   reloadCurrentPage() {
 
-    if (this.tableOptions.stateKey && !this.stateInitialized) {
+    if (this.tableOptions.saveState && !this.stateInitialized) {
       this.stateInitialized = true;
       this.readState().pipe(
         finalize(() => this.reloadCurrentPage())
@@ -469,7 +469,7 @@ export class PanemuTableController<T> {
     }
 
     let result = false;
-    let previouslySelected = this.selectedRow();
+    //let previouslySelected = this.selectedRow();
 
     if (typeof rowOrIndex == 'number') {
       const row = this.data!()[rowOrIndex as number];
@@ -595,7 +595,7 @@ export class PanemuTableController<T> {
    * 4. Filtering
    * 5. Grouping
    * 
-   * Saving state only works if `TableOptions.stateKey` is defined. It has to be unique app-wide.
+   * Saving state only works if `TableOptions.saveState` is defined. The key has to be unique app-wide.
    * The state is stored in local storage. To save in db server, override `PanemuTableService.saveTableState`.
    */
   saveState() {
@@ -608,7 +608,7 @@ export class PanemuTableController<T> {
    * @see `PanemuTableController.saveState`
    */
   deleteState(reloadAfterDelete = true) {
-    this.stateManager.deleteTableState(this.tableOptions.stateKey).subscribe({
+    this.stateManager.deleteTableState(this.tableOptions.saveState?.key).subscribe({
       next: (_: any) => {
         if (reloadAfterDelete) {
           window.location.reload()
@@ -626,33 +626,46 @@ export class PanemuTableController<T> {
    * @see `PanemuTableController.saveState`
    */
   readState() {
-    return this.stateManager.getSavedTableState(this.tableOptions.stateKey, this.columnDefinition.structureKey)
+    return this.stateManager.getSavedTableState(this.tableOptions.saveState?.key, this.columnDefinition.structureKey)
   }
 
   private restoreState(state: TableState) {
-    this.criteria = state.criteria || [];
-    this.groupByColumns = state.groupByColumns || [];
-    this.startIndex = state.startIndex;
-    this.maxRows = state.maxRows;
-    this.sortedColumn = state.sorting ?? {};
-    const flattenStructure = this.getFlattenColumns(this.columnDefinition.mutatedStructure, []);
-    const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
-    for (const clmState of state.columns) {
-      const actualColumn = flattenStructure.find(item => item.__key == clmState.key);
-      if (!actualColumn) {
-        console.error(`unable to restore state for column key ${clmState.key}`);
-        return;
-      }
-      newStructure.push(actualColumn);
-      if (clmState.children?.length) {
-        const childStructure = this.restoreGroupState(clmState, flattenStructure);
-        (actualColumn as GroupedColumn).children = childStructure;
-      } else {
-        this.copyState(clmState, actualColumn);
-      }
+    const saveState = this.tableOptions.saveState;
+    if (saveState?.states?.includes('criteria') ?? true) {
+      this.criteria = state.criteria || [];
     }
-
-    this.columnDefinition.mutatedStructure = newStructure;
+    if (saveState?.states?.includes('groupByColumns') ?? true) {
+      this.groupByColumns = state.groupByColumns || [];
+    }
+    if (saveState?.states?.includes('startIndex') ?? true) {
+      this.startIndex = state.startIndex ?? 0;
+    }
+    if (saveState?.states?.includes('maxRows') ?? true) {
+      this.maxRows = state.maxRows ?? this._maxRows;
+    }
+    if (saveState?.states?.includes('sorting') ?? true) {
+      this.sortedColumn = state.sorting ?? {};
+    }
+    if ((saveState?.states?.includes('columns') ?? true) && state.columns) {
+      const flattenStructure = this.getFlattenColumns(this.columnDefinition.mutatedStructure, []);
+      const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
+      for (const clmState of state.columns) {
+        const actualColumn = flattenStructure.find(item => item.__key == clmState.key);
+        if (!actualColumn) {
+          console.error(`unable to restore state for column key ${clmState.key}`);
+          return;
+        }
+        newStructure.push(actualColumn);
+        if (clmState.children?.length) {
+          const childStructure = this.restoreGroupState(clmState, flattenStructure);
+          (actualColumn as GroupedColumn).children = childStructure;
+        } else {
+          this.copyState(clmState, actualColumn);
+        }
+      }
+  
+      this.columnDefinition.mutatedStructure = newStructure;
+    }
     this.relayout();
   }
 

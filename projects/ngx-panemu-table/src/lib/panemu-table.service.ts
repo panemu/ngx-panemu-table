@@ -379,7 +379,7 @@ export class PanemuTableService {
       virtualScrollRowHeight: 32,
       footer: null,
       calculateColumnWidthDelay: 500,
-      stateKey: ''
+      saveState: null
     };
     return defaultOptions;
   }

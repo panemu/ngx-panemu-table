@@ -1,6 +1,7 @@
 import { Signal, TemplateRef, Type } from "@angular/core";
 import { TableFooterComponent } from "../table-footer";
 import { PropertyColumn } from "../column/column";
+import { TableState } from "../state/table-states";
 
 /**
  * Interface for custom row renderer. The template root component should be a tr element.
@@ -151,10 +152,9 @@ export interface TableOptions<T> {
   calculateColumnWidthDelay: number
 
   /**
-   * Key to save and restore the state of the columns to localstorage.
-   * It should be unique app-wide
-   * 
+   * Save table states to local storage. The key should be unique app-wide. The states
+   * define what to save. If undefined, all states are saved.
    * @see https://ngx-panemu-table.panemu.com/usages/persist-states
    */
-  stateKey?: string  
+  saveState?: {key: string, states?: (keyof Omit<TableState, 'structureKey'>)[]} | null
 }

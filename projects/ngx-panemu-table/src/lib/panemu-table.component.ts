@@ -198,7 +198,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
 
     if (this.controller) {
       this.columnDefinition = this.controller.columnDefinition;
-      if (this.controller.tableOptions.stateKey) {
+      if (this.controller.tableOptions.saveState?.key) {
         this.pts['rebuildColumnDefinition'](this.columnDefinition);
       }
       this.controller['tableDisplayData'] = this.displayData.bind(this);

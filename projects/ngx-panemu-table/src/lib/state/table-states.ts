@@ -19,7 +19,7 @@ export interface ColumnState {
 }
 
 /**
- * States of table that can be saved and restored. The `TableOptions.stateKey` must be
+ * States of table that can be saved and restored. The `TableOptions.saveState.key` must be
  * uniquely defined to enable persisting states.
  */
 export interface TableState {
@@ -44,20 +44,20 @@ export interface TableState {
   /**
    * State of pagination start index.
    */
-  startIndex: number;
+  startIndex?: number;
 
   /**
    * State of pagination max rows
    */
-  maxRows: number;
+  maxRows?: number;
 
   /**
    * Sorting state
    */
-  sorting: { [key: string]: 'asc' | 'desc' };
+  sorting?: { [key: string]: 'asc' | 'desc' };
 
   /**
-   * Column structure state
+   * Column structure: width, stickiness, visibility and position
    */
-  columns: ColumnState[];
+  columns?: ColumnState[];
 }
