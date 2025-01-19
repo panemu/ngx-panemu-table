@@ -20,12 +20,6 @@ NgxPanemuTable is an Angular table component. It is designed to be easy to use. 
 
 To know how to install and use NgxPanemuTable, please check our [documentation](https://ngx-panemu-table.panemu.com/).
 
-## Demo
-
-[See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
-
-[![NgxPanemuTable Demo](https://img.youtube.com/vi/Qs4VbpteiRk/0.jpg)](https://www.youtube.com/watch?v=Qs4VbpteiRk)
-
 ## New Features:
 
 ### v.0.3.0

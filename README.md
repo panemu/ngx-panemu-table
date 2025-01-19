@@ -20,12 +20,6 @@ NgxPanemuTable is an Angular table component. It is designed to be easy to use. 
 
 To know how to install and use NgxPanemuTable, please check our [documentation](https://ngx-panemu-table.panemu.com/).
 
-## Demo
-
-[See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
-
-[![NgxPanemuTable Demo](https://img.youtube.com/vi/Qs4VbpteiRk/0.jpg)](https://www.youtube.com/watch?v=Qs4VbpteiRk)
-
 ## New Features:
 
 ### v.0.3.0
@@ -50,15 +44,28 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ### v.0.0.6
 
-* Cell expansion ✨
-* Export to CSV ✨
+* Cell expansion
+* Export to CSV
 
 ### v.0.0.5
 
 * Group multiple columns under one cell header
 
+## Development
 
-### Support Us
+This command is to watch code changes in lib source:
+
+```
+ng build ngx-panemu-table --watch
+```
+
+This command is to run the demo:
+
+```
+npm start
+```
+
+## Support Us
 
 <a href='https://ko-fi.com/s/60c660f1f0' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
