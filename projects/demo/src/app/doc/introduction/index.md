@@ -86,6 +86,11 @@ These features are not developed yet. Please create a ticket in [our repository]
 
 ## Releases:
 
+### v.0.4.0
+
+* [Breaking Change] Persist state now has a way to pick what states to save rather than always saving all states.
+[See this page](usages/persist-states).
+
 ### v.0.3.0
 
 * Inline editing

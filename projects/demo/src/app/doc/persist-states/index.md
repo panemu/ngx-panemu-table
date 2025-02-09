@@ -4,16 +4,16 @@ keyword: PersistStatesPage
 
 To activate the save table states feature, specify the `TableOptions.saveState` when instantiating table controller.
 
-```typescript {4}
+```typescript {4-10}
 controller = PanemuTableController.create<People>(
 	this.columns, 
 	this.datasource, 
 	{ saveState: {
-    key:'this_key_must_be_unique_app_wide',
-    
-    //leave states undefined to save all states. To only save, for example,
-    // which columns are sorted and column position, use ['sorting', 'columns']
-    states: undefined
+      key:'this_key_must_be_unique_app_wide',
+      
+      //leave states undefined to save all states. To only save, for example,
+      // which columns are sorted and column position, use ['sorting', 'columns']
+      states: undefined
   }
 });
 ```

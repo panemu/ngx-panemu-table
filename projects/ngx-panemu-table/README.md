@@ -22,6 +22,11 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ## New Features:
 
+### v.0.4.0
+
+* [Breaking Change] Persist state now has a way to pick what states to save rather than always saving all states.
+[See this page](https://ngx-panemu-table.panemu.com/usages/persist-states).
+
 ### v.0.3.0
 
 * Inline editing
