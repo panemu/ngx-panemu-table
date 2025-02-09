@@ -90,6 +90,7 @@ These features are not developed yet. Please create a ticket in [our repository]
 
 * [Breaking Change] Persist state now has a way to pick what states to save rather than always saving all states.
 [See this page](usages/persist-states).
+* Icons can be changed. See `*IconsPage`
 
 ### v.0.3.0
 

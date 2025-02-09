@@ -5,13 +5,13 @@ import { PanemuTableController, PanemuTableDataSource, PanemuTableService } from
   selector: 'icon-preview',
   standalone: true,
   template: `
-<div class="grid grid-cols-4 gap-y-4">
+<div class="grid grid-cols-4 gap-4">
   <div class="text-sm font-bold">CSS Class Name</div>
 	<div class="text-sm font-bold">Default (Material Symbols)</div>
 	<div class="text-sm font-bold underline"><a href="https://fontawesome.com/" target="_blank">FontAwesome</a></div>
 	<div class="text-sm font-bold underline"><a href="https://heroicons.com/" target="_blank">Hero Icon (svg)</a></div>
   @for (iconName of icons; track $index) {
-    <div class="">{{iconName}}</div>
+    <div class="text-sm">{{iconName}}</div>
     @for (wrapperClass of wrapperClasses; track $index) {
       <div class="{{wrapperClass}}">
         <span class="ngx-panemu-table-icon {{iconName}}"></span>
