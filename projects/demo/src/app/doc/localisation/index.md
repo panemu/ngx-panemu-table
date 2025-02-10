@@ -16,6 +16,6 @@ Notice the `searcForValueInColumn` has `{par0}` part. It is a variable that will
 
 One way to change some or all the translation is as follow:
 
-```typescript file="../../service/custom-panemu-table.service.ts" {8,13-14,17-19}
+```typescript file="../../service/custom-panemu-table.service.ts" {8,13-15,17-20}
 
 ```
