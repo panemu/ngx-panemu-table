@@ -1,12 +1,12 @@
 .custom-row-group {
   .panemu-table tbody {
 
-    tr:not(.row-group):not(.selected-row) {
+    tr:not(.row-group):not(.selected-row):not(:hover) {
       background-color: white;
     }
 
     tr.row-group {
-      background-color: rgb(240, 253, 244);
+      background-color: rgb(246, 246, 246);
     }
   }
 }
