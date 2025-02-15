@@ -161,27 +161,22 @@ export class PanemuTableService {
       column.groupable = column.groupable === undefined ? defaultOptions.groupable : column.groupable;
       column.sortable = column.sortable === undefined ? defaultOptions.sortable : column.sortable;
       column.filterable = column.filterable === undefined ? defaultOptions.filterable : column.filterable;
-      // column.groupByField = column.groupByField as string || column.field;
-      column.type = column.type;
+      column.type = column.type ?? ColumnType.STRING;
 
+      //Set default formatter
       if (!column.formatter) {
         switch (column.type) {
           case ColumnType.INT:
             column.formatter = this.getIntCellFormatter();
-            column.cellClass = column.cellClass || (() => 'number-cell')
             break;
           case ColumnType.DECIMAL:
             column.formatter = this.getDecimalCellFormatter();
-            column.cellClass = column.cellClass || (() => 'number-cell')
-
             break;
           case ColumnType.DATETIME:
             column.formatter = this.getDateTimeCellFormatter();
-            column.filterEditor = column.filterEditor || this.getDateTimeFilterComponent();
             break;
           case ColumnType.DATE:
             column.formatter = this.getDateCellFormatter();
-            column.filterEditor = column.filterEditor || this.getDateFilterComponent();
             break;
           case ColumnType.MAP:
             const mapColumn = (<MapColumn<any>>column);
@@ -189,16 +184,26 @@ export class PanemuTableService {
               mapColumn.valueMap = signal(mapColumn.valueMap);
             }
             column.formatter = this.getMapFormatter(mapColumn.valueMap as Signal<any>);
-            // if (!column.cellRenderer) {
-            //   column.cellRenderer = { component: MapCellRenderer }
-            // }
-            column.filterEditor = column.filterEditor || this.getMapFilterComponent();
             break;
           default:
             column.formatter = this.getDefaultCellFormatter();
         }
-      } else {
-        column.formatter = column.formatter;
+      }
+
+      // Set default cellClass
+      if (!column.cellClass && (column.type == ColumnType.INT || column.type == ColumnType.DECIMAL)) {
+        column.cellClass = (() => 'number-cell')
+      }
+
+      // Set default filterEditor
+      if (!column.filterEditor) {
+        if (column.type == ColumnType.DATETIME) {
+          column.filterEditor = this.getDateTimeFilterComponent();
+        } else if (column.type == ColumnType.DATE) {
+          column.filterEditor = this.getDateFilterComponent();
+        } else if (column.type == ColumnType.MAP) {
+          column.filterEditor = this.getMapFilterComponent();
+        }
       }
 
     } else if (baseColumn.type == ColumnType.TICK) {
