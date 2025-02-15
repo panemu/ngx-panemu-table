@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
 import { PropertyColumn } from '../../column/column';
+import { PanemuTableService } from '../../panemu-table.service';
 import { TableCriteria } from '../../table-query';
 import { FilterEditor } from './filter-editor';
 import { FilterEditorDirective } from './filter-editor.directive';
-import { PanemuTableService } from '../../panemu-table.service';
-import { StringCellEditor } from "../../editing/string-cell-editor";
 import { StringFilterComponent } from './string-filter.component';
 
 @Component({
@@ -28,9 +27,8 @@ export class FilterEditorComponent implements OnInit {
   value = signal<string|undefined|null>('');
   editor = viewChild<TemplateRef<any>>('editor');
   pts = inject(PanemuTableService);
-
-  constructor(private dialogRef: MatDialogRef<FilterEditorComponent, TableCriteria>,
-    private cdr: ChangeDetectorRef
+  labelTranslation = this.pts.getLabelTranslation();
+  constructor(private dialogRef: MatDialogRef<FilterEditorComponent, TableCriteria>
   ) {
 
   }

@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, WritableSignal } from '@angular/core';
+import { Component, inject, Input, OnInit, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PropertyColumn } from '../../column/column';
 import { TableCriteria } from '../../table-query';
 import { formatDateToIso } from '../../util';
 import { FilterEditor } from './filter-editor';
+import { PanemuTableService } from '../../panemu-table.service';
 
 @Component({
   standalone: true,
@@ -15,7 +16,8 @@ export class DateFilterComponent implements OnInit, FilterEditor {
   column!: PropertyColumn<any>;
   filter!: TableCriteria;
   value!: WritableSignal<string|undefined|null>
-  
+  pts = inject(PanemuTableService)
+  labelTranslation = this.pts.getLabelTranslation()
   txt = new FormControl('');
   
   ngOnInit(): void {

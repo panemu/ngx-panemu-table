@@ -1,6 +1,5 @@
 import { WritableSignal } from "@angular/core";
 import { BaseColumn } from "../../column/column";
-import { Filter } from "../filter";
 import { TableCriteria } from "../../table-query";
 
 /**

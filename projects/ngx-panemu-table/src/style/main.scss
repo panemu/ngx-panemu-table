@@ -717,7 +717,6 @@
     padding: 4px 12px;
     border-radius: 6px;
     font-size: 0.875rem;
-    border: none;
   }
 
   .btn:hover:enabled {
@@ -725,7 +724,7 @@
   }
 
   .btn:focus:enabled {
-    outline: 1px solid #aaaaaa;
+    // outline: 1px solid #aaaaaa;
   }
 
   .btn:active:enabled {
@@ -1051,5 +1050,12 @@
     &:hover {
       color: red;
     }
+  }
+}
+
+.panemu-date-filter {
+  .button-group {
+    display: flex;
+    gap: 0.5rem;
   }
 }

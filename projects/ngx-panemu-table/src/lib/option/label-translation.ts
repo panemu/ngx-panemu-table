@@ -26,5 +26,14 @@ export interface LabelTranslation {
     min: string
     max: string
     pattern: string
-  }
+  },
+  queryEditor: string
+  column: string
+  searchValue: string
+  stringRepresentation: string
+  cancel: string
+  apply: string
+  yesterday: string
+  today: string
+  tomorrow: string
 }
