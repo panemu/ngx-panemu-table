@@ -42,7 +42,7 @@ export class IconPreviewComponent implements OnInit {
     let mainCss: CSSStyleSheet | null = null;
     for (let index = 0; index < sheets.length; index++) {
       const element = sheets[index];
-      if (element.href?.endsWith('styles.css')) {
+      if (element.href?.includes('styles') && element.href?.endsWith('.css')) {
         mainCss = element;
         break;
       }
