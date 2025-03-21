@@ -25,23 +25,7 @@ import { PanemuTableController, PanemuTableDataSource, PanemuTableService } from
 })
 
 export class IconPreviewComponent implements OnInit {
-  icons: string[] = [
-    'icon-settings',
-    'icon-arrow_drop_down',
-    'icon-arrow_drop_up',
-    'icon-splitscreen_top',
-    'icon-close',
-    'icon-search',
-    'icon-check',
-    'icon-arrow_right',
-    'icon-expand_more',
-    'icon-chevron_right',
-    'icon-west',
-    'icon-east',
-    'icon-align_horizontal_left',
-    'icon-align_horizontal_right',
-    'icon-horizontal_distribute'
-  ];
+  icons: string[] = [];
 
   wrapperClasses = ['', 'fontawesome', 'heroicons'];
   pts = inject(PanemuTableService);
@@ -49,5 +33,32 @@ export class IconPreviewComponent implements OnInit {
   controller = PanemuTableController.create(this.columns, new PanemuTableDataSource());
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.readIconCssList();
+  }
+
+  private readIconCssList() {
+    let sheets = document.styleSheets;
+    let mainCss: CSSStyleSheet | null = null;
+    for (let index = 0; index < sheets.length; index++) {
+      const element = sheets[index];
+      if (element.href?.endsWith('styles.css')) {
+        mainCss = element;
+        break;
+      }
+    }
+    if (mainCss) {
+      let rules = mainCss.cssRules;
+      this.icons = []
+      for (let index = 0; index < rules.length; index++) {
+        const rule = rules[index];
+        if (rule instanceof CSSStyleRule) {
+          if (rule.selectorText.includes('.ngx-panemu-table-icon') && rule.selectorText.includes('::after')) {
+            this.icons.push(rule.selectorText.replace('::after', '').replace('.ngx-panemu-table-icon.', ''));
+          }
+        }
+      }
+    }
+  }
+  
 }

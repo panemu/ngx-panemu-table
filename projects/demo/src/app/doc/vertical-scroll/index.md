@@ -16,7 +16,7 @@ controller = PanemuTableController.create(
 );
 ```
 
-This basic example display all rows by enabling the `autoHeigh` thus disabling vertical scrolling.
+This basic example displays all rows by enabling the `autoHeigh` thus disabling vertical scrolling.
 
 {{ NgDocActions.demo("BasicComponent") }}
 
