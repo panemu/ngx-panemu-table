@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, input, OnInit, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, PanemuTableComponent, PanemuSettingComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
@@ -18,6 +18,7 @@ const DATA: People[] = [
 })
 
 export class BasicComponent implements OnInit {
+  showAddRowButton = input(false);
   pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
@@ -34,10 +35,10 @@ export class BasicComponent implements OnInit {
     },
     { field: 'verified' }
   ])
-
+  datasource = new PanemuTableDataSource([...DATA]);
   controller = PanemuTableController.create(
     this.columns,
-    new PanemuTableDataSource(DATA),
+    this.datasource,
     { 
       autoHeight: true
     },
@@ -45,6 +46,14 @@ export class BasicComponent implements OnInit {
   );
 
   ngOnInit() {
+    this.controller.reloadData();
+  }
+
+  addRow() {
+    const newRow = JSON.parse(JSON.stringify(DATA[DATA.length -1]));
+    newRow.id = this.controller.getAllData().length + 1;
+    newRow.name = 'New Name';
+    this.datasource.setData([...this.datasource.getAllData(), newRow]);
     this.controller.reloadData();
   }
 

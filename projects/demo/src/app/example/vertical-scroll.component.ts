@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
 import { ColumnType, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
-import {MatSliderModule} from '@angular/material/slider';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class VerticalScrollComponent {
   height = 300
+  pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -31,7 +32,7 @@ export class VerticalScrollComponent {
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit() {
 

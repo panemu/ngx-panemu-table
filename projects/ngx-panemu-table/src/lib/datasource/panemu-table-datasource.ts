@@ -35,7 +35,7 @@ export class PanemuTableDataSource<T> {
 
   /**
    * Get all data in this datasource from the `setData()` method or from the constructor.
-   * @returns 
+   * @returns the data in a new array
    */
   getAllData() {
     return [...this._data]

@@ -18,7 +18,8 @@ controller = PanemuTableController.create(
 
 This basic example displays all rows by enabling the `autoHeigh` thus disabling vertical scrolling.
 
-{{ NgDocActions.demo("BasicComponent") }}
+
+{{ NgDocActions.demo("BasicComponent", {inputs: {showAddRowButton: "true"} }) }}
 
 Below is the example of the table taking remaining vertical spaces.
 
