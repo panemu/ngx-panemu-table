@@ -9,16 +9,17 @@ keyword: BasicUsagePage
 
 2. A function to get the data. For basic usage, in which the sorting, filtering and grouping are done in client side, use `PanemuTableDataSource`.
 
-```typescript file="../../example/basic.component.ts"#L38-L45 {3}
-
+```typescript
+datasource = new PanemuTableDataSource([...DATA]);
+controller = PanemuTableController.create(this.columns, this.datasource)
 ```
 
 In that snippet, the `autoHeight` property is set to true. It will displays all rows and the table height will adjust accordingly.
 
-After that, pass the controller to `PanemuTableComponent`.
+After that, pass the controller to `PanemuTableComponent` in the html template.
 
-```html file="../../example/basic.component.html"#L1
-
+```html
+<panemu-setting [controller]="controller"/>
 ```
 
 Then call `PanemuTableController.reloadData` preferably in `ngOnInit` to render the data in the table.
@@ -35,9 +36,7 @@ When user click a column header, the sorting is handled by the datasource.
 For more advanced scenario, the data is from server and then broken down into several pages by the datasource. `PanemuPaginationComponent` provide the UI that allows user to enter arbitrary range, i.e: 34-47, and move between pages by clicking the previous and next button. Simply add the following in the html template:
 
 ```html
-...
 <panemu-pagination [controller]="controller"/>
-...
 ```
 
 {{ NgDocActions.demo("PaginationComponent") }}

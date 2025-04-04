@@ -186,6 +186,12 @@ EDIT MODE:
 ```typescript file="../../example/message-dialog/message-dialog.component.ts" group="message-dialog" name="message-dialog.component.ts"
 
 ```
+```html file="../../example/message-dialog/message-dialog.component.html" group="message-dialog" name="message-dialog.component.html"
+
+```
+```scss file="../../example/message-dialog/message-dialog.component.scss" group="message-dialog" name="message-dialog.component.scss"
+
+```
 ```typescript file="../../example/documentation.service.ts" group="message-dialog" name="documentation.service.ts"
 
 ```

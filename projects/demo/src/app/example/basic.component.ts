@@ -34,7 +34,8 @@ export class BasicComponent implements OnInit {
       ]
     },
     { field: 'verified' }
-  ])
+  ]);
+  
   datasource = new PanemuTableDataSource([...DATA]);
   controller = PanemuTableController.create(
     this.columns,
@@ -42,7 +43,6 @@ export class BasicComponent implements OnInit {
     { 
       autoHeight: true
     },
-    
   );
 
   ngOnInit() {
