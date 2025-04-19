@@ -294,6 +294,11 @@ export class PanemuTableService {
     }
   }
 
+  /**
+   * Default formatter for MapColumn (ColumnType.MAP)
+   * @param map 
+   * @returns 
+   */
   getMapFormatter(map: Signal<{ [key: string]: any }>): CellFormatter {
     return (val: any) => {
       return (map as any)()[val] ?? val;

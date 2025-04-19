@@ -718,10 +718,9 @@ export class PanemuTableController<T> {
    * @param options provide a way to exclude header or `RowGroup` rows.
    */
   exportToCsv(options?: { includeHeader?: boolean, includeRowGroup?: boolean }) {
-    const csvString = this.getCsvData(options);
-
-    const dl = "data:text/csv;charset=utf-8," + csvString;
-    window.open(encodeURI(dl))
+    let csvString = this.getCsvData(options);
+    const dl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvString);
+    window.location.href = dl;
   }
 
   set editingController(ec: PanemuTableEditingController<T> | undefined) {
