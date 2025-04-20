@@ -222,3 +222,9 @@ a.btn:hover {
 .btn:active:enabled {
   background-color: rgb(215, 215, 215);
 }
+
+.highlight {
+  background-color: rgba(50, 60, 100, 1);
+  color: white;
+  border-radius: 4px;
+}

@@ -1,3 +1,5 @@
+import { CellRenderer } from "../cell/cell"
+
 /**
  * Default values for `BaseColumn` and its extension.
  * 
@@ -29,4 +31,10 @@ export interface DefaultColumnOptions {
    * Allow the column to be filtered. Default true.
    */
   filterable?: boolean
+
+  /**
+   * Cell renderer for columns without it defined. If it is also undefined,
+   * it fallback to `PanemuTableService.getDefaultCellRenderer`.
+   */
+  cellRenderer?: CellRenderer
 }

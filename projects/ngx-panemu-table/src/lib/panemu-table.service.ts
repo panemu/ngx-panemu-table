@@ -226,7 +226,7 @@ export class PanemuTableService {
           parameter: baseColumn.expansion
         };
       } else {
-        baseColumn.cellRenderer = DefaultCellRenderer.create();
+        baseColumn.cellRenderer = defaultOptions.cellRenderer ?? this.getDefaultCellRenderer();
       }
     }
 
@@ -372,6 +372,7 @@ export class PanemuTableService {
       groupable: true,
       resizable: true,
       sortable: true,
+      cellRenderer: this.getDefaultCellRenderer()
     }
   }
 
@@ -498,4 +499,11 @@ export class PanemuTableService {
     return of(null);
   }
 
+  /**
+   * Override this method to specify default cell renderer globally.
+   * @returns cell renderer
+   */
+  getDefaultCellRenderer() {
+    return DefaultCellRenderer.create();
+  }
 }

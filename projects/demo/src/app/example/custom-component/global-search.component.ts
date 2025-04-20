@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -6,6 +6,7 @@ import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { CustomPaginationComponent } from './custom-pagination.component';
 import { GlobalSearchDataSource } from './global-search-datasource';
+import { HighlightCellRenderer } from './highlight-cell-renderer';
 
 @Component({
   selector: 'global-search',
@@ -16,6 +17,7 @@ import { GlobalSearchDataSource } from './global-search-datasource';
 
 export class GlobalSearchComponent implements OnInit {
   txtSearch = new FormControl('');
+  searchTerm = signal('')
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -26,7 +28,10 @@ export class GlobalSearchComponent implements OnInit {
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
     { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
-  ])
+  ], {
+    //use this custom cell renderer for all columns above
+    cellRenderer: HighlightCellRenderer.create({searchTerm: this.searchTerm})
+  })
   datasource = new GlobalSearchDataSource(this.columns);
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
@@ -44,6 +49,7 @@ export class GlobalSearchComponent implements OnInit {
     ).subscribe(val => {
       this.controller.criteria = [{ field: '', value: val }];
       this.controller.reloadData();
+      this.searchTerm.set(val?.trim() ?? '')
     })
   }
 

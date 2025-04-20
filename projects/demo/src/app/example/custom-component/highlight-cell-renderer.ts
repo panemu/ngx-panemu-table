@@ -1,0 +1,32 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, signal, Signal, TemplateRef } from '@angular/core';
+import { CellComponent, CellFormatterPipe, CellRenderer, PropertyColumn } from 'ngx-panemu-table';
+import { HighlightPipe } from './highlight.pipe';
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, HighlightPipe],
+  templateUrl: 'highlight-cell-renderer.html',
+})
+export class HighlightCellRenderer implements CellComponent<any>, OnInit {
+  row!: any;
+  column!: PropertyColumn<any>
+  parameter?: any;
+  searchTerm!: Signal<string>;
+  ngOnInit(): void {
+    this.searchTerm = this.parameter?.searchTerm ?? signal('');
+  }
+  
+  /**
+   * Create a custom cell renderer using `ng-template`.
+   * @param templateRef 
+   * @returns 
+   */
+  static create(parameter?: Record<string, any>): CellRenderer {
+    return {
+      component: HighlightCellRenderer,
+      parameter
+    }
+  }
+
+}
