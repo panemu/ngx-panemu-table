@@ -35,7 +35,7 @@ export class PersistStateComponent implements OnInit {
       field: 'email', expansion: {
         component: this.sendEmailTemplate,
         isDisabled: (row) => {
-          return row.country == 'Indonesia'
+          return row.country == 'ID'
         },
       }
     },

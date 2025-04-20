@@ -36,7 +36,7 @@ export class AllFeaturesClientComponent implements OnInit {
       field: 'email', width: 230, expansion: {
         component: this.sendEmailTemplate,
         isDisabled: (row) => {
-          return row.country == 'Indonesia'
+          return row.country == 'ID'
         },
       }
     },
