@@ -12,6 +12,18 @@ const tagsToReplace: any = {
   standalone: true
 })
 export class HighlightPipe implements PipeTransform {
+
+
+  /**
+   * Some of unused parameters here are actually used for Angular pipe memoization
+   * @param value 
+   * @param row 
+   * @param column 
+   * @param formatter 
+   * @param valueMap 
+   * @param searchTerm 
+   * @returns 
+   */
   transform(value: any, row?: any, column?: PropertyColumn<any>, formatter?:CellFormatter, valueMap?: any, searchTerm?: string): any {
     if (column?.formatter) {
       value = column.formatter!(value, row, column)

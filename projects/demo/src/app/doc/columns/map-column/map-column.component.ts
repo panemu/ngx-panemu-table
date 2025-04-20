@@ -1,11 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { Component, OnInit, Signal, signal } from '@angular/core';
+import { ColumnType, MapColumn, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 
-interface Data { gender: string }
+interface Data { gender?: string }
 
 const DATA: Data[] = [
   { "gender": "F" },
-  { "gender": "F" },
+  {  },
   { "gender": "M" },
   { "gender": "M" },
   { "gender": "F" }
@@ -33,6 +33,17 @@ export class MapColumnComponent implements OnInit {
       type: ColumnType.MAP,
       label: 'Signal of Map',
       valueMap: this.genderMap
+    },
+    {
+      field: 'gender',
+      type: ColumnType.MAP,
+      label: 'Custom Formatter',
+      valueMap: this.genderMap,
+      formatter: (val, rowData, column) => {
+        const mapColumn = column as MapColumn<Data>;
+        const formattedValue = (mapColumn.valueMap as Signal<string>)()[val]
+        return formattedValue ? val + ' - ' + formattedValue : val;
+      }
     },
   ])
 

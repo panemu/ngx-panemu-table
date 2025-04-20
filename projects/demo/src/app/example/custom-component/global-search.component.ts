@@ -30,7 +30,7 @@ export class GlobalSearchComponent implements OnInit {
     { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
   ], {
     //use this custom cell renderer for all columns above
-    cellRenderer: HighlightCellRenderer.create({searchTerm: this.searchTerm})
+    cellRenderer: HighlightCellRenderer.create(this.searchTerm)
   })
   datasource = new GlobalSearchDataSource(this.columns);
   controller = PanemuTableController.create<People>(this.columns, this.datasource);

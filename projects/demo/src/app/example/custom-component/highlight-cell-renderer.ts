@@ -13,19 +13,15 @@ export class HighlightCellRenderer implements CellComponent<any>, OnInit {
   column!: PropertyColumn<any>
   parameter?: any;
   searchTerm!: Signal<string>;
+  
   ngOnInit(): void {
     this.searchTerm = this.parameter?.searchTerm ?? signal('');
   }
   
-  /**
-   * Create a custom cell renderer using `ng-template`.
-   * @param templateRef 
-   * @returns 
-   */
-  static create(parameter?: Record<string, any>): CellRenderer {
+  static create(searchTerm: Signal<string>): CellRenderer {
     return {
       component: HighlightCellRenderer,
-      parameter
+      parameter: {searchTerm}
     }
   }
 

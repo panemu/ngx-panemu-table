@@ -19,7 +19,7 @@ Below is the code of the datasource.
 
 ```
 
-That example uses custom cell renderer to hight light text matching search term.
+That example also uses custom `CellRenderer` to hight light texts matching search term.
 
 ```typescript name="highlight-cell-renderer.ts" file="../../example/custom-component/highlight-cell-renderer.ts" group="highlight-cell-renderer"
 

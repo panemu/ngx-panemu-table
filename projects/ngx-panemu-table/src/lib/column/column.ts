@@ -150,7 +150,7 @@ export interface BaseColumn<T> {
   cellStyle?: (value: any, row: T) => string;
 
   /**
-   * Automatically generated. Must be unique. It allows table to have multiple columns with the same field.
+   * Automatically generated. Always unique. It allows table to have multiple columns with the same field.
    */
   __key?: string
 
