@@ -86,9 +86,7 @@ export class InlineEditing5Component {
 
   scrollDown() {
     const viewport = document.getElementsByTagName('cdk-virtual-scroll-viewport')[0];
-    // viewport.dispatchEvent(new Event('scroll'));
     viewport.scrollTo(0, viewport.scrollHeight);
-    this.cdr.markForCheck();
   }
   
   scrollUp() {

@@ -184,7 +184,7 @@ export class PanemuTableEditingController<T> {
    * null for column you don't want to be editable. Use `BaseColumn.__key` property to identify
    * the column.
    * 
-   * This method works in conjuction with `createFormControl`. This method is only
+   * This method works in conjunction with `createFormControl`. This method is only
    * called when the `column.field` has formControl value returned by createFormControl.
    * 
    * @param renderer 

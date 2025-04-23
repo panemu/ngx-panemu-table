@@ -21,7 +21,7 @@ class EditingController extends SampleEditingController<any> {
     super(docService)
   }
 
-  form: { [f in keyof Required<any>]: () => AbstractControl | undefined } = {
+  form: { [f : string]: () => AbstractControl | undefined } = {
     id: () => undefined,
     name: () => new FormControl('', { updateOn: 'blur', validators: [Validators.required, Validators.maxLength(15), Validators.minLength(5)] }),
     address: () => new FormGroup(
