@@ -7,7 +7,7 @@ import { TickHeaderRenderer } from "../cell/tick-header-renderer";
 import { isDataRow } from "../util";
 
 /**
- * 
+ *
  */
 export class TickColumnClass<T> implements PropertyColumn<T> {
   type = ColumnType.TICK;
@@ -19,6 +19,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
   visible?: boolean;
   cellClass?: (value: any, row?: T) => string;
   __key?: string;
+  label?: string;
   constructor(tickColumn?: TickColumn<T>) {
     if (tickColumn) {
       Object.assign(this, tickColumn);
@@ -27,7 +28,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
     this.cellRenderer = tickColumn?.cellRenderer ||  {
       component: TickCellComponent,
     };
-    
+
     if (!this.cellClass) {
       this.cellClass = (_) => 'tick-cell'
     }
@@ -43,12 +44,12 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Set passed row to be ticked/unticked.
-   * 
+   *
    * @param ticked true to tick
    * @param row row to tick or untick
    */
   setTicked(ticked: boolean, row: T) {
-    
+
     if (ticked && !this.selections().includes(row)) {
       this.selections.update(vals => [...vals, row])
     } else if (!ticked && this.selections().includes(row)) {
@@ -58,10 +59,10 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Tick or untick row by row index. RowGroup can't be ticked.
-   * 
+   *
    * @param ticked true to tick
-   * @param index 
-   * @returns 
+   * @param index
+   * @returns
    */
   setTickedByRowIndex(ticked: boolean, index: number) {
     if (index < 0 || this.__data().length <= index) {
@@ -76,7 +77,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Set all rows to be ticked / unticked. RowGroup can't be ticked.
-   * 
+   *
    * @param ticked true to tick
    */
   setTickedAll(ticked: boolean) {
@@ -96,9 +97,9 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Check if passed row is ticked.
-   * 
-   * @param row 
-   * @returns 
+   *
+   * @param row
+   * @returns
    */
   isTicked(row: T) {
     return this.selections().includes(row);
@@ -106,8 +107,8 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Get list of ticked rows as signal
-   * 
-   * @returns 
+   *
+   * @returns
    */
   getTickedRowsAsSignal() {
     return this.selections.asReadonly()
@@ -115,7 +116,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
 
   /**
    * Get ticked rows
-   * @returns 
+   * @returns
    */
   getTickedRows() {
     return this.selections();
