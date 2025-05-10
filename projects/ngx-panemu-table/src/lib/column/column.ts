@@ -284,6 +284,7 @@ export interface GroupedColumn extends Pick<BaseColumn<any>, 'type' | 'label' | 
   type: ColumnType.GROUP
   label: string
   children: (GroupedColumn | NonGroupColumn<any>)[]
+  headerRenderer?: HeaderRenderer
 }
 
 // export interface DetailColumn {

@@ -1,4 +1,5 @@
 import { CellRenderer } from "../cell/cell"
+import { HeaderRenderer } from "../cell/header"
 
 /**
  * Default values for `BaseColumn` and its extension.
@@ -37,4 +38,6 @@ export interface DefaultColumnOptions {
    * it fallback to `PanemuTableService.getDefaultCellRenderer`.
    */
   cellRenderer?: CellRenderer
+
+  headerRenderer?: HeaderRenderer
 }

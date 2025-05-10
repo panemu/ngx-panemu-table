@@ -17,6 +17,8 @@ import { generateStructureKey, mergeDeep } from './util';
 import { Observable, of } from 'rxjs';
 import { DEFAULT_LABEL_TRANSLATION } from './option/default-label-translation';
 import { DateTimeFilterComponent } from './query/editor/date-time-filter.component';
+import { HeaderRenderer } from '../public-api';
+
 const GROUP_KEY_PREFIX = 'group_';
 
 @Injectable({
@@ -35,8 +37,15 @@ export class PanemuTableService {
    * @returns 
    */
   buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T> {
+    const defaultOptions = this.getColumnOptions();
+    if (options) {
+      mergeDeep(defaultOptions, options);
+    } else {
+      options = defaultOptions;
+    }
+    
     let bodyColumns = this.buildBody(columns);
-    this.initColumns(bodyColumns, options);
+    this.initColumns(bodyColumns, defaultOptions);
     let headerRows: HeaderRow[] = [];
     this.buildHeaders(headerRows, columns, 0, this.getDepth(columns, 0), signal(0));
     
@@ -50,6 +59,10 @@ export class PanemuTableService {
   }
 
   private rebuildColumnDefinition(columnDef: ColumnDefinition<any>) {
+    /**
+     * This method is used by PanemuTableController.
+     * Marked as private to avoid usage by developer
+     */
     let bodyColumns = this.buildBody(columnDef.mutatedStructure);
     let headerRows: HeaderRow[] = [];
     this.buildHeaders(headerRows, columnDef.mutatedStructure, 0, this.getDepth(columnDef.mutatedStructure, 0), signal(0));
@@ -73,7 +86,8 @@ export class PanemuTableService {
   private buildHeaders<T>(wholeResult: HeaderRow[], headers: (GroupedColumn | NonGroupColumn<T>)[],
     level: number,
     totalDepth: number,
-    groupIndex: WritableSignal<number>
+    groupIndex: WritableSignal<number>,
+    defaultOptions?: Required<DefaultColumnOptions>
   ) {
 
     if (!wholeResult[level]) {
@@ -84,19 +98,18 @@ export class PanemuTableService {
     for (const h of headers) {
       if (h.type == ColumnType.GROUP) {
         const clmGroup = h as GroupedColumn;
+        clmGroup.headerRenderer = clmGroup.headerRenderer ?? defaultOptions?.headerRenderer ?? this.getDefaultHeaderRenderer();
         let groupDepth = this.getDepth(clmGroup.children, 0);
         let groupRowSpan = totalDepth - groupDepth - level;
         let currentGroupIndex = groupIndex();
         groupIndex.update(i => i + 1);
-        let childrenColSpan = this.buildHeaders(wholeResult, clmGroup.children, level + groupRowSpan, totalDepth, groupIndex);
+        let childrenColSpan = this.buildHeaders(wholeResult, clmGroup.children, level + groupRowSpan, totalDepth, groupIndex, defaultOptions);
 
         if (childrenColSpan) {
-          //{ colSpan: childrenColSpan, label: h.label!, rowSpan: groupRowSpan, headerRenderer: DefaultHeaderRenderer.create(), isGroup: true }
           let groupHeader: BaseColumn<any> = {
+            ...clmGroup,
             __colSpan: childrenColSpan,
-            label: clmGroup.label!,
             __rowSpan: groupRowSpan,
-            headerRenderer: DefaultHeaderRenderer.create(),
             __isGroup: true,
             __key: GROUP_KEY_PREFIX + currentGroupIndex,
           }
@@ -133,11 +146,8 @@ export class PanemuTableService {
   }
 
 
-  private initColumns<T>(columns: BaseColumn<T>[], options?: DefaultColumnOptions): BaseColumn<T>[] {
-    const defaultOptions = this.getColumnOptions();
-    if (options) {
-      mergeDeep(defaultOptions, options);
-    }
+  private initColumns<T>(columns: BaseColumn<T>[], defaultOptions: Required<DefaultColumnOptions>): BaseColumn<T>[] {
+    
 
     columns.forEach((item, index) => this.initColumn(item, index, defaultOptions))
 
@@ -372,7 +382,8 @@ export class PanemuTableService {
       groupable: true,
       resizable: true,
       sortable: true,
-      cellRenderer: this.getDefaultCellRenderer()
+      cellRenderer: this.getDefaultCellRenderer(),
+      headerRenderer: this.getDefaultHeaderRenderer()
     }
   }
 
@@ -505,5 +516,13 @@ export class PanemuTableService {
    */
   getDefaultCellRenderer() {
     return DefaultCellRenderer.create();
+  }
+
+  /**
+   * Override this method to specify default header renderer globally.
+   * @returns HeaderRenderer
+   */
+  getDefaultHeaderRenderer(): HeaderRenderer {
+    return DefaultHeaderRenderer.create()
   }
 }
