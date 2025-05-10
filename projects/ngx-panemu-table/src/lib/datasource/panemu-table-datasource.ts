@@ -130,32 +130,37 @@ export class PanemuTableDataSource<T> {
       return result;
     }
 
-    result = result.filter((a: any) => {
+    result = result.filter((row: any) => {
       let filterResult = false;
       for (const crit of tableCriteria) {
-        let value = a[crit.field];
+        let fieldValue = row[crit.field];
         let hasBeenChecked = false;
         if (typeof crit.value == 'string') {
           if (crit.value.includes(BETWEEN_EQ_START_EQ_END)) {
-            filterResult = this.betweenFilter(BETWEEN_EQ_START_EQ_END, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_START_EQ_END, fieldValue, crit.value);
             hasBeenChecked = true;
           } else if (crit.value.includes(BETWEEN_EQ_START)) {
-            filterResult = this.betweenFilter(BETWEEN_EQ_START, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_START, fieldValue, crit.value);
             hasBeenChecked = true;
           } else if (crit.value.includes(BETWEEN_EQ_END)) {
-            filterResult = this.betweenFilter(BETWEEN_EQ_END, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN_EQ_END, fieldValue, crit.value);
             hasBeenChecked = true;
           } else if (crit.value.includes(BETWEEN)) {
-            filterResult = this.betweenFilter(BETWEEN, value, crit.value);
+            filterResult = this.betweenFilter(BETWEEN, fieldValue, crit.value);
             hasBeenChecked = true;
           }
         }
         if (!hasBeenChecked) {
-          if (typeof value == 'number') {
-            filterResult = value == (+crit.value)
+          if (typeof fieldValue == 'number') {
+            filterResult = fieldValue == (+crit.value)
           } else {
-            value = value + '';
-            filterResult = (value).toLowerCase().includes((crit.value + '').replaceAll('"', '').toLowerCase() )
+            let stringFieldValue = String(fieldValue).trim();
+            let stringCriteriaValue = String(crit.value).trim();
+            if (stringCriteriaValue.startsWith('"') && stringCriteriaValue.endsWith('"')) {
+              filterResult = stringCriteriaValue === `"${stringFieldValue}"`; //exact match
+            } else {
+              filterResult = stringFieldValue.toLowerCase().includes(stringCriteriaValue.toLowerCase() )
+            }
           }
         }
         if (!filterResult) {
