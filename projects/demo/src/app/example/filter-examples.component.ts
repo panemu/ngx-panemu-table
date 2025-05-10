@@ -36,6 +36,7 @@ export class FilterExamplesComponent {
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {
+      result[2].name = 'Abagail Kingscote 2';
       this.datasource.setData(result);
       this.controller.reloadData();
     })
@@ -95,5 +96,8 @@ export class FilterExamplesComponent {
     this.controller.reloadData();
   }
 
-  
+  nameExact() {
+    this.controller.criteria = [{ field: 'name', value: '"Abagail Kingscote"' }]
+    this.controller.reloadData();
+  }
 }

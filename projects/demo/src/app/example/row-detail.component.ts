@@ -45,10 +45,6 @@ export class RowDetailComponent {
       }
     },
     {field: 'last_login'},
-    {field: 'last_login'},
-    {field: 'last_login'},
-    {field: 'last_login'},
-    {field: 'last_login'},
     this.clmEditInExpansion,
   ])
   datasource = new PanemuTableDataSource<People>();

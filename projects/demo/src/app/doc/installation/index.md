@@ -26,6 +26,12 @@ Open the main style file. Usually `src/styles.scss` or `src/styles.css`. Add the
 > **Warning**
 > If your project uses Angular Material, you don't need to import `indigo-pink.css`
 
+Check `package.json` if there is no `@angular/animations`, install it with this command:
+
+```
+npm i @angular/animations
+```
+
 Ensure `provideAnimations()` is in `app.config.ts` provider array. If it's not there, please add it.
 
 ```typescript name="app.config.ts" {1,6}
