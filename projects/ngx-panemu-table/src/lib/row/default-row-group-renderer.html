@@ -1,6 +1,6 @@
-<td mat-cell [attr.colspan]="colSpan" [style]="'padding-left: '+(rowGroup.level * 20) + 'px;'">
+<td mat-cell [attr.colspan]="colSpan">
   <div class="group-row">
-    <div class="group-cell" (click)="expandAction(rowGroup, showPagination)">
+    <div class="group-cell" (click)="expandAction(rowGroup, showPagination)" [style]="'left: '+(rowGroup.level * 1) + 'rem;'">
       <span class="ngx-panemu-table-icon icon-arrow_drop_down icon-big" *ngIf="rowGroup.expanded"></span>
       <span class="ngx-panemu-table-icon icon-arrow_right icon-big" *ngIf="!rowGroup.expanded"></span>
       @if (contentComponent) {
