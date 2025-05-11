@@ -11,7 +11,7 @@ import { CellClassPipe } from "./cell/cell-class.pipe";
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
-import { BaseColumn, ColumnDefinition, ColumnType, HeaderRow, PropertyColumn } from './column/column';
+import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, PropertyColumn } from './column/column';
 import { CellEditorRendererDirective } from "./editing/cell-editor-renderer.directive";
 import { EditingInfo } from "./editing/editing-info";
 import { TableOptions } from './option/options';
@@ -82,9 +82,10 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   overlay = inject(Overlay);
   dialogRef?: DialogRef<any, any>;
   colWidthInitiated = false;
-
+  cellPadding = '1rem';
   constructor() {
-    
+    const element = document.documentElement; // Or any specific element
+    this.cellPadding = getComputedStyle(element).getPropertyValue('--pnm-table-cell-padding') || '0px';
 
     effect(() => {
       if (this.colElements() && this.colElements().length) {
@@ -183,10 +184,118 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     }
     this.matTable?.nativeElement.setAttribute('resized','');
     if (styleLeft || styleRight) {
+      this.resetGroupedColumnStickyInfo();
       this.cdr.markForCheck();
     }
 
     
+  }
+
+  private resetGroupedColumnStickyInfo() {
+    
+    this.columnDefinition.header.forEach(headerRow => {
+      headerRow.cells.forEach(aCell => {
+        if (aCell.__isGroup) {
+          const si2 = this.calculateStickyInfoRecursively((aCell as GroupedColumn).children)
+
+          let left = 0;
+          let contentLeft = 0;
+
+          if (si2.leftWidth) {
+            if (si2.totalWidth > si2.leftWidth) {
+              left = si2.leftWidth - si2.totalWidth + si2.minLeft;
+              contentLeft = si2.minLeft;
+            } else {
+              left = si2.minLeft;
+            }
+          }
+
+          let right = 0;
+          let contentRight = 0;
+
+          if (si2.rightWidth) {
+            if (si2.totalWidth > si2.rightWidth) {
+              right = si2.rightWidth - si2.totalWidth + si2.minRight
+              contentRight = si2.minRight;
+            } else {
+              right = si2.minRight;
+            }
+          }
+          let stickyInfo = {left, contentLeft, right, contentRight, stickyLeft: si2.stickyLeft, stickyRight: si2.stickyRight}
+
+          if (stickyInfo.stickyLeft) {
+            aCell.sticky = 'start';
+            aCell.__leftStyle = stickyInfo.left;
+            (aCell as any).__contentStyle = `left: calc(${this.cellPadding} + ${stickyInfo.contentLeft}px)`;
+          }
+          
+          if (stickyInfo.right != 0) {
+            aCell.sticky = 'end';
+            aCell.__rightStyle = stickyInfo.right;
+            (aCell as any).__contentStyle = `right: ${stickyInfo.contentRight}px`;
+          }
+        }
+      })
+    })
+  }
+
+  private calculateStickyInfoRecursively(groupChildren: BaseColumn<any>[]): {
+    leftWidth: number
+    minLeft: number
+    stickyLeft: boolean
+    rightWidth: number
+    minRight: number
+    stickyRight: boolean
+    totalWidth: number
+  } {
+    let totalWidth = 0;
+    
+    let leftWidth = 0;
+    let minLeft = Number.MAX_VALUE;
+    let stickyLeft = false;
+    
+    let rightWidth = 0;
+    let minRight = Number.MAX_VALUE
+    let stickyRight = false;
+    
+    if (!groupChildren?.length) {
+      return {leftWidth, minLeft, stickyLeft, rightWidth, minRight, stickyRight, totalWidth}
+    }
+    for (const child of groupChildren) {
+      if ((child as GroupedColumn).children?.length) {
+        let result = this.calculateStickyInfoRecursively((child as GroupedColumn).children)
+        
+        leftWidth += result.leftWidth;
+        minLeft = Math.min(minLeft, result.minLeft)
+        if (!stickyLeft) {
+          stickyLeft = result.stickyLeft
+        }
+
+        rightWidth += result.rightWidth;
+        minRight = Math.min(minRight, result.minRight)
+        if (!stickyRight) {
+          stickyRight = result.stickyRight
+        }
+
+        totalWidth += result.totalWidth;
+      } else {
+        const columnWidth = child.width ?? 0;
+        totalWidth += columnWidth;
+        if (child.sticky == 'start') {
+          const leftStyle = child.__leftStyle ?? 0;
+          leftWidth += columnWidth;
+          minLeft = Math.min(minLeft, leftStyle);
+          stickyLeft = true;
+        } else if (child.sticky == 'end') {
+          const rightStyle = child.__rightStyle ?? 0;
+          rightWidth += columnWidth;
+          minRight = Math.min(minRight, rightStyle);
+          stickyRight = true;
+        }
+      }
+    }
+    
+    return {leftWidth, minLeft, stickyLeft, rightWidth, minRight, stickyRight, totalWidth}
   }
 
   afterColumnResize() {

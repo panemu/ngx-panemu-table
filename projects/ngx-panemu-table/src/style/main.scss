@@ -1,5 +1,9 @@
 @import './icon.scss';
 
+:root {
+  --pnm-table-cell-padding: 1rem;
+}
+
 .panemu-table,
 .panemu-query,
 .panemu-groupby,
@@ -84,7 +88,7 @@
     tr td,
     tr th {
       border-bottom: 1px solid #dedede;
-      padding: 0 1rem;
+      padding: 0 var(--pnm-table-cell-padding);
     }
 
     tr.row-group td {
@@ -166,6 +170,15 @@
 
   }
 
+  th.sticky[group="true"] {
+    overflow: unset;
+    z-index: 0;
+    .column-header {
+      position: sticky;
+      width: fit-content;
+      left: var(--pnm-table-cell-padding);
+    }
+  }
 
   .column-header {
     display: flex;
@@ -960,8 +973,10 @@
   &.draggable.cdk-drag-preview {
     border-color: rgb(96, 165, 250);
     background-color: rgb(219 234 254 / 0.5);
+  }
 
-    .hover-child-inverse-display {
+  &.draggable.cdk-drag-preview {
+    .hover-child-inverse-display, .hover-child-flex {
       display: none;
     }
   }
