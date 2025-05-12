@@ -79,6 +79,12 @@ export interface RowOptions<T> {
   rowStyle?: (row: T) => string;
 
   /**
+   * Callback for double click on data row. If table is not in browse mode, it isn't called.
+   * @param row data
+   */
+  onDoubleClick?: (row: T) => void;
+
+  /**
    * It provides a way to build your own tr-td tags in the table body for example
    * if you need to implement cell or row spanning.
    * 

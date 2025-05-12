@@ -41,7 +41,12 @@ export class BasicComponent implements OnInit {
     this.columns,
     this.datasource,
     { 
-      autoHeight: true
+      autoHeight: true,
+      rowOptions: {
+        onDoubleClick: (row) => {
+            this.onDoubleClick(row)
+        },
+      }
     },
   );
 
@@ -57,4 +62,7 @@ export class BasicComponent implements OnInit {
     this.controller.reloadData();
   }
 
+  onDoubleClick(row: People) {
+    alert('A row was double clicked: ' + row.name)
+  }
 }

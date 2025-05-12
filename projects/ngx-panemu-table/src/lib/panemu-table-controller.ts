@@ -854,4 +854,9 @@ export class PanemuTableController<T> {
     })
   }
 
+  onDoubleClick(row: T) {
+    if (this._mode() == 'browse') {
+      this.tableOptions.rowOptions?.onDoubleClick?.(row)
+    }
+  }
 }

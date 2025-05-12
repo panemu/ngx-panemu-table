@@ -135,7 +135,9 @@
   <tr class="row {{row | rowStyling:tableOptions.rowOptions.rowClass}}"
   [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
   [class.selected-row]="_controllerSelectedRowSignal() == row"
-  (click)="selectRow(row)">
+  (click)="selectRow(row)"
+  (dblclick)="onDoubleClick(row)"
+  >
     @for (column of _visibleColumns; track column) {
       <td
       class="default-cell {{column.__key!}} {{row[column.field] | cellClass:row:_controllerSelectedRowSignal() == row:column.__key!:controller.mode():controller.editingController:column.cellClass}}"

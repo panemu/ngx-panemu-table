@@ -635,4 +635,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
      */
     this.controller?.editingController?._reset();
   }
+
+  onDoubleClick(row: T) {
+    this.controller.onDoubleClick(row)
+  }
 }
