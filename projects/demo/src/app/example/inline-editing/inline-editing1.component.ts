@@ -110,7 +110,12 @@ export class InlineEditing1Component implements OnInit {
     )
   }
   controller = PanemuTableController.createWithCustomDataSource<People>(this.columns, this.retrieveDataFunction, {
-    autoHeight: true
+    autoHeight: true,
+    rowOptions: {
+      onDoubleClick: (row) => {
+        console.log('row double clicked', row)
+      }
+    }
   });
 
   resetData() {
