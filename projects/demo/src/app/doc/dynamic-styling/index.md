@@ -21,15 +21,15 @@ To specify cell class or style dynamically, specify the factory function in `Bas
 To specify row class and style dynamically, define the logic in `RowOptions` object and pass it to the controller.
 
 ```typescript
-controller = PanemuTableController.create<People>(this.columns, this.datasource, {
-  
-  rowClass: (row: People) => row.country == 'ID' ? 'indonesia' : '',
-  
-  rowStyle: (row) => {
-    if (row.gender == 'F') return 'color: red;'
-    return '';
-  }
-});
+controller = PanemuTableController.create<People>(this.columns, this.datasource, { 
+  rowOptions: {
+    rowClass: (row: People) => {
+      return row.country == 'ID' ? 'indonesia' : '';
+    },
+    rowStyle: (row) => {
+      return row.gender == 'F' ? 'color: red;' : '';
+    }
+  }});
 ```
 
 In below example, Indonesian (country code ID) are bold and Female are red. Indonesian female are bold and red. When a row is selected the texts are underlined.

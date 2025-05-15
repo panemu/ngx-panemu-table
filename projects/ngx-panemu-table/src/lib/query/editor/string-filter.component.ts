@@ -18,12 +18,7 @@ export class StringFilterComponent implements OnInit, FilterEditor {
   txt = new FormControl('');
   constructor() {
     effect(() => {
-      console.log('signal', this.value())
-      // if (this.value()) {
-        this.txt.setValue(this.value() ?? null)
-      // } else {
-        // this.txt.setValue(null)
-      // }
+      this.txt.setValue(this.value() ?? null)
     })
   }
   ngOnInit(): void {

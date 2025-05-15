@@ -29,12 +29,10 @@ export class DynamicRowStyleComponent implements OnInit {
   controller = PanemuTableController.create<People>(this.columns, this.datasource, { rowOptions: {
     // rowSelection: false,
     rowClass: (row: People) => {
-      if (row.country == 'ID') return 'indonesia';
-      return '';
+      return row.country == 'ID' ? 'indonesia' : '';
     },
     rowStyle: (row) => {
-      if (row.gender == 'F') return 'color: red;'
-      return '';
+      return row.gender == 'F' ? 'color: red;' : '';
     }
   }});
 

@@ -24,7 +24,6 @@ export class CellEditorRendererDirective implements OnChanges, OnDestroy {
   }
 
   recreateElement(): void {
-    // console.log('CellEditorRendererDirective recreateElement')
     this.componentRef?.destroy();
 
     if (this.editor?.formControl) {

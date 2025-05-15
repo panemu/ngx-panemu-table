@@ -6,7 +6,7 @@ import { RowGroup } from './row-group';
   selector: '[rowGroupFooterRenderer]',
   standalone: true
 })
-export class RowGroupFooterRendererDirective implements OnChanges, OnInit, OnDestroy {
+export class RowGroupFooterRendererDirective implements OnInit, OnDestroy {
   @Input() rowGroupFooterRenderer!: RowGroupRenderer;
   @Input() colSpan!: number;
   @Input() rowGroup!: RowGroup;
@@ -24,11 +24,6 @@ export class RowGroupFooterRendererDirective implements OnChanges, OnInit, OnDes
   }
   ngOnInit(): void {
     this.recreateElement();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.log('changes')
-    // this.recreateElement();
   }
 
   recreateElement(): void {

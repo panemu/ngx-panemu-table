@@ -29,7 +29,6 @@ export class TransposeDialogComponent implements OnInit {
       debounceTime(250),
       distinctUntilChanged(),
     ).subscribe(val => {
-      console.log('filtering...')
       val = val?.trim().toLowerCase() || ''
 
       if (val) {
