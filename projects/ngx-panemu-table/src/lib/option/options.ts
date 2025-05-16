@@ -164,5 +164,9 @@ export interface TableOptions<T> {
    */
   saveState?: {key: string, states?: (keyof Omit<TableState, 'structureKey'>)[]} | null
 
+  /**
+   * Error handler for the controller. If unspecified, it uses `PanemuTableService.handleError`
+   * @param error 
+   */
   errorHandler: (error: any) => void;
 }

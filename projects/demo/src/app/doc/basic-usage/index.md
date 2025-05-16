@@ -29,7 +29,7 @@ Then call `PanemuTableController.reloadData` preferably in `ngOnInit` to render 
 
 {{ NgDocActions.demo("BasicComponent") }}
 
-When user click a column header, the sorting is handled by the datasource.
+When user click a column header, the sorting is handled by the datasource. Double clicking a row triggers an action specified in `RowOptions.onDoubleClick`.
 
 ## Client Side Pagination
 

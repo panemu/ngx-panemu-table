@@ -1,20 +1,21 @@
 <div class="flex flex-col h-[500px]">
-  <div class="flex justify-between mb-2 items-end">
-    <div>
+  <div class="flex gap-4 mb-2 items-center">
+    <div class="text-sm">
       Error Handler
       <select class="form-select" [formControl]="cmbErrorHandler">
-        <option value="pts">PanemuTableService (Global)</option>
-        <option value="controller">PanemuTableController (Local)</option>
+        <option value="pts">Table Service (Global)</option>
+        <option value="controller">Current Controller (Local)</option>
       </select>
     </div>
-    <div>
-      <button class="btn" [class.text-red-600]="counter() % 2" (click)="reload()">
-        @if (loading()) {
-          Loading...
-        } @else {
-          Next reload will {{counter() % 2 ? 'error' : 'success'}}
-        }
-      </button>
+    <button class="btn" (click)="reload()">
+      @if (loading()) {
+      Loading...
+    } @else {
+      Reload
+    }
+    </button>
+    <div class="text-sm" [class.text-red-600]="counter() % 2" >
+        Next reload will {{counter() % 2 ? 'error' : 'success'}}
     </div>
   </div>
   <div class="flex-grow overflow-auto">

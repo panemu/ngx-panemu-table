@@ -856,12 +856,22 @@ export class PanemuTableController<T> {
     })
   }
 
+  /**
+   * This method is specified in `RowOptions.onDoubleClick`.
+   * @param row 
+   * @see https://ngx-panemu-table.panemu.com/usages/basic-usage
+   */
   onDoubleClick(row: T) {
     if (this._mode() == 'browse') {
       this.tableOptions.rowOptions?.onDoubleClick?.(row)
     }
   }
 
+  /**
+   * Error handler that will be called when there is an error when loading, deleting or other actions..
+   * By default, it uses `PanemuTableService.handlerError`.
+   * @see https://ngx-panemu-table.panemu.com/usages/error-handling
+   */
   set errorHandler(handler: ((error: any) => void) | null) {
     this._errorHandler = handler ?? this.pts.handleError.bind(this.pts)
   }

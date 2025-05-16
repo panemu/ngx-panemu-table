@@ -7,13 +7,22 @@ import { CountryCode } from '../../model/country-code';
 import { People } from '../../model/people';
 import { CustomPanemuTableService } from '../../service/custom-panemu-table.service';
 import { DataService } from '../../service/data.service';
+import { DocumentationService } from '../documentation.service';
 
 @Component({
   templateUrl: 'error-handling-sample.component.html',
   imports: [PanemuTableComponent, ReactiveFormsModule],
   standalone: true,
   providers: [
-    {provide: PanemuTableService, useClass: CustomPanemuTableService}
+    /**
+     * To apply custom injection globally, set this provider in angular
+     * app.config.ts
+     * 
+     * @see https://ngx-panemu-table.panemu.com/getting-started/configuration
+     */
+    {
+      provide: PanemuTableService, useClass: CustomPanemuTableService
+    }
   ]
 })
 
@@ -21,13 +30,12 @@ export class ErrorHandlingSample implements OnInit {
 private pts = inject(PanemuTableService)
   cmbErrorHandler = new FormControl('controller')
   countryMap = signal({});
-  countryCell = viewChild<TemplateRef<any>>('countryCell')
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT},
     { field: 'name' },
     { field: 'email' },
     { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country', type: ColumnType.MAP, valueMap :  this.countryMap, cellRenderer: DefaultCellRenderer.create(this.countryCell)},
+    { field: 'country', type: ColumnType.MAP, valueMap :  this.countryMap},
     { field: 'amount', type: ColumnType.DECIMAL },
     { field: 'enrolled', type: ColumnType.DATE },
     { field: 'last_login', type: ColumnType.DATETIME },
@@ -37,9 +45,8 @@ private pts = inject(PanemuTableService)
     this.columns, 
     this.retrieveData.bind(this),
     {
-      errorHandler: (err) => {
-        this.handlerError(err)
-      }
+      //Override global error handler
+      errorHandler: this.handlerError.bind(this)
     }
   );
 
@@ -50,6 +57,7 @@ private pts = inject(PanemuTableService)
   resultCount?: number;
   counter = signal(0)
   loading = toSignal(this.controller.loading)
+  docService = inject(DocumentationService);
   private dataService = inject(DataService);
 
   constructor() {
@@ -84,7 +92,16 @@ private pts = inject(PanemuTableService)
   }
 
   handlerError(err: any) {
-    console.log('counter', this.counter())
-    alert(`This error is handled locally.\n\n${err}\n\nReload counter: ${this.counter()}`)
+    this.docService.showDialog({
+      title: 'Local Error Handler',
+      content: err.message || err,
+      yesLabel: 'Ok',
+      noLabel: 'Reload Again?',
+      type: 'confirm'
+    }).then(answer => {
+      if (answer == 'no') {
+        this.reload();
+      }
+    })
   }
 }
