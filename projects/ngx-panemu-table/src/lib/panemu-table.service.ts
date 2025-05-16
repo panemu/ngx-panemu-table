@@ -401,7 +401,8 @@ export class PanemuTableService {
       virtualScrollRowHeight: 32,
       footer: null,
       calculateColumnWidthDelay: 500,
-      saveState: null
+      saveState: null,
+      errorHandler: this.handleError.bind(this)
     };
     return defaultOptions;
   }

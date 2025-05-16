@@ -163,4 +163,6 @@ export interface TableOptions<T> {
    * @see https://ngx-panemu-table.panemu.com/usages/persist-states
    */
   saveState?: {key: string, states?: (keyof Omit<TableState, 'structureKey'>)[]} | null
+
+  errorHandler: (error: any) => void;
 }

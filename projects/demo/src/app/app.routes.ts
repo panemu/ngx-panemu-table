@@ -38,6 +38,7 @@ import { TickableRowComponent } from './example/tickable-row.component';
 import { VerticalScrollComponent } from './example/vertical-scroll.component';
 import { VirtualScrollComponent } from './example/virtual-scroll.component';
 import { ColumnSearchComponent } from './example/custom-component/column-search.component';
+import { ErrorHandlingSample } from './example/error-handling/error-handling-sample.component';
 
 export const routes: Routes = [
   { path: 'basic', component: BasicComponent },
@@ -81,5 +82,6 @@ export const routes: Routes = [
   { path: 'global-search', component: GlobalSearchComponent },
   { path: 'icon-preview', component: IconPreviewComponent },
   { path: 'column-search', component: ColumnSearchComponent },
+  { path: 'error-handling', component: ErrorHandlingSample },
   { path: '', redirectTo: 'getting-started/introduction', pathMatch: 'full' }
 ];

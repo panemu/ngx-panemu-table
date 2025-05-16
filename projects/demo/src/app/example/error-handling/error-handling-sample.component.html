@@ -1,0 +1,23 @@
+<div class="flex flex-col h-[500px]">
+  <div class="flex justify-between mb-2 items-end">
+    <div>
+      Error Handler
+      <select class="form-select" [formControl]="cmbErrorHandler">
+        <option value="pts">PanemuTableService (Global)</option>
+        <option value="controller">PanemuTableController (Local)</option>
+      </select>
+    </div>
+    <div>
+      <button class="btn" [class.text-red-600]="counter() % 2" (click)="reload()">
+        @if (loading()) {
+          Loading...
+        } @else {
+          Next reload will {{counter() % 2 ? 'error' : 'success'}}
+        }
+      </button>
+    </div>
+  </div>
+  <div class="flex-grow overflow-auto">
+      <panemu-table [controller]="controller"/>
+  </div>
+</div>

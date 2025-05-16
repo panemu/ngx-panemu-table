@@ -53,6 +53,7 @@ export class PanemuTableController<T> {
   private _mode = signal<TABLE_MODE>('browse');
 
   private _loading = new BehaviorSubject<boolean>(false);
+  private _errorHandler!: (error: any) => void;
 
   /**
    * @internal
@@ -97,6 +98,7 @@ export class PanemuTableController<T> {
     tableOptions?: Partial<TableOptions<T>>) {
 
     this.pts = columnDefinition.__tableService;
+    this._errorHandler = tableOptions?.errorHandler ?? this.pts.handleError.bind(this.pts);
     this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
     this.tableOptions = this.pts.getTableOptions();
     this.stateManager = new TableStateManager(this.pts);
@@ -178,7 +180,7 @@ export class PanemuTableController<T> {
         return this.retrieveDataFunction(start, rowsToLoad, tq, this.isGroupController).pipe(
           finalize(() => this._loading.next(false)),
           catchError(err => {
-            this.pts.handleError(err);
+            this._errorHandler(err);
             return of(null)
           })
         );
@@ -615,7 +617,7 @@ export class PanemuTableController<T> {
         };
       }
       , error: e => {
-        this.pts.handleError(e)
+        this._errorHandler(e)
       }
     })
   }
@@ -814,7 +816,7 @@ export class PanemuTableController<T> {
             this._editingController?.afterSuccessfulSave(changed, this._mode());
             this._mode.set('browse')
           },
-          error: e => this.pts.handleError(e)
+          error: e => this._errorHandler(e)
         })
       } else {
         this._mode.set('browse');
@@ -847,7 +849,7 @@ export class PanemuTableController<T> {
               this.deleteRowFromTable?.(rowToDel);
               this._editingController?.afterSuccessfulDelete(_);
             },
-            error: e => this.pts.handleError(e)
+            error: e => this._errorHandler(e)
           })
         }
       }
@@ -859,4 +861,9 @@ export class PanemuTableController<T> {
       this.tableOptions.rowOptions?.onDoubleClick?.(row)
     }
   }
+
+  set errorHandler(handler: ((error: any) => void) | null) {
+    this._errorHandler = handler ?? this.pts.handleError.bind(this.pts)
+  }
+
 }
