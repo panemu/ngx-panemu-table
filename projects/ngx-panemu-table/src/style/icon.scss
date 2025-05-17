@@ -34,13 +34,12 @@
     content: "settings";
   }
 
-  &.icon-arrow_drop_down::after {
-    content: "arrow_drop_down";
+  &.arrow_downward_alt::after {
+    content: "arrow_downward_alt";
   }
 
-
-  &.icon-arrow_drop_up::after {
-    content: "arrow_drop_up";
+  &.arrow_upward_alt::after {
+    content: "arrow_upward_alt";
   }
 
   &.icon-splitscreen_top::after {
