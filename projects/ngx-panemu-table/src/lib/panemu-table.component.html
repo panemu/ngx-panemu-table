@@ -32,7 +32,7 @@
           <col #colEl [attr.data-col]="column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
         }
       </colgroup>
-      <thead [style.top]="headerTop">
+      <thead [style.top]="headerTop()">
         @for (header of columnDefinition.header; track header) {
           <tr>
             @for (cell of header.cells; track cell.__key; let idx = $index) {
@@ -108,7 +108,7 @@
 
     <ng-template #footerComponent>
       @if (tableOptions.footer) {
-        <tfoot [style.bottom]="footerBottom">
+        <tfoot [style.bottom]="footerBottom()">
           <tr>
             <ng-template [tableFooterRenderer]="tableOptions.footer.component" [parameter]="tableOptions.footer.parameter" [colSpan]="_displayedColumns.length"></ng-template>
           </tr>

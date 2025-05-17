@@ -2,7 +2,7 @@ import { Dialog, DialogRef } from "@angular/cdk/dialog";
 import { Overlay } from "@angular/cdk/overlay";
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, signal, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { Observable } from 'rxjs';
@@ -75,8 +75,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
 
   @ViewChild(CdkVirtualScrollViewport)
   public viewPort!: CdkVirtualScrollViewport;
-  headerTop = '0px';
-  footerBottom = '0px';
+  headerTop = signal('0px');
+  footerBottom = signal('0px');
   colElements = viewChildren<ElementRef<HTMLElement>>('colEl');
   dialog = inject(Dialog);
   overlay = inject(Overlay);
@@ -130,9 +130,9 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     if (!!this.viewPort) {
 
       this.viewPort['_scrollStrategy'].onRenderedOffsetChanged = () => {
-        this.headerTop = `-${this.viewPort.getOffsetToRenderedContentStart()}px`;
-        this.footerBottom = `${this.viewPort.getOffsetToRenderedContentStart()}px`;
-        this.cdr.detectChanges();
+        this.headerTop.set(`-${this.viewPort.getOffsetToRenderedContentStart()}px`);
+        this.footerBottom.set(`${this.viewPort.getOffsetToRenderedContentStart()}px`);
+        // this.cdr.markForCheck();
       };
     }
 
