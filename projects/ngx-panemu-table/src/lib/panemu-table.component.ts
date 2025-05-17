@@ -465,8 +465,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
 
   groupHeaderClick(row: RowGroup, usePagination?: boolean) {
     if (this.controller.mode() != 'browse') return;
-    row.expanded = !row.expanded;
-    if (row.expanded) {
+    row.expanded.update(val => !val);
+    if (row.expanded()) {
       this.controller.reloadGroup(row, usePagination);
     } else {
       this.keepColumnWidth();

@@ -1,3 +1,4 @@
+import { signal } from "@angular/core";
 import { CellFormatter } from "../cell/cell";
 import { PropertyColumn } from "../column/column";
 import { PanemuTableController } from "../panemu-table-controller";
@@ -19,7 +20,7 @@ export class RowGroup {
   field!: string;
   level = 0;
   parent?: RowGroup;
-  expanded = false;
+  expanded = signal(false);
   controller?: PanemuTableController<any>;
   formatter!: CellFormatter;
   modifier?: string;

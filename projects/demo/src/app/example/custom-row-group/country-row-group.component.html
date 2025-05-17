@@ -12,6 +12,6 @@
 </td>
 <td class="text-right">{{$any(rowGroup.data).average | number:'.2'}}</td>
 <td colspan="3">
-  <panemu-pagination *ngIf="rowGroup.expanded && rowGroup.controller" [controller]="rowGroup.controller"
+  <panemu-pagination *ngIf="rowGroup.expanded() && rowGroup.controller" [controller]="rowGroup.controller"
     [group]="rowGroup" class="row-group-pagination"></panemu-pagination>
 </td>

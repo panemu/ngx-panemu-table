@@ -1,8 +1,15 @@
 <td mat-cell [attr.colspan]="colSpan">
   <div class="group-row">
     <div class="group-cell" (click)="expandAction(rowGroup, showPagination)" [style]="'left: '+(rowGroup.level * 1) + 'rem;'">
-      <span class="ngx-panemu-table-icon icon-arrow_drop_down icon-big" *ngIf="rowGroup.expanded"></span>
-      <span class="ngx-panemu-table-icon icon-arrow_right icon-big" *ngIf="!rowGroup.expanded"></span>
+      <button>
+        <span
+          class="ngx-panemu-table-icon"
+          [class]="{
+            'icon-expand_more': rowGroup.expanded(),
+            'icon-chevron_right': !rowGroup.expanded(),
+          }">
+        </span>
+      </button>
       @if (contentComponent) {
         <ng-container [rowGroupContentRenderer]="contentComponent" [rowGroup]="rowGroup" ></ng-container>
       } @else {
@@ -14,7 +21,7 @@
         <pnm-spinning-icon />
       </span>
     </div>
-    <panemu-pagination *ngIf="rowGroup.expanded && rowGroup.controller && rowGroup.controller['hasPagination']"
+    <panemu-pagination *ngIf="rowGroup.expanded() && rowGroup.controller && rowGroup.controller['hasPagination']"
       [controller]="rowGroup.controller" [group]="rowGroup"
       class="row-group-pagination"></panemu-pagination>
   </div>
