@@ -868,8 +868,8 @@ export class PanemuTableController<T> {
   }
 
   /**
-   * Error handler that will be called when there is an error when loading, deleting or other actions..
-   * By default, it uses `PanemuTableService.handlerError`.
+   * Error handler that will be called when there is an error in this controller instance.
+   * By default, it propagates to global error handler in `PanemuTableService.handleError`.
    * @see https://ngx-panemu-table.panemu.com/usages/error-handling
    */
   set errorHandler(handler: ((error: any) => void) | null) {

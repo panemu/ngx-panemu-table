@@ -459,12 +459,12 @@ export class PanemuTableService {
   }
 
   /**
-   * Function to handle error. Override this method to have your own error handler.
+   * Function to handle error globally. Override this method to have your own error handler.
    * @param err 
    * @returns 
    */
   handleError(err: any) {
-    console.error(err);
+    console.error('There is an error when loading table. Override this error handler in PanemuTableService.handleError', err);
     alert(err.message || 'There is an error when loading table. Override this error handler in PanemuTableService.handleError')
   }
 
