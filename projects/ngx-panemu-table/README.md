@@ -22,6 +22,11 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 ## New Features:
 
+### v.0.5.0
+
+* Support row double click action. See `*BasicUsagePage`.
+* Support local error handler. See `*ErrorHandlingPage`.
+
 ### v.0.4.0
 
 * [Breaking Change] Persist state now has a way to pick what states to save rather than always saving all states.
@@ -35,17 +40,6 @@ To know how to install and use NgxPanemuTable, please check our [documentation](
 
 * Transpose selected row.
 
-### v.0.0.9
-
-* New `PanemuSettingComponent` as the UI to change columns visibility, position and stickiness.
-* Save table states (column structure, pagination, filtering, sorting and grouping)
-* Support cell rowspan and colspan using `RowRenderer`.
-
-### v.0.0.7
-
-* Virtual scroll
-* Table footer
-* RowGroup now customizable and can have footer
 
 ### Support Us
 

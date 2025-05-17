@@ -47,6 +47,12 @@ export interface TableCriteria {
    * Filter predicate.
    */
   value: any;
+
+  /**
+   * Support for other scenario of filter where operator such as =, <, > etc
+   * is separated from value.
+   */
+  operator?: string;
 }
 
 /**

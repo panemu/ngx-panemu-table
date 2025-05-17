@@ -86,6 +86,11 @@ These features are not developed yet. Please create a ticket in [our repository]
 
 ## Releases:
 
+### v.0.5.0
+
+* Support row double click action. See `*BasicUsagePage`.
+* Support local error handler. See `*ErrorHandlingPage`.
+
 ### v.0.4.0
 
 * [Breaking Change] Persist state now has a way to pick what states to save rather than always saving all states.
