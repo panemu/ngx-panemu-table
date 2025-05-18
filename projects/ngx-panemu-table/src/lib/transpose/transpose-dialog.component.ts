@@ -1,10 +1,10 @@
 import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, effect, inject, OnInit, Signal } from '@angular/core';
 import { PropertyColumn } from '../column/column';
 import { PanemuTableService } from '../panemu-table.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'pnm-transpose-dialog',
@@ -21,7 +21,13 @@ export class TransposeDialogComponent implements OnInit {
   labelTranslation = this.pts.getLabelTranslation()
   txtSearch = new FormControl('')
   filteredColumns!: PropertyColumn<any>[];
-  constructor() { }
+  constructor() {
+    effect(() => {
+      if (this.data()) {
+        this.displayData(this.txtSearch.value)
+      }
+    })
+  }
 
   ngOnInit() {
     this.filteredColumns = [...this.columns]
@@ -29,26 +35,30 @@ export class TransposeDialogComponent implements OnInit {
       debounceTime(250),
       distinctUntilChanged(),
     ).subscribe(val => {
-      val = val?.trim().toLowerCase() || ''
+      this.displayData(val)
+    })
+  }
 
-      if (val) {
-        this.filteredColumns = [];
-        this.columns.forEach(clm => {
-          if (clm.label?.toLowerCase().includes(val)) {
-            this.filteredColumns.push(clm)
-          } else {
-            let dataValue = clm.formatter?.(this.data()?.[clm.field], this.data(), clm) || this.data()?.[clm.field];
-            if (typeof dataValue === 'string') {
-              if (dataValue.toLowerCase().includes(val)) {
-                this.filteredColumns.push(clm)
-              }
+  private displayData(val?: string | null) {
+    val = val?.trim().toLowerCase() || ''
+
+    if (val) {
+      this.filteredColumns = [];
+      this.columns.forEach(clm => {
+        if (clm.label?.toLowerCase().includes(val)) {
+          this.filteredColumns.push(clm)
+        } else {
+          let dataValue = clm.formatter?.(this.data()?.[clm.field], this.data(), clm) || this.data()?.[clm.field];
+          if (typeof dataValue === 'string') {
+            if (dataValue.toLowerCase().includes(val)) {
+              this.filteredColumns.push(clm)
             }
           }
-        })
-      } else {
-        this.filteredColumns = [...this.columns]
-      }
-    })
+        }
+      })
+    } else {
+      this.filteredColumns = [...this.columns]
+    }
   }
 
   static show(dialog: Dialog, overlay: Overlay, columns: PropertyColumn<any>[], data: Signal<any>) {
