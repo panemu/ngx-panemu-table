@@ -86,6 +86,10 @@ These features are not developed yet. Please create a ticket in [our repository]
 
 ## Releases:
 
+### v.0.6.0
+
+* Support Angular 20
+
 ### v.0.5.0
 
 * Support row double click action. See `*BasicUsagePage`.

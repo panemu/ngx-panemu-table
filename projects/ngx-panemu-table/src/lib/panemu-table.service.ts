@@ -227,7 +227,7 @@ export class PanemuTableService {
     baseColumn.resizable = baseColumn.resizable === undefined ? defaultOptions.resizable : baseColumn.resizable;
     baseColumn.width = baseColumn.width || 0;
     baseColumn.visible = baseColumn.visible === undefined ? defaultOptions.visible : baseColumn.visible;
-    baseColumn.headerRenderer = baseColumn.headerRenderer || DefaultHeaderRenderer.create();
+    baseColumn.headerRenderer = baseColumn.headerRenderer || defaultOptions.headerRenderer;
 
     if (!baseColumn.cellRenderer) {
       if (baseColumn.expansion) {
