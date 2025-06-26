@@ -32,6 +32,7 @@ export * from './lib/column/default-column-options';
 export * from './lib/busy-indicator/panemu-busy-indicator.component';
 export {isDataRow} from './lib/util';
 export * from './lib/query/editor/filter-editor';
+export * from './lib/query/panemu-groupby.component'
 
 
 export * from './lib/setting/panemu-setting.component';

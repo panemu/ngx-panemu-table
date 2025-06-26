@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { debounce, distinctUntilChanged, Subscription } from 'rxjs';
 import { ColumnType, MapColumn, PropertyColumn } from '../column/column';
 import { PanemuTableController } from '../panemu-table-controller';
-import { GroupbyComponent } from './groupby.component';
+import { PanemuGroupbyComponent } from './panemu-groupby.component';
 import { TableCriteria } from '../table-query';
 import { PanemuTableService } from '../panemu-table.service';
 import { LabelTranslation } from '../option/label-translation';
@@ -17,7 +17,7 @@ import { Filter } from './filter';
 @Component({
   selector: 'panemu-query',
   standalone: true,
-  imports: [CommonModule, MatMenuModule, GroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
+  imports: [CommonModule, MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
   templateUrl: './panemu-query.component.html',
 })
 export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {

@@ -8,12 +8,12 @@ import { LabelTranslation } from '../option/label-translation';
 
 @Component({
   selector: 'panemu-groupby',
-  templateUrl: 'groupby.component.html',
+  templateUrl: 'panemu-groupby.component.html',
   standalone: true,
   imports: [CommonModule, MatMenuModule],
 })
 
-export class GroupbyComponent {
+export class PanemuGroupbyComponent {
   labelTranslation: LabelTranslation;
   controller = input.required<PanemuTableController<any>>();
   _columns = computed(() => {
