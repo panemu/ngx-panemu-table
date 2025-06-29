@@ -18,12 +18,12 @@ import { PanemuTableEditingController } from "./editing/panemu-table-editing-con
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
  * It is used for server side pagination, filtering, sorting and grouping. In this scenario,
  * it replace `PanemuTableDataSource`.
- * 
+ *
  * `startIndex`: zero-based row index to retrive.
- * 
+ *
  * `maxRows`: Maximum rows to fetch per page. To avoid user entering very big number that can bring server
  * or the browser down, override `PanemuTableService.getPaginationMaxRowsLimit`.
- * 
+ *
  * `groupController`: if true, then the request is triggered from a row group expansion
  */
 export type RetrieveDataFunction<T> = (startIndex: number, maxRows: number, tableQuery: TableQuery, groupController?: boolean) => Observable<TableData<T>>;
@@ -110,9 +110,9 @@ export class PanemuTableController<T> {
 
   /**
    * Create controller with pagination, sorting, filtering and grouping handled by supplied `PanemuTableDataSource`.
-   * @param columns 
-   * @param datasource 
-   * @returns 
+   * @param columns
+   * @param datasource
+   * @returns
    */
   static create<T>(columns: ColumnDefinition<T>,
     datasource: PanemuTableDataSource<T>,
@@ -126,9 +126,9 @@ export class PanemuTableController<T> {
   /**
    * Create controller with pagination, sorting, filtering and grouping handled by custom datasource. It provide
    * a way to specify custom logic for pagination, sorting, filtering and grouping in server side.
-   * @param columns 
-   * @param retrieveDataFunction 
-   * @returns 
+   * @param columns
+   * @param retrieveDataFunction
+   * @returns
    */
   static createWithCustomDataSource<T>(columns: ColumnDefinition<T>, retrieveDataFunction: RetrieveDataFunction<T>, tableOptions?: Partial<TableOptions<T>>) {
     return new PanemuTableController(columns, retrieveDataFunction, tableOptions)
@@ -206,10 +206,10 @@ export class PanemuTableController<T> {
    * Connect pagination component with the controller. It tells the controller
    * that pagination should be used. If there is no pagination component calling
    * this method, the controller will set its `maxRows` to 0 which means the datasource
-   * should return all data. 
-   * 
+   * should return all data.
+   *
    * The controller will also tell the pagination about pagination information after each reload.
-   * 
+   *
    * @param refreshAction callback function called by the controller so that the pagination
    * component can update itself. This callback is called after reloading data.
    */
@@ -233,7 +233,7 @@ export class PanemuTableController<T> {
    * This observable fire just before loading a data. This is only for table controller.
    * It will not fire for `RowGroup` expand action because RowGroup has its own
    * controller instance.
-   * @returns 
+   * @returns
    */
   get beforeReloadEvent() {
     return this.reloadCue.asObservable();
@@ -249,12 +249,12 @@ export class PanemuTableController<T> {
   }
 
   /**
-   * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup`, 
-   * `RowGroupFooter` and `ExpansionRow`. 
-   * 
+   * Get data being displayed in table. It only returns regular row data. It excludes `RowGroup`,
+   * `RowGroupFooter` and `ExpansionRow`.
+   *
    * To get all data from table including of type `RowGroup`, `RowGroupFooter` and `ExpansionRow` see `getAllData` method.
-   * 
-   * @returns 
+   *
+   * @returns
    */
   getData() {
     if (this.data?.()) {
@@ -267,8 +267,8 @@ export class PanemuTableController<T> {
   /**
    * Get data being displayed in table including `RowGroup`, `RowGroupFooter` and `ExpansionRow`.
    * If a `RowGroup` is collapsed, its children are not included because they aren't visible in the table.
-   * 
-   * @returns 
+   *
+   * @returns
    */
   getAllData() {
     return this.data?.() ? [...this.data()] : []
@@ -276,7 +276,7 @@ export class PanemuTableController<T> {
 
   /**
    * Get data being displayed in table as signal. See also `getAllData` method.
-   * @returns 
+   * @returns
    */
   getAllDataAsSignal() {
     return this.data
@@ -302,18 +302,18 @@ export class PanemuTableController<T> {
   /**
    * Set max rows to display in table. Only usable if there is `PanemuPaginationComponent` using this controller.
    * Otherwise all data from datasource is displayed at once.<br><br>
-   * 
-   * To change default max rows for all tables across application, create a service extending PanemuTableService 
+   *
+   * To change default max rows for all tables across application, create a service extending PanemuTableService
    * and override `PanemuTableService.getPaginationMaxRows`.
-   * 
+   *
    * The value is limited by `PanemuTableService.getPaginationMaxRowsLimit`.
    */
   set maxRows(val: number) { this._maxRows = Math.min(val, this.pts.getPaginationMaxRowsLimit()) }
 
   /**
    * Get max rows from connected `PanemuPaginationComponent`.
-   * 
-   * To change default max rows for all tables across application, create a service extending PanemuTableService 
+   *
+   * To change default max rows for all tables across application, create a service extending PanemuTableService
    * and override `PanemuTableService.getPaginationMaxRows`
    */
   get maxRows() { return this._maxRows }
@@ -322,7 +322,7 @@ export class PanemuTableController<T> {
    * This is an internal method used by grouping functionality and group-level pagination.
    * You shouldn't need to call this method unless you are creating custom pagination component.
    * @param group
-   * @internal 
+   * @internal
    */
   reloadGroup(group: RowGroup, usePagination?: boolean) {
     if (!group.controller) {
@@ -368,19 +368,19 @@ export class PanemuTableController<T> {
       this.buildCriteriaRecursively(group.parent, tableCriteria);
     }
     let val;
-    if (group.data.value === null || group.data.value === undefined) {
+    if (group.data.value === null || group.data.value === undefined || group.data.value == '') {
       val = 'NULL'
     } else {
       val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.data.value : `"${group.data.value}"`;
-    }
-    if (group.modifier == 'year') {
-      let nextYear = +(group.data.value) + 1;
-      val = `${group.data.value}-01-01.,${nextYear}-01-01`;
-    } else if (group.modifier == 'month') {
-      let endMonth = toDate(group.data.value + '-01');
-      endMonth.setMonth(endMonth.getMonth() + 1);
-      val = group.data.value + '-01' + '.,' + formatDateToIso(endMonth);
+      if (group.modifier == 'year') {
+        let nextYear = +(group.data.value) + 1;
+        val = `${group.data.value}-01-01.,${nextYear}-01-01`;
+      } else if (group.modifier == 'month') {
+        let endMonth = toDate(group.data.value + '-01');
+        endMonth.setMonth(endMonth.getMonth() + 1);
+        val = group.data.value + '-01' + '.,' + formatDateToIso(endMonth);
 
+      }
     }
     tableCriteria.push({ field: group.field, value: val });
     return tableCriteria;
@@ -432,7 +432,7 @@ export class PanemuTableController<T> {
     if (this._mode() != 'browse' && this._editingController?._getChangedData(this._mode()).length) {
       this._editingController?.canReload(this._editingController?._getChangedData(this._mode()), this._mode()).then(result => {
         if (result) {
-          this.reloadCue.next(this.reloadCue.getValue() + 1)      
+          this.reloadCue.next(this.reloadCue.getValue() + 1)
         }
       })
     } else {
@@ -442,7 +442,7 @@ export class PanemuTableController<T> {
 
   /**
    * Get selected row. A row is selected if user click it. RowGroup cannot be selected.
-   * @returns 
+   * @returns
    */
   getSelectedRow() {
     return this.selectedRow()
@@ -450,7 +450,7 @@ export class PanemuTableController<T> {
 
   /**
    * Get selected row as signal. A row is selected if user click it. RowGroup cannot be selected.
-   * @returns 
+   * @returns
    */
   get selectedRowSignal() {
     return this.selectedRow.asReadonly()
@@ -515,8 +515,8 @@ export class PanemuTableController<T> {
 
   /**
    * Expand cell. Only works if the column `BaseColumn.expansion` is defined.
-   * @param row 
-   * @param column 
+   * @param row
+   * @param column
    * @param expanded a signal to listen to expand/collapse state.
    * @see https://ngx-panemu-table.panemu.com/usages/cell-expansion
    */
@@ -535,9 +535,9 @@ export class PanemuTableController<T> {
 
   /**
    * Get data as comma separated string. By default it includes the header and `RowGroup`s.
-   * 
+   *
    * Take a look at `exportToCsv` function as well.
-   * 
+   *
    * @param options provide a way to exclude header or `RowGroup` rows.
    * @returns csv string
    */
@@ -596,7 +596,7 @@ export class PanemuTableController<T> {
    * 3. Pagination
    * 4. Filtering
    * 5. Grouping
-   * 
+   *
    * Saving state only works if `TableOptions.saveState` is defined. The key has to be unique app-wide.
    * The state is stored in local storage. To save in db server, override `PanemuTableService.saveTableState`.
    */
@@ -606,7 +606,7 @@ export class PanemuTableController<T> {
 
   /**
    * Delete table state. By default, it reload the window after it.
-   * 
+   *
    * @see `PanemuTableController.saveState`
    */
   deleteState(reloadAfterDelete = true) {
@@ -624,7 +624,7 @@ export class PanemuTableController<T> {
 
   /**
    * Read state.
-   * @returns 
+   * @returns
    * @see `PanemuTableController.saveState`
    */
   readState() {
@@ -665,7 +665,7 @@ export class PanemuTableController<T> {
           this.copyState(clmState, actualColumn);
         }
       }
-  
+
       this.columnDefinition.mutatedStructure = newStructure;
     }
     this.relayout();
@@ -716,7 +716,7 @@ export class PanemuTableController<T> {
   /**
    * It calls `getCsvData` method and instructs browser to download the data
    * as csv file.
-   * 
+   *
    * @param options provide a way to exclude header or `RowGroup` rows.
    */
   exportToCsv(options?: { includeHeader?: boolean, includeRowGroup?: boolean }) {
@@ -745,7 +745,7 @@ export class PanemuTableController<T> {
       throw new Error('No PanemuTableEditingController assigned to PanemuTableController.editingController')
     }
   }
-  
+
   /**
    * Change table mode to `edit`. It will throw an error if this controller
    * doesn't have `editingController`.
@@ -774,7 +774,7 @@ export class PanemuTableController<T> {
 
   /**
    * Save changed rows. This method does the followings:
-   * 
+   *
    * 1. Call `editingController._getChangedData`
    * 2. Call `editingController._validate`. It executes validation on cell basis.
    * 3. Call `editingController.canSave`. It is a hook to allow user to cancel the save operation or
@@ -782,8 +782,8 @@ export class PanemuTableController<T> {
    * 4. Call `editingController.saveData`. It saves the data to server.
    * 5. Call `editingController.afterSuccessfulSave`. It is a hook to do something after the data is saved.
    * 6. Change mode to `browse`.
-   * 
-   * @returns 
+   *
+   * @returns
    */
   async save() {
     this.assertEditingController();
@@ -858,7 +858,7 @@ export class PanemuTableController<T> {
 
   /**
    * This method is specified in `RowOptions.onDoubleClick`.
-   * @param row 
+   * @param row
    * @see https://ngx-panemu-table.panemu.com/usages/basic-usage
    */
   onDoubleClick(row: T) {

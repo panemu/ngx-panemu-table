@@ -15,7 +15,7 @@ export class PanemuTableDataSource<T> {
   private _data: T[] = [];
 
   /**
-   * 
+   *
    * @param data the data similar to calling `setData()` method
    */
   constructor(data?: T[]) {
@@ -26,8 +26,8 @@ export class PanemuTableDataSource<T> {
 
   /**
    * Set data to the datasource.
-   * 
-   * @param data 
+   *
+   * @param data
    */
   setData(data: T[]) {
     this._data = data;
@@ -43,10 +43,10 @@ export class PanemuTableDataSource<T> {
 
   /**
    * Get data with the specified `start` index, maximum of `maxRows` is taken, matching the criteria in `tableQuery`.
-   * @param start 
-   * @param maxRows 
-   * @param tableQuery 
-   * @returns 
+   * @param start
+   * @param maxRows
+   * @param tableQuery
+   * @returns
    */
   getData(start: number, maxRows: number, tableQuery: TableQuery): Observable<TableData<T>> {
     if (!this._data?.length) {
@@ -84,8 +84,8 @@ export class PanemuTableDataSource<T> {
     }
     let groupMap: { [key: string]: T[] } = {};
     result.forEach((row: any) => {
-      let val = row[groupBy.field] + '';
-
+      let val = row[groupBy.field];
+      val = (val === null || val === undefined) ? '' : (val + '').trim();
       if (groupBy.modifier == 'year') {
         val = this.toYear(val);
       } else if (groupBy.modifier == 'month') {
@@ -154,9 +154,12 @@ export class PanemuTableDataSource<T> {
           if (typeof fieldValue == 'number') {
             filterResult = fieldValue == (+crit.value)
           } else {
+            fieldValue = fieldValue ?? '';
             let stringFieldValue = String(fieldValue).trim();
             let stringCriteriaValue = String(crit.value).trim();
-            if (stringCriteriaValue.startsWith('"') && stringCriteriaValue.endsWith('"')) {
+            if (stringCriteriaValue === 'NULL') {
+              filterResult = stringFieldValue.length == 0;
+            } else if (stringCriteriaValue.startsWith('"') && stringCriteriaValue.endsWith('"')) {
               filterResult = stringCriteriaValue === `"${stringFieldValue}"`; //exact match
             } else {
               filterResult = stringFieldValue.toLowerCase().includes(stringCriteriaValue.toLowerCase() )
@@ -199,7 +202,7 @@ export class PanemuTableDataSource<T> {
       for (const s of sortings) {
         const aValue = a[s.field] ?? '';
         const bValue = b[s.field] ?? '';
-        
+
         if (aValue > bValue) {
           result = 1;
         } else if (aValue < bValue) {
