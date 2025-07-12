@@ -7,10 +7,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-  selector: 'pnm-transpose-dialog',
-  templateUrl: 'transpose-dialog.component.html',
-  standalone: true,
-  imports: [ReactiveFormsModule]
+    selector: 'pnm-transpose-dialog',
+    templateUrl: 'transpose-dialog.component.html',
+    imports: [ReactiveFormsModule]
 })
 
 export class TransposeDialogComponent implements OnInit {

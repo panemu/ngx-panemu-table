@@ -15,23 +15,21 @@ import {
 import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
 
 @Component({
-  animations: [preventInitialChildAnimations],
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
-  imports: [
-    NgDocRootComponent,
-    NgDocNavbarComponent,
-    RouterLink,
-    NgDocThemeToggleComponent,
-    NgDocButtonIconComponent,
-    NgDocTooltipDirective,
-    NgDocIconComponent,
-    NgDocSidebarComponent,
-    RouterOutlet
-  ],
+    animations: [preventInitialChildAnimations],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [
+        NgDocRootComponent,
+        NgDocNavbarComponent,
+        RouterLink,
+        NgDocThemeToggleComponent,
+        NgDocButtonIconComponent,
+        NgDocTooltipDirective,
+        NgDocIconComponent,
+        NgDocSidebarComponent,
+        RouterOutlet
+    ]
 })
 export class AppComponent {
   protected readonly location = inject(Location);

@@ -85,10 +85,9 @@ export interface RowGroupRenderer {
 }
 
 @Component({
-  templateUrl: 'default-row-group-renderer.html',
-  standalone: true,
-  imports: [CommonModule, GroupCellPipe, SpinningIconComponent, PanemuPaginationComponent, RowGroupContentRendererDirective],
-  styles: `
+    templateUrl: 'default-row-group-renderer.html',
+    imports: [CommonModule, GroupCellPipe, SpinningIconComponent, PanemuPaginationComponent, RowGroupContentRendererDirective],
+    styles: `
   :host {
     display: contents;
   }

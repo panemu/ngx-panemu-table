@@ -44,9 +44,8 @@ class EditingController extends SampleEditingController<People> {
 }
 
 @Component({
-  templateUrl: 'inline-editing7.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, CellFormatterPipe, ToolbarComponent],
-  standalone: true,
+    templateUrl: 'inline-editing7.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, CellFormatterPipe, ToolbarComponent]
 })
 
 export class InlineEditing7Component implements OnInit {

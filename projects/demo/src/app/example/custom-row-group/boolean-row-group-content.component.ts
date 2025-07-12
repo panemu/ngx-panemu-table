@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { RowGroup, RowGroupContentComponent } from 'ngx-panemu-table';
 
 @Component({
-  template: `
+    template: `
   <div class="flex items-center">
     @if (rowGroup.data.value == 'true') {
       <span class="material-symbols-outlined text-2xl text-green-600">
@@ -17,8 +17,7 @@ import { RowGroup, RowGroupContentComponent } from 'ngx-panemu-table';
     }
   </div>
   `,
-  standalone: true,
-  imports: [NgIf]
+    imports: [NgIf]
 })
 export class BooleanRowGroupContentComponent implements RowGroupContentComponent {
   rowGroup!: RowGroup;

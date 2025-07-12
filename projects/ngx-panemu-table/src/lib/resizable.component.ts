@@ -3,10 +3,9 @@ import { ResizableDirective } from "./resizable.directive";
 import { getColElement, initTableWidth, setElementWidth } from "./util";
 import { BaseColumn} from "./column/column";
 @Component({
-  selector: 'th[resizable]',
-  templateUrl: 'resizable.component.html',
-  standalone: true,
-  imports: [ResizableDirective]
+    selector: 'th[resizable]',
+    templateUrl: 'resizable.component.html',
+    imports: [ResizableDirective]
 })
 export class ResizableComponent implements OnChanges {
   @Input() @Optional() resizable: number | string = 0;

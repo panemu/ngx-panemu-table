@@ -5,10 +5,9 @@ import { DataService } from '../../service/data.service';
 import { CustomPaginationComponent } from './custom-pagination.component';
 
 @Component({
-  selector: 'custom-pagination-showcase',
-  templateUrl: 'custom-pagination-showcase.component.html',
-  imports: [PanemuTableComponent, CustomPaginationComponent],
-  standalone: true,
+    selector: 'custom-pagination-showcase',
+    templateUrl: 'custom-pagination-showcase.component.html',
+    imports: [PanemuTableComponent, CustomPaginationComponent]
 })
 
 export class CustomPaginationShowcaseComponent implements OnInit {

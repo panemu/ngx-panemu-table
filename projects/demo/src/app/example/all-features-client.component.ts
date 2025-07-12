@@ -6,10 +6,9 @@ import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.co
 import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
-  templateUrl: 'all-features-client.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
-  standalone: true,
-  styleUrl: 'all-features-client.component.scss'
+    templateUrl: 'all-features-client.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
+    styleUrl: 'all-features-client.component.scss'
 })
 
 export class AllFeaturesClientComponent implements OnInit {

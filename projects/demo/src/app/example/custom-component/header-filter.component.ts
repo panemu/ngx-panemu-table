@@ -5,9 +5,8 @@ import { HeaderComponent, HeaderRenderer, PanemuTableController, PropertyColumn 
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-  templateUrl: 'header-filter.component.html',
-  imports: [CommonModule, ReactiveFormsModule],
-  standalone: true
+    templateUrl: 'header-filter.component.html',
+    imports: [CommonModule, ReactiveFormsModule]
 })
 export class HeaderFilterComponent implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>;

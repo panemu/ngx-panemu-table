@@ -9,10 +9,9 @@ import { GlobalSearchDataSource } from './global-search-datasource';
 import { HighlightCellRenderer } from './highlight-cell-renderer';
 
 @Component({
-  selector: 'global-search',
-  templateUrl: 'global-search.component.html',
-  imports: [PanemuTableComponent, CustomPaginationComponent, ReactiveFormsModule],
-  standalone: true,
+    selector: 'global-search',
+    templateUrl: 'global-search.component.html',
+    imports: [PanemuTableComponent, CustomPaginationComponent, ReactiveFormsModule]
 })
 
 export class GlobalSearchComponent implements OnInit {

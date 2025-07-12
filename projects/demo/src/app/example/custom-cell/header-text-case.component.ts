@@ -6,9 +6,8 @@ import { HeaderComponent, PropertyColumn } from 'ngx-panemu-table';
 type TextCase = 'normal' | 'upper' | 'lower'
 
 @Component({
-  templateUrl: 'header-text-case.component.html',
-  imports: [CommonModule, ReactiveFormsModule],
-  standalone: true
+    templateUrl: 'header-text-case.component.html',
+    imports: [CommonModule, ReactiveFormsModule]
 })
 export class HeaderTextCaseComponent implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>;

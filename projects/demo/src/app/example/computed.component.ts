@@ -4,11 +4,10 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  selector: 'pnm-computed',
-  templateUrl: 'computed.component.html',
-  imports: [PanemuTableComponent],
-  standalone: true,
-  styles: `
+    selector: 'pnm-computed',
+    templateUrl: 'computed.component.html',
+    imports: [PanemuTableComponent],
+    styles: `
     .panemu-table .computed2 {
       background-color: rgba(165, 42, 42, 0.7);
       color: white;
@@ -18,7 +17,7 @@ import { DataService } from '../service/data.service';
       text-align: center;
     }
   `,
-  encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None
 })
 export class ComputedComponent implements OnInit {
   columns = this.pts.buildColumns<People>([

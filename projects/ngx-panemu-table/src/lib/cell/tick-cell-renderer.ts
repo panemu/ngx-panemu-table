@@ -5,9 +5,8 @@ import { TickColumnClass } from '../column/tick-column-class';
 import { CellComponent } from './cell';
 
 @Component({
-  template: '<input type="checkbox" [formControl]="chkControl">',
-  imports: [ReactiveFormsModule],
-  standalone: true
+    template: '<input type="checkbox" [formControl]="chkControl">',
+    imports: [ReactiveFormsModule]
 })
 
 export class TickCellComponent implements CellComponent<any>, OnInit {

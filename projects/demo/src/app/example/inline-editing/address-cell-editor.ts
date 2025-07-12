@@ -3,11 +3,10 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CellEditorComponent, CellValidationError } from 'ngx-panemu-table';
 
 @Component({
-  selector: 'string-cell-editor',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: 'address-cell-editor.html',
-  styleUrl: 'address-cell-editor.scss'
+    selector: 'string-cell-editor',
+    imports: [ReactiveFormsModule],
+    templateUrl: 'address-cell-editor.html',
+    styleUrl: 'address-cell-editor.scss'
 })
 
 export class AddressCellEditor implements CellEditorComponent {

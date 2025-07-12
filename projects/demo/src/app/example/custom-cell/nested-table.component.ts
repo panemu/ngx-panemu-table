@@ -4,9 +4,8 @@ import { People } from "../../model/people";
 import { DataService } from "../../service/data.service";
 
 @Component({
-  templateUrl: 'nested-table.component.html',
-  imports: [PanemuTableComponent],
-  standalone: true
+    templateUrl: 'nested-table.component.html',
+    imports: [PanemuTableComponent]
 })
 
 export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People> {

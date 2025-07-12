@@ -6,9 +6,8 @@ import { FilterEditor } from './filter-editor';
 import { TableCriteria } from '../../table-query';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './map-filter.component.html',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './map-filter.component.html'
 })
 export class MapFilterComponent implements OnInit, FilterEditor, OnChanges {
   

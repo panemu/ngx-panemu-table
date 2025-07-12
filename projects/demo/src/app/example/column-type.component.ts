@@ -4,10 +4,9 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  selector: 'pnm-column-type',
-  templateUrl: 'column-type.component.html',
-  imports: [PanemuTableComponent, PanemuQueryComponent],
-  standalone: true
+    selector: 'pnm-column-type',
+    templateUrl: 'column-type.component.html',
+    imports: [PanemuTableComponent, PanemuQueryComponent]
 })
 
 export class ColumnTypeComponent implements OnInit {

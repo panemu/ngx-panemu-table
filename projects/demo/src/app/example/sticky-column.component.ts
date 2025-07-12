@@ -4,10 +4,9 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  selector: 'app-sticky-column',
-  standalone: true,
-  imports: [PanemuTableComponent],
-  templateUrl: './sticky-column.component.html',
+    selector: 'app-sticky-column',
+    imports: [PanemuTableComponent],
+    templateUrl: './sticky-column.component.html'
 })
 export class StickyColumnComponent implements OnInit {
   

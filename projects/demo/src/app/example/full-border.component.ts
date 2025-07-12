@@ -4,12 +4,11 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  selector: 'app-full-border',
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuSettingComponent],
-  templateUrl: './full-border.component.html',
-  styleUrl: './full-border.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-full-border',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuSettingComponent],
+    templateUrl: './full-border.component.html',
+    styleUrl: './full-border.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class 
 FullBorderComponent {

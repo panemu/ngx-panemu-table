@@ -11,10 +11,9 @@ import { FilterEditorDirective } from './filter-editor.directive';
 import { StringFilterComponent } from './string-filter.component';
 
 @Component({
-  selector: 'panemu-filter-editor',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective, StringFilterComponent],
-  templateUrl: './filter-editor.component.html',
+    selector: 'panemu-filter-editor',
+    imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective, StringFilterComponent],
+    templateUrl: './filter-editor.component.html'
 })
 export class FilterEditorComponent implements OnInit {
   columns!: PropertyColumn<any>[];

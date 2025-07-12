@@ -31,29 +31,28 @@ import { TransposeDialogComponent } from './transpose/transpose-dialog.component
 import { initTableWidth } from './util';
 
 @Component({
-  selector: 'panemu-table',
-  standalone: true,
-  imports: [
-    MatMenuModule,
-    CommonModule,
-    MatButtonModule,
-    ResizableComponent,
-    CellRendererDirective,
-    CellEditorRendererDirective,
-    HeaderRendererDirective,
-    RowGroupRendererDirective,
-    PanemuBusyIndicatorComponent,
-    RowStylingPipe,
-    CellStylingPipe,
-    CellClassPipe,
-    ExpansionRowRendererDirective,
-    ScrollingModule,
-    RowGroupFooterRendererDirective,
-    TableFooterRendererDirective,
-],
-  // templateUrl: './panemu-table.component.html',
-  templateUrl: './panemu-table.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'panemu-table',
+    imports: [
+        MatMenuModule,
+        CommonModule,
+        MatButtonModule,
+        ResizableComponent,
+        CellRendererDirective,
+        CellEditorRendererDirective,
+        HeaderRendererDirective,
+        RowGroupRendererDirective,
+        PanemuBusyIndicatorComponent,
+        RowStylingPipe,
+        CellStylingPipe,
+        CellClassPipe,
+        ExpansionRowRendererDirective,
+        ScrollingModule,
+        RowGroupFooterRendererDirective,
+        TableFooterRendererDirective,
+    ],
+    // templateUrl: './panemu-table.component.html',
+    templateUrl: './panemu-table.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDestroy {
   @Input({required: true}) controller!: PanemuTableController<T>;

@@ -12,9 +12,8 @@ const DATA: People[] = [
 
 
 @Component({
-  templateUrl: 'basic.component.html',
-  imports: [PanemuTableComponent, PanemuSettingComponent],
-  standalone: true
+    templateUrl: 'basic.component.html',
+    imports: [PanemuTableComponent, PanemuSettingComponent]
 })
 
 export class BasicComponent implements OnInit {

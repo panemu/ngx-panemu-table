@@ -12,12 +12,11 @@ interface People2 extends People {
 }
 
 @Component({
-  selector: 'app-cell-span',
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuPaginationComponent, CellStylingPipe, RowStylingPipe, CommonModule, CellFormatterPipe],
-  templateUrl: './cell-span.component.html',
-  styleUrl: './cell-span.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-cell-span',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, CellStylingPipe, RowStylingPipe, CommonModule, CellFormatterPipe],
+    templateUrl: './cell-span.component.html',
+    styleUrl: './cell-span.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CellSpanComponent {
   rowRenderer = viewChild<TemplateRef<RowRenderer<People2>>>('rowRenderer')

@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, EventEmitter, Inject, Output } from '@angular/core';
+
+import { Directive, ElementRef, EventEmitter, Inject, Output, DOCUMENT } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, finalize, map, skip, switchMap, takeUntil, tap, } from 'rxjs/operators';
 

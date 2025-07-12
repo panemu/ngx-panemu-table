@@ -5,10 +5,9 @@ import { DataService } from '../service/data.service';
 import { CustomTableFooter } from './custom-table-footer.component';
 
 @Component({
-  imports: [PanemuTableComponent, PanemuQueryComponent],
-  standalone: true,
-  templateUrl: './virtual-scroll.component.html',
-  styleUrl: './virtual-scroll.component.scss'
+    imports: [PanemuTableComponent, PanemuQueryComponent],
+    templateUrl: './virtual-scroll.component.html',
+    styleUrl: './virtual-scroll.component.scss'
 })
 export class VirtualScrollComponent {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');

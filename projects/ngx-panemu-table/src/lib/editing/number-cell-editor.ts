@@ -3,10 +3,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CellEditorComponent } from './editing-info';
 
 @Component({
-  selector: 'number-cell-editor',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  template: `<input type="number" [formControl]="formControl" [value]="formControl.value" class="editor-input" [title]="errorMessage() || ''">`
+    selector: 'number-cell-editor',
+    imports: [ReactiveFormsModule],
+    template: `<input type="number" [formControl]="formControl" [value]="formControl.value" class="editor-input" [title]="errorMessage() || ''">`
 })
 
 export class NumberCellEditor implements CellEditorComponent {

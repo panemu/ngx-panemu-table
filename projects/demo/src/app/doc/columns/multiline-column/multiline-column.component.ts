@@ -11,12 +11,11 @@ const DATA: People[] = [
 ]
 
 @Component({
-  selector: 'app-multiline-column',
-  templateUrl: 'multiline-column.component.html',
-  imports: [PanemuTableComponent, PanemuSettingComponent],
-  standalone: true,
-  styleUrl: 'multiline-column.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-multiline-column',
+    templateUrl: 'multiline-column.component.html',
+    imports: [PanemuTableComponent, PanemuSettingComponent],
+    styleUrl: 'multiline-column.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 
 export class MultilineColumnnComponent implements OnInit {

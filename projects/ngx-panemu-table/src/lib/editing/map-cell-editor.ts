@@ -9,10 +9,9 @@ export interface MapOption {
 }
 
 @Component({
-  selector: 'map-cell-editor',
-  standalone: true,
-  imports: [ReactiveFormsModule, SpinningIconComponent],
-  templateUrl: 'map-cell-editor.html'
+    selector: 'map-cell-editor',
+    imports: [ReactiveFormsModule, SpinningIconComponent],
+    templateUrl: 'map-cell-editor.html'
 })
 
 export class MapCellEditor implements OnInit, CellEditorComponent {

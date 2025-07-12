@@ -4,10 +4,9 @@ import { PanemuTableController } from '../panemu-table-controller';
 import { RowGroup } from '../row/row-group';
 
 @Component({
-  selector: 'panemu-pagination',
-  templateUrl: 'panemu-pagination.component.html',
-  standalone: true,
-  imports: [ReactiveFormsModule],
+    selector: 'panemu-pagination',
+    templateUrl: 'panemu-pagination.component.html',
+    imports: [ReactiveFormsModule]
 })
 
 export class PanemuPaginationComponent implements OnChanges {

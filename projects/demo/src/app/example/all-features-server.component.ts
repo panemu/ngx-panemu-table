@@ -7,9 +7,8 @@ import { CountryCode } from '../model/country-code';
 import { CellFormatterPipe } from '../../../../ngx-panemu-table/src/public-api';
 
 @Component({
-  templateUrl: 'all-features-server.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, CellFormatterPipe],
-  standalone: true,
+    templateUrl: 'all-features-server.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, CellFormatterPipe]
 })
 
 export class AllFeaturesServerComponent implements OnInit {

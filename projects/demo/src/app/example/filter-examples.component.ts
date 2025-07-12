@@ -5,9 +5,8 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, PanemuTableComponent, PanemuQueryComponent],
-  templateUrl: './filter-examples.component.html',
+    imports: [CommonModule, PanemuTableComponent, PanemuQueryComponent],
+    templateUrl: './filter-examples.component.html'
 })
 export class FilterExamplesComponent {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');

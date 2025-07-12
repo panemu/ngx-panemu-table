@@ -4,9 +4,8 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  templateUrl: 'pagination.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent],
-  standalone: true,
+    templateUrl: 'pagination.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent]
 })
 
 export class PaginationComponent implements OnInit {

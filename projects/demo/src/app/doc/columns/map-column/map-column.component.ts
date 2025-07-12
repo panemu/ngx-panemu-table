@@ -12,9 +12,8 @@ const DATA: Data[] = [
 ]
 
 @Component({
-  templateUrl: 'map-column.component.html',
-  imports: [PanemuTableComponent],
-  standalone: true
+    templateUrl: 'map-column.component.html',
+    imports: [PanemuTableComponent]
 })
 
 export class MapColumnComponent implements OnInit {

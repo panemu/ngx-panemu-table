@@ -16,10 +16,9 @@ const DATA: People[] = [
 ]
 
 @Component({
-  selector: 'app-column-group',
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuSettingComponent],
-  template: `
+    selector: 'app-column-group',
+    imports: [PanemuTableComponent, PanemuSettingComponent],
+    template: `
   <div class="flex flex-col gap-4">
     <div class="flex gap-4">
       <button data-test-id="btn2" class="btn" (click)="group1()">Group 1</button>
@@ -31,7 +30,7 @@ const DATA: People[] = [
       <panemu-table [controller]="controller"></panemu-table>
     </div>
   </div>
-  `,
+  `
 })
 export class ColumnGroupComponent {
   columns!: ColumnDefinition<People>;

@@ -6,13 +6,12 @@ import { HeaderComponent } from './header';
 import { isDataRow } from '../util';
 
 @Component({
-   template: `
+    template: `
    <div class="tick-header">
       <input #checkbox type="checkbox" [indeterminate]="partialChecked" (change)="toggle($event)"><span class="label"> {{column.label}} </span>
    </div>`,
-   imports: [FormsModule],
-   standalone: true,
-   styles: `
+    imports: [FormsModule],
+    styles: `
    .tick-header {
       display: flex; align-items: center;
    }

@@ -3,10 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { GroupCellPipe, PanemuPaginationComponent, RowGroup, RowGroupComponent } from 'ngx-panemu-table';
 
 @Component({
-  templateUrl: 'country-row-group.component.html',
-  standalone: true,
-  imports: [CommonModule, GroupCellPipe, PanemuPaginationComponent],
-  styles: `
+    templateUrl: 'country-row-group.component.html',
+    imports: [CommonModule, GroupCellPipe, PanemuPaginationComponent],
+    styles: `
   :host {
     display: contents;
   }

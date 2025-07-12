@@ -4,12 +4,11 @@ import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 
 @Component({
-  selector: 'pnm-dynamic-row-style',
-  templateUrl: 'dynamic-row-style.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  standalone: true,
-  styleUrl: 'dynamic-row-style.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'pnm-dynamic-row-style',
+    templateUrl: 'dynamic-row-style.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+    styleUrl: 'dynamic-row-style.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 
 export class DynamicRowStyleComponent implements OnInit {

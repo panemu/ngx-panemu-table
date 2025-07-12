@@ -13,10 +13,9 @@ const DATA: Data[] = [
 ]
 
 @Component({
-  templateUrl: 'date-column.component.html',
-  imports: [PanemuTableComponent],
-  standalone: true,
-  providers: [{ provide: PanemuTableService, useClass: CustomPanemuTableService }]
+    templateUrl: 'date-column.component.html',
+    imports: [PanemuTableComponent],
+    providers: [{ provide: PanemuTableService, useClass: CustomPanemuTableService }]
 })
 
 export class DateColumnComponent implements OnInit {

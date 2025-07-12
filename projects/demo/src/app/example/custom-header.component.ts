@@ -14,9 +14,8 @@ const DATA: People[] = [
 ]
 
 @Component({
-  templateUrl: 'custom-header.component.html',
-  imports: [PanemuTableComponent, CommonModule, ReactiveFormsModule],
-  standalone: true
+    templateUrl: 'custom-header.component.html',
+    imports: [PanemuTableComponent, CommonModule, ReactiveFormsModule]
 })
 export class CustomHeaderComponent implements OnInit {
   customHeader = viewChild<TemplateRef<any>>('customHeader');

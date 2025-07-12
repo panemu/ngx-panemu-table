@@ -4,7 +4,7 @@ import { HeaderComponent, HeaderRenderer } from './header';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  template: `
+    template: `
   <ng-container
   *ngTemplateOutlet="templateRef?.() || defaultDescriptionTemplate; context:{column}">
   </ng-container>
@@ -12,8 +12,7 @@ import { CommonModule } from '@angular/common';
       {{column.label}}
   </ng-template>
   `,
-  imports: [CommonModule],
-  standalone: true
+    imports: [CommonModule]
 })
 export class DefaultHeaderRenderer implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>

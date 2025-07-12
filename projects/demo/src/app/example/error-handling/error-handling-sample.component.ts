@@ -10,20 +10,19 @@ import { DataService } from '../../service/data.service';
 import { DocumentationService } from '../documentation.service';
 
 @Component({
-  templateUrl: 'error-handling-sample.component.html',
-  imports: [PanemuTableComponent, ReactiveFormsModule],
-  standalone: true,
-  providers: [
-    /**
-     * To apply custom injection globally, set this provider in angular
-     * app.config.ts
-     * 
-     * @see https://ngx-panemu-table.panemu.com/getting-started/configuration
-     */
-    {
-      provide: PanemuTableService, useClass: CustomPanemuTableService
-    }
-  ]
+    templateUrl: 'error-handling-sample.component.html',
+    imports: [PanemuTableComponent, ReactiveFormsModule],
+    providers: [
+        /**
+         * To apply custom injection globally, set this provider in angular
+         * app.config.ts
+         *
+         * @see https://ngx-panemu-table.panemu.com/getting-started/configuration
+         */
+        {
+            provide: PanemuTableService, useClass: CustomPanemuTableService
+        }
+    ]
 })
 
 export class ErrorHandlingSample implements OnInit {

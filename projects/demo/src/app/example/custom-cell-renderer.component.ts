@@ -9,12 +9,11 @@ interface People2 extends People {
   amountHistory: WritableSignal<number[]>
 }
 @Component({
-  selector: 'app-custom-cell-renderer',
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuSettingComponent],
-  templateUrl: './custom-cell-renderer.component.html',
-  styleUrl: './custom-cell-renderer.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-custom-cell-renderer',
+    imports: [PanemuTableComponent, PanemuSettingComponent],
+    templateUrl: './custom-cell-renderer.component.html',
+    styleUrl: './custom-cell-renderer.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CustomCellRendererComponent {
   pts = inject(PanemuTableService);

@@ -4,11 +4,10 @@ import { MessageDialogObject } from './message-dialog.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'cmp-message-dialog',
-  templateUrl: './message-dialog.component.html',
-  standalone: true,
-  imports: [CommonModule, MatDialogModule],
-  styleUrls: ['./message-dialog.component.scss']
+    selector: 'cmp-message-dialog',
+    templateUrl: './message-dialog.component.html',
+    imports: [CommonModule, MatDialogModule],
+    styleUrls: ['./message-dialog.component.scss']
 })
 
 export class MessageDialogComponent {

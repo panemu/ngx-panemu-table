@@ -4,9 +4,8 @@ import { CellComponent, CellFormatterPipe, CellRenderer, PropertyColumn } from '
 type onClick<T> = (value: any, field: string, row?: T) => void;
 
 @Component({
-  templateUrl: 'filter-country-cell.component.html',
-  standalone: true,
-  imports: [CellFormatterPipe]
+    templateUrl: 'filter-country-cell.component.html',
+    imports: [CellFormatterPipe]
 })
 
 export class FilterCountryCellComponent<T> implements CellComponent<T> {

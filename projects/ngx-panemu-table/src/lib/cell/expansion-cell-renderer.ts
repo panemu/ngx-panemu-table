@@ -6,7 +6,7 @@ import { ExpansionRowRenderer } from '../row/expansion-row';
 import { NgClass } from '@angular/common';
 
 @Component({
-  template: `
+    template: `
    <div class="detail-cell {{position}}">
      <button (click)="click()" [disabled]="disabled" class="">
         <span class="ngx-panemu-table-icon" [ngClass]="expanded() ? 'icon-expand_more' : 'icon-chevron_right'"></span>
@@ -14,8 +14,7 @@ import { NgClass } from '@angular/common';
       <span>{{row[column.field] | cellFormatter:row:column:column.formatter}}</span>
    </div>
    `,
-  standalone: true,
-  imports: [CellFormatterPipe, NgClass]
+    imports: [CellFormatterPipe, NgClass]
 })
 
 export class ExpansionCellRenderer implements OnInit, CellComponent<any> {

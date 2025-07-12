@@ -19,12 +19,11 @@ import { BooleanRowGroupContentComponent } from './boolean-row-group-content.com
 import { CountryRowGroupFooter } from './country-row-group-footer.component';
 
 @Component({
-  selector: 'app-custom-row-group',
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe, PanemuPaginationComponent],
-  templateUrl: './custom-row-group.component.html',
-  styleUrl: './custom-row-group.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-custom-row-group',
+    imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe, PanemuPaginationComponent],
+    templateUrl: './custom-row-group.component.html',
+    styleUrl: './custom-row-group.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CustomRowGroupComponent implements OnInit {
 

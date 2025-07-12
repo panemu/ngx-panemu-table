@@ -5,10 +5,9 @@ import { FilterEditor } from './filter-editor';
 import { TableCriteria } from '../../table-query';
 
 @Component({
-  selector: 'string-filter',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './string-filter.component.html',
+    selector: 'string-filter',
+    imports: [ReactiveFormsModule],
+    templateUrl: './string-filter.component.html'
 })
 export class StringFilterComponent implements OnInit, FilterEditor {
   @Input() column!: PropertyColumn<any>;

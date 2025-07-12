@@ -4,10 +4,9 @@ import { PanemuTableService } from '../panemu-table.service';
 import { LabelTranslation } from '../option/label-translation';
 
 @Component({
-  selector: 'pnm-busy-indicator',
-  templateUrl: 'busy-indicator.component.html',
-  standalone: true,
-  imports: [SpinningIconComponent],
+    selector: 'pnm-busy-indicator',
+    templateUrl: 'busy-indicator.component.html',
+    imports: [SpinningIconComponent]
 })
 
 export class BusyIndicatorComponent {

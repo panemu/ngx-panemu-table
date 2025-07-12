@@ -12,9 +12,8 @@ const DATA: Data[] = [
 ]
 
 @Component({
-  templateUrl: 'date-time-column.component.html',
-  imports: [PanemuTableComponent],
-  standalone: true
+    templateUrl: 'date-time-column.component.html',
+    imports: [PanemuTableComponent]
 })
 
 export class DateTimeColumnComponent implements OnInit {

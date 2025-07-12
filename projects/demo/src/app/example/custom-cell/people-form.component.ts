@@ -4,10 +4,9 @@ import { People } from '../../model/people';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-people-form',
-  templateUrl: 'people-form.component.html',
-  standalone: true,
-  imports: [PanemuBusyIndicatorComponent, ReactiveFormsModule],
+    selector: 'app-people-form',
+    templateUrl: 'people-form.component.html',
+    imports: [PanemuBusyIndicatorComponent, ReactiveFormsModule]
 })
 export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People> {
   row!: People;

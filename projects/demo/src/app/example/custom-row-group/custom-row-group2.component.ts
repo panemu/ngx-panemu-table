@@ -18,11 +18,10 @@ import { CountryRowGroupFooter } from './country-row-group-footer.component';
 import { CountryRowGroup } from './country-row-group.component';
 
 @Component({
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe],
-  templateUrl: './custom-row-group2.component.html',
-  styleUrl: './custom-row-group.component.scss',
-  encapsulation: ViewEncapsulation.None
+    imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe],
+    templateUrl: './custom-row-group2.component.html',
+    styleUrl: './custom-row-group.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class CustomRowGroup2Component implements OnInit {
 

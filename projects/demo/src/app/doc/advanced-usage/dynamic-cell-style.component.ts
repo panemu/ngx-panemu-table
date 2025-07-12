@@ -4,12 +4,11 @@ import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 
 @Component({
-  selector: 'pnm-dynamic-cell-style',
-  templateUrl: 'dynamic-cell-style.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  standalone: true,
-  styleUrl: 'dynamic-cell-style.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'pnm-dynamic-cell-style',
+    templateUrl: 'dynamic-cell-style.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+    styleUrl: 'dynamic-cell-style.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 
 export class DynamicCellStyleComponent implements OnInit {

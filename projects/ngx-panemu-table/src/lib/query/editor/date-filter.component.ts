@@ -7,9 +7,8 @@ import { FilterEditor } from './filter-editor';
 import { PanemuTableService } from '../../panemu-table.service';
 
 @Component({
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './date-filter.component.html',
+    imports: [ReactiveFormsModule],
+    templateUrl: './date-filter.component.html'
 })
 export class DateFilterComponent implements OnInit, FilterEditor {
 

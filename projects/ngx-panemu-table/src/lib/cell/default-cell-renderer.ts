@@ -5,9 +5,8 @@ import { CellComponent, CellRenderer } from './cell';
 import { CellFormatterPipe } from './cell-formatter.pipe';
 
 @Component({
-  templateUrl: 'default-cell-renderer.html',
-  standalone: true,
-  imports: [CommonModule, CellFormatterPipe]
+    templateUrl: 'default-cell-renderer.html',
+    imports: [CommonModule, CellFormatterPipe]
 })
 export class DefaultCellRenderer implements CellComponent<any>, OnInit {
   row!: any;

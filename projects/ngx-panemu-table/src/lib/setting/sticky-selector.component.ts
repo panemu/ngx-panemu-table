@@ -5,10 +5,9 @@ import { CommonModule } from '@angular/common';
 import { PanemuTableService } from '../panemu-table.service';
 
 @Component({
-  selector: 'sticky-selector',
-  templateUrl: 'sticky-selector.component.html',
-  standalone: true,
-  imports: [CommonModule]
+    selector: 'sticky-selector',
+    templateUrl: 'sticky-selector.component.html',
+    imports: [CommonModule]
 })
 
 export class StickySelectorComponent implements OnInit {

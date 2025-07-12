@@ -15,10 +15,9 @@ import { FilterEditorComponent } from './editor/filter-editor.component';
 import { Filter } from './filter';
 
 @Component({
-  selector: 'panemu-query',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
-  templateUrl: './panemu-query.component.html',
+    selector: 'panemu-query',
+    imports: [CommonModule, MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
+    templateUrl: './panemu-query.component.html'
 })
 export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   controller = input.required<PanemuTableController<any>>();

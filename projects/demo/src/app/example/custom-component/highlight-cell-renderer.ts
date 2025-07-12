@@ -4,9 +4,8 @@ import { CellComponent, CellFormatterPipe, CellRenderer, PropertyColumn } from '
 import { HighlightPipe } from './highlight.pipe';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, HighlightPipe],
-  templateUrl: 'highlight-cell-renderer.html',
+    imports: [CommonModule, HighlightPipe],
+    templateUrl: 'highlight-cell-renderer.html'
 })
 export class HighlightCellRenderer implements CellComponent<any>, OnInit {
   row!: any;

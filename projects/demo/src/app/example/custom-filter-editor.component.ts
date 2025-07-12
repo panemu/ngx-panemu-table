@@ -5,9 +5,8 @@ import { DataService } from '../service/data.service';
 import { BooleanFilterComponent } from './custom-filter/boolean-filter.component';
 
 @Component({
-  standalone: true,
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  templateUrl: './custom-filter-editor.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+    templateUrl: './custom-filter-editor.component.html'
 })
 export class CustomFilterEditorComponent {
 

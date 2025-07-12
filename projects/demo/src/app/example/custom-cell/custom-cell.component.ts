@@ -5,11 +5,10 @@ import { DataService } from '../../service/data.service';
 import { FilterCountryCellComponent } from './filter-country-cell.component';
 
 @Component({
-  selector: 'pnm-custom-cell',
-  templateUrl: 'custom-cell.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  standalone: true,
-  styleUrl: 'custom-cell.component.scss'
+    selector: 'pnm-custom-cell',
+    templateUrl: 'custom-cell.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
+    styleUrl: 'custom-cell.component.scss'
 })
 
 export class CustomCellComponent implements OnInit {

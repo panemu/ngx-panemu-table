@@ -4,9 +4,8 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { BaseColumn, FilterEditor, TableCriteria } from 'ngx-panemu-table';
 
 @Component({
-  standalone: true,
-  imports: [MatSlideToggle, ReactiveFormsModule],
-  templateUrl: './boolean-filter.component.html',
+    imports: [MatSlideToggle, ReactiveFormsModule],
+    templateUrl: './boolean-filter.component.html'
 })
 export class BooleanFilterComponent implements OnInit, FilterEditor {
   column!: BaseColumn<any>;

@@ -10,9 +10,8 @@ import { StickySelectorComponent } from './sticky-selector.component';
 import { PanemuTableService } from '../panemu-table.service';
 
 @Component({
-  templateUrl: 'setting-dialog.component.html',
-  standalone: true,
-  imports: [FormsModule, CommonModule, DragDropModule, StickySelectorComponent]
+    templateUrl: 'setting-dialog.component.html',
+    imports: [FormsModule, CommonModule, DragDropModule, StickySelectorComponent]
 })
 
 export class SettingDialogComponent implements OnInit {

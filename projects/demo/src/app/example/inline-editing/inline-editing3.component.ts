@@ -98,14 +98,13 @@ class EditingController extends PanemuTableEditingController<CustomData> {
 }
 
 @Component({
-  standalone: true,
-  imports: [PanemuTableComponent, ToolbarComponent],
-  template: `
+    imports: [PanemuTableComponent, ToolbarComponent],
+    template: `
 	<div class="border">
 	<div><toolbar-component [controller]="controller" [allowInsert]="false" [allowDelete]="false"/></div>
 	<panemu-table [controller]="controller"/>
 	</div>
-	`,
+	`
 })
 export class InlineEditing3Component implements OnInit {
 

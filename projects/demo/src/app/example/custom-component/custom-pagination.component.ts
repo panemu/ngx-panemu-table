@@ -5,11 +5,10 @@ import { PanemuTableController } from 'ngx-panemu-table';
 const DEFAULT_MAX_ROWS = 100;
 
 @Component({
-  selector: 'custom-pagination',
-  imports: [ReactiveFormsModule],
-  standalone: true,
-  templateUrl: 'custom-pagination.component.html',
-  styleUrl: 'custom-pagination.component.scss'
+    selector: 'custom-pagination',
+    imports: [ReactiveFormsModule],
+    templateUrl: 'custom-pagination.component.html',
+    styleUrl: 'custom-pagination.component.scss'
 })
 
 export class CustomPaginationComponent implements OnInit {

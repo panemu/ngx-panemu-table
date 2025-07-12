@@ -7,10 +7,9 @@ import { PanemuTableService } from '../panemu-table.service';
 import { LabelTranslation } from '../option/label-translation';
 
 @Component({
-  selector: 'panemu-groupby',
-  templateUrl: 'panemu-groupby.component.html',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
+    selector: 'panemu-groupby',
+    templateUrl: 'panemu-groupby.component.html',
+    imports: [CommonModule, MatMenuModule]
 })
 
 export class PanemuGroupbyComponent {

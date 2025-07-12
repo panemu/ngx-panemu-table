@@ -6,10 +6,9 @@ import { DataService } from '../service/data.service';
 
 
 @Component({
-  selector: 'pnm-delayed',
-  templateUrl: 'delayed.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  standalone: true,
+    selector: 'pnm-delayed',
+    templateUrl: 'delayed.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent]
 })
 
 export class DelayedComponent implements OnInit {

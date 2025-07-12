@@ -20,10 +20,9 @@ import { PanemuTableService } from '../panemu-table.service';
  * ```
  */
 @Component({
-  selector: 'panemu-setting',
-  templateUrl: 'panemu-setting.component.html',
-  standalone: true,
-  imports: [MatMenuModule]
+    selector: 'panemu-setting',
+    templateUrl: 'panemu-setting.component.html',
+    imports: [MatMenuModule]
 })
 export class PanemuSettingComponent {
   @Input({ required: true }) controller!: PanemuTableController<any>;

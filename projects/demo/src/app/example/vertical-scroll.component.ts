@@ -6,14 +6,13 @@ import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-  standalone: true,
-  imports: [
-    PanemuTableComponent, 
-    PanemuPaginationComponent, 
-    MatSliderModule,
-    FormsModule
-  ],
-  templateUrl: './vertical-scroll.component.html',
+    imports: [
+        PanemuTableComponent,
+        PanemuPaginationComponent,
+        MatSliderModule,
+        FormsModule
+    ],
+    templateUrl: './vertical-scroll.component.html'
 })
 export class VerticalScrollComponent {
   height = 300

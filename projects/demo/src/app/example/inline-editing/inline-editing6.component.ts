@@ -50,9 +50,8 @@ class EditingController extends PanemuTableEditingController<CustomData> {
 }
 
 @Component({
-  standalone: true,
-  imports: [PanemuTableComponent, ToolbarComponent],
-  template: `
+    imports: [PanemuTableComponent, ToolbarComponent],
+    template: `
   <div class="border">
     <div><toolbar-component [controller]="controller"/></div>
     <panemu-table [controller]="controller"/>
@@ -68,7 +67,7 @@ class EditingController extends PanemuTableEditingController<CustomData> {
       </div>
     </div>
   </ng-template>
-	`,
+	`
 })
 export class InlineEditing6Component implements OnInit {
 

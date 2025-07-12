@@ -5,9 +5,8 @@ import { DataService } from '../service/data.service';
 
 
 @Component({
-  templateUrl: 'tickable-row.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent],
-  standalone: true,
+    templateUrl: 'tickable-row.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent]
 })
 
 export class TickableRowComponent implements OnInit {

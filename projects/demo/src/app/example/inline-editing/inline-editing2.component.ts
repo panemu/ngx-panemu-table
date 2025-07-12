@@ -68,10 +68,9 @@ class EditingController extends SampleEditingController<any> {
 }
 
 @Component({
-  selector: 'inline-editing2',
-  standalone: true,
-  imports: [PanemuTableComponent, ToolbarComponent],
-  template: `
+    selector: 'inline-editing2',
+    imports: [PanemuTableComponent, ToolbarComponent],
+    template: `
 	<div class="border">
     <div>
       <toolbar-component [controller]="controller">
@@ -80,7 +79,7 @@ class EditingController extends SampleEditingController<any> {
     </div>
     <panemu-table [controller]="controller"/>
   </div>
-	`,
+	`
 })
 
 export class InlineEditing2Component implements OnInit {

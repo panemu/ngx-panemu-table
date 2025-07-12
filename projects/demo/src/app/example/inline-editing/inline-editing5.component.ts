@@ -28,9 +28,8 @@ class EditingController extends SampleEditingController<People> {
 }
 
 @Component({
-  imports: [PanemuTableComponent, PanemuQueryComponent, ToolbarComponent],
-  standalone: true,
-  templateUrl: './inline-editing5.component.html',
+    imports: [PanemuTableComponent, PanemuQueryComponent, ToolbarComponent],
+    templateUrl: './inline-editing5.component.html'
 })
 export class InlineEditing5Component {
   pts = inject(PanemuTableService);

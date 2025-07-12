@@ -7,11 +7,10 @@ import { NestedTableComponent } from './custom-cell/nested-table.component';
 import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
-  selector: 'app-row-detail',
-  standalone: true,
-  imports: [PanemuTableComponent, CommonModule],
-  templateUrl: 'row-detail.component.html',
-  styleUrl: 'row-detail.component.scss',
+    selector: 'app-row-detail',
+    imports: [PanemuTableComponent, CommonModule],
+    templateUrl: 'row-detail.component.html',
+    styleUrl: 'row-detail.component.scss'
 })
 export class RowDetailComponent {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');

@@ -6,9 +6,8 @@ import { formatDateToIso } from '../../util';
 import { FilterEditor } from './filter-editor';
 
 @Component({
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './date-time-filter.component.html',
+    imports: [ReactiveFormsModule],
+    templateUrl: './date-time-filter.component.html'
 })
 export class DateTimeFilterComponent implements OnInit, FilterEditor {
 

@@ -7,11 +7,10 @@ import { ColumnSearchDataSource } from './column-search-datasource';
 import { HeaderFilterComponent } from './header-filter.component';
 
 @Component({
-  selector: 'column-search',
-  templateUrl: 'column-search.component.html',
-  imports: [PanemuTableComponent, ReactiveFormsModule],
-  standalone: true,
-  styles :`
+    selector: 'column-search',
+    templateUrl: 'column-search.component.html',
+    imports: [PanemuTableComponent, ReactiveFormsModule],
+    styles: `
   .panemu-table table tr th{
     padding: 2px 4px;
   }
@@ -22,7 +21,7 @@ import { HeaderFilterComponent } from './header-filter.component';
     text-overflow: unset;//remove ellipsis
   }
   `,
-  encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None
 })
 
 export class ColumnSearchComponent implements OnInit {

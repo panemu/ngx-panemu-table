@@ -3,11 +3,10 @@ import { ChartistComponent, ChartistModule, Configuration } from 'ng-chartist';
 import { CellComponent, CellRenderer, PropertyColumn } from 'ngx-panemu-table';
 
 @Component({
-  template: `
+    template: `
 	<x-chartist [configuration]="configuration"></x-chartist>
 	`,
-  standalone: true,
-  imports: [ChartistModule]
+    imports: [ChartistModule]
 })
 
 export class ChartCellComponent implements CellComponent<any> {

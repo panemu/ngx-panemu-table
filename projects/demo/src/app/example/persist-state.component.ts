@@ -6,10 +6,9 @@ import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.co
 import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
-  templateUrl: 'persist-state.component.html',
-  imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
-  standalone: true,
-  styleUrl: 'persist-state.component.scss'
+    templateUrl: 'persist-state.component.html',
+    imports: [PanemuTableComponent, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent],
+    styleUrl: 'persist-state.component.scss'
 })
 
 export class PersistStateComponent implements OnInit {
