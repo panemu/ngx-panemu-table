@@ -82,6 +82,7 @@ export class PanemuTableDataSource<T> {
     if (!groupBy) {
       return null;
     }
+    let orderOfKeys: string[] = [];
     let groupMap: { [key: string]: T[] } = {};
     result.forEach((row: any) => {
       let val = row[groupBy.field];
@@ -96,16 +97,23 @@ export class PanemuTableDataSource<T> {
 
       let groupMember = groupMap[val];
       if (!groupMember) {
+        orderOfKeys.push(val);
         groupMember = []
         groupMap[val] = groupMember;
       }
       groupMember.push(row)
     })
 
-    return Object.keys(groupMap).map(key => ({
-      value: key,
-      count: groupMap[key].length
-    }))
+
+    const groupResult: RowGroupData[] = orderOfKeys.map(key => {
+      const groupMember = groupMap[key];
+      return {
+        value: key,
+        count: groupMember.length,
+      }
+    });
+
+    return groupResult;
   }
 
   protected toYear(value: string) {
