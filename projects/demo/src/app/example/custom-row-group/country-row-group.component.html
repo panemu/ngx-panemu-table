@@ -2,16 +2,22 @@
   <div class="flex justify-between items-center">
     <span class="group-label flex items-center gap-4">
       <img width="24px" src="assets/flags/{{rowGroup.data.value.toLowerCase()}}.svg">
-      {{rowGroup.data.value | groupCell:rowGroup.formatter}} 
-      - ({{rowGroup.data.count}}) </span>
-      <span *ngIf="!disableInteraction">
+      {{rowGroup.data.value | groupCell:rowGroup.formatter}}
+    - ({{rowGroup.data.count}}) </span>
+    @if (!disableInteraction) {
+      <span>
         click to expand
       </span>
-    <span *ngIf="!disableInteraction" class="text-xs font-semibold text-gray-500">Average Amount:</span>
+    }
+    @if (!disableInteraction) {
+      <span class="text-xs font-semibold text-gray-500">Average Amount:</span>
+    }
   </div>
 </td>
 <td class="text-right">{{$any(rowGroup.data).average | number:'.2'}}</td>
 <td colspan="3">
-  <panemu-pagination *ngIf="rowGroup.expanded() && rowGroup.controller" [controller]="rowGroup.controller"
+  @if (rowGroup.expanded() && rowGroup.controller) {
+    <panemu-pagination [controller]="rowGroup.controller"
     [group]="rowGroup" class="row-group-pagination"></panemu-pagination>
+  }
 </td>

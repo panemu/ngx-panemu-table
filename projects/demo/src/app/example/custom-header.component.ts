@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
 import { BaseColumn, ColumnType, ComputedColumn, DefaultHeaderRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn } from 'ngx-panemu-table';
 import { People } from '../model/people';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HeaderTextCaseComponent } from './custom-cell/header-text-case.component';
 
@@ -15,9 +15,10 @@ const DATA: People[] = [
 
 @Component({
     templateUrl: 'custom-header.component.html',
-    imports: [PanemuTableComponent, CommonModule, ReactiveFormsModule]
+    imports: [PanemuTableComponent, ReactiveFormsModule]
 })
 export class CustomHeaderComponent implements OnInit {
+  pts = inject(PanemuTableService);
   customHeader = viewChild<TemplateRef<any>>('customHeader');
   customColumns = this.pts.buildColumns<People>([
     { field: 'email' },
@@ -38,8 +39,6 @@ export class CustomHeaderComponent implements OnInit {
 
   cmbColumnHeader = new FormControl(this.customColumns.body[0].__key)
   controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
-
-  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.reloadData();

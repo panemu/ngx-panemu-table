@@ -1,6 +1,6 @@
 import { Component, computed, input, Input, OnInit } from '@angular/core';
 import { PanemuTableController } from '../panemu-table-controller';
-import { CommonModule } from '@angular/common';
+
 import { PropertyColumn, ColumnType } from '../column/column';
 import {MatMenuModule} from '@angular/material/menu';
 import { PanemuTableService } from '../panemu-table.service';
@@ -9,7 +9,7 @@ import { LabelTranslation } from '../option/label-translation';
 @Component({
     selector: 'panemu-groupby',
     templateUrl: 'panemu-groupby.component.html',
-    imports: [CommonModule, MatMenuModule]
+    imports: [MatMenuModule]
 })
 
 export class PanemuGroupbyComponent {

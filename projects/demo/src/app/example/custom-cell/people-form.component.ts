@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PanemuBusyIndicatorComponent, PropertyColumn, ExpansionRowRenderer } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -13,13 +13,11 @@ export class PeopleFormComponent implements OnInit, ExpansionRowRenderer<People>
   column!: PropertyColumn<People>;
   close!: Function;
   ready = signal(false);
-
+  fb = inject(FormBuilder);
   form = this.fb.group({
     name: [''],
     email: ['']
   })
-
-  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     setTimeout(() => {

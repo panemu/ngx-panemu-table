@@ -1,12 +1,12 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MessageDialogObject } from './message-dialog.model';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'cmp-message-dialog',
     templateUrl: './message-dialog.component.html',
-    imports: [CommonModule, MatDialogModule],
+    imports: [MatDialogModule],
     styleUrls: ['./message-dialog.component.scss']
 })
 

@@ -1,8 +1,14 @@
-<div class="sticky-badge hover-child-inverse-display" *ngIf="(stickyObservable$ | async)" (click)="click()">
-  <span *ngIf="stickyObservable$.getValue() == 'start'" class="ngx-panemu-table-icon icon-align_horizontal_left"></span>
-  {{label}}
-  <span *ngIf="stickyObservable$.getValue() == 'end'" class="ngx-panemu-table-icon icon-align_horizontal_right"></span>
-</div>
+@if ((stickyObservable$ | async)) {
+  <div class="sticky-badge hover-child-inverse-display" (click)="click()">
+    @if (stickyObservable$.getValue() == 'start') {
+      <span class="ngx-panemu-table-icon icon-align_horizontal_left"></span>
+    }
+    {{label}}
+    @if (stickyObservable$.getValue() == 'end') {
+      <span class="ngx-panemu-table-icon icon-align_horizontal_right"></span>
+    }
+  </div>
+}
 
 <div class="sticky-options hover-child-flex">
   <button [class.selected]="stickyObservable$.getValue() == 'start'" (click)="stick('start')"><span class="ngx-panemu-table-icon icon-align_horizontal_left"></span></button>

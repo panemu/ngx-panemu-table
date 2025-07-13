@@ -6,51 +6,55 @@
     <panemu-table [controller]="controller"></panemu-table>
   </div>
 </div>
-<ng-template #rowRenderer 
-let-row="row" 
-let-visibleColumns="visibleColumns" 
-let-rowOptions="rowOptions"
-let-selectedRow="selectedRow"
-let-selectRow="selectRow"
->
+<ng-template #rowRenderer
+  let-row="row"
+  let-visibleColumns="visibleColumns"
+  let-rowOptions="rowOptions"
+  let-selectedRow="selectedRow"
+  let-selectRow="selectRow"
+  >
   <tr class="row {{row | rowStyling:rowOptions.rowClass}}"
-  [style]="row | rowStyling:rowOptions.rowStyle"
-  [class.selected-row]="selectedRow() == row"
-  (click)="selectRow(row)">
+    [style]="row | rowStyling:rowOptions.rowStyle"
+    [class.selected-row]="selectedRow() == row"
+    (click)="selectRow(row)">
     @for (column of visibleColumns; track column) {
       @if (column.field == 'country') {
-        <td *ngIf="row['country_row_span']" [attr.rowspan]="row['country_row_span']"
-        class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
-        [style]="row[column.field] | cellStyling:row:column.cellStyle"
-        [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-        >
-        {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
-        </td>
+        @if (row['country_row_span']) {
+          <td [attr.rowspan]="row['country_row_span']"
+            class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+            [style]="row[column.field] | cellStyling:row:column.cellStyle"
+            [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+            >
+            {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
+          </td>
+        }
       } @else if (column.field == 'name') {
         <td [attr.colspan]="row['name_col_span']"
-        class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
-        [style]="row[column.field] | cellStyling:row:column.cellStyle"
-        [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-        >
-        {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
+          class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+          [style]="row[column.field] | cellStyling:row:column.cellStyle"
+          [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+          >
+          {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
         </td>
       } @else if (column.field == 'email') {
-        <td *ngIf="row['email_col_span']" [attr.colspan]="row['email_col_span']"
-        class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
-        [style]="row[column.field] | cellStyling:row:column.cellStyle"
-        [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-        >
-        {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
-        </td>
+        @if (row['email_col_span']) {
+          <td [attr.colspan]="row['email_col_span']"
+            class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+            [style]="row[column.field] | cellStyling:row:column.cellStyle"
+            [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+            >
+            {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
+          </td>
+        }
       } @else {
 
-      <td
-        class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
-        [style]="row[column.field] | cellStyling:row:column.cellStyle"
-        [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
-        >
-        {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
-      </td>
+        <td
+          class="default-cell {{column.__key!}} {{row[column.field] | cellStyling:row:column.cellClass}}"
+          [style]="row[column.field] | cellStyling:row:column.cellStyle"
+          [ngClass]="{'sticky-start': column.sticky == 'start', 'sticky-end': column.sticky == 'end'}"
+          >
+          {{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}
+        </td>
       }
     }
   </tr>

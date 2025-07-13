@@ -16,10 +16,23 @@ interface EditingInfoMap<T> {
   editingInfo: EditingInfo<T>
 }
 
+/**
+ * This class enable [inline editing](/usages/inline-editing). It has 2 main methods:
+ * 
+ * - create reactive AbstractControl when editing is initated
+ * - provide necessary methods to save or delete data
+ * 
+ * It provides default editor components for various `ColumnType`. One can provide ones own editor.
+ * 
+ */
 export class PanemuTableEditingController<T> {
 
   private subscription$ = new Subscription();
   private mapEditingInfos: EditingInfoMap<T>[] = [];
+
+  /**
+   * @internal
+   */
   pts!: PanemuTableService;
 
   /**
@@ -147,6 +160,9 @@ export class PanemuTableEditingController<T> {
     return renderer;
   }
 
+  /**
+   * @internal
+   */
   protected _createCellEditorRenderer(column: PropertyColumn<T>, formControl: AbstractControl): CellEditorRenderer<T> | null {
     let columnType = column.type!;
     let result: CellEditorRenderer<T> | null;
@@ -204,17 +220,17 @@ export class PanemuTableEditingController<T> {
     return this.mapEditingInfos.find(item => item.rowData === rowData)?.editingInfo;
   }
 
+  /**
+   * @internal
+   * @param rowData 
+   */
   _deleteEditingInfo(rowData: T) {
     this.mapEditingInfos = this.mapEditingInfos.filter(item => item.rowData != rowData);
   }
 
   /**
    * 
-   * @param columns 
-   * @param rowData 
-   * @param tableMode 
-   * @returns 
-   * @interal
+   * @internal
    */
   _createEditingInfo(columns: PropertyColumn<T>[], rowData: T, tableMode: TABLE_MODE) {
 
@@ -316,6 +332,7 @@ export class PanemuTableEditingController<T> {
    * 
    * @param rowData 
    * @returns 
+   * @internal
    */
   _validate(rowData: T) {
     let map = this.mapEditingInfos.find(item => item.rowData == rowData);
@@ -324,7 +341,6 @@ export class PanemuTableEditingController<T> {
     }
     if (map.editingInfo.form.invalid) {
       map.editingInfo.form.markAllAsTouched();
-      map.editingInfo.editor
       this.handleInvalidFormGroup(map.editingInfo.form, map.editingInfo.label);
       return false;
     }
@@ -388,6 +404,7 @@ export class PanemuTableEditingController<T> {
    * 
    * @param mode 
    * @returns 
+   * @internal
    */
   _getChangedData(mode: TABLE_MODE) {
     if (mode == "insert") {
@@ -402,6 +419,10 @@ export class PanemuTableEditingController<T> {
     return result;
   }
 
+  /**
+   * @internal
+   * @param rowData 
+   */
   _startEdit(rowData: T) {
     let editingInfo = this._getEditingInfo(rowData);
     if (editingInfo){

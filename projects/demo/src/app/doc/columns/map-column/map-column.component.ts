@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal, signal } from '@angular/core';
+import { Component, inject, OnInit, Signal, signal } from '@angular/core';
 import { ColumnType, MapColumn, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 
 interface Data { gender?: string }
@@ -17,6 +17,7 @@ const DATA: Data[] = [
 })
 
 export class MapColumnComponent implements OnInit {
+  pts = inject(PanemuTableService);
   genderMap = signal<any>({});
 
   columns = this.pts.buildColumns<Data>([
@@ -47,8 +48,6 @@ export class MapColumnComponent implements OnInit {
   ])
 
   controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
-
-  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.reloadData();

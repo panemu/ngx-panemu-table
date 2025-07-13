@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -10,6 +10,8 @@ import { BooleanFilterComponent } from './custom-filter/boolean-filter.component
 })
 export class CustomFilterEditorComponent {
 
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>({ width: 40 }),
     { field: 'id', type: ColumnType.INT, width: 50 },
@@ -27,8 +29,6 @@ export class CustomFilterEditorComponent {
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
 

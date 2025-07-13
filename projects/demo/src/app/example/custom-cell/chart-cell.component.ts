@@ -49,7 +49,7 @@ export class ChartCellComponent implements CellComponent<any> {
       this.configuration.data.series[0] = this.row[this.parameter?.signalProperty || '']?.();
       this.configuration.data.labels = this.row[this.parameter?.signalProperty || '']?.();
 
-      this.chart()?.chart.update(this.configuration.data);
+      this.chart()?.chart?.update(this.configuration.data);
     })
   }
   

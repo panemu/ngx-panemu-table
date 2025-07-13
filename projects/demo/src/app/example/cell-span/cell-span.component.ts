@@ -1,4 +1,4 @@
-import { Component, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
 import { CellFormatterPipe, CellStylingPipe, ColumnType, RowRenderer, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, RowStylingPipe, TableData, TableQuery } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -20,6 +20,8 @@ interface People2 extends People {
 })
 export class CellSpanComponent {
   rowRenderer = viewChild<TemplateRef<RowRenderer<People2>>>('rowRenderer')
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People2>([
     { field: 'id', type: ColumnType.INT },
     { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
@@ -39,8 +41,6 @@ export class CellSpanComponent {
   controller = PanemuTableController.createWithCustomDataSource<People2>(this.columns, this.getData.bind(this),
     { rowOptions: { rowRenderer: this.rowRenderer }, autoHeight: true }
   );
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.maxRows = 10;

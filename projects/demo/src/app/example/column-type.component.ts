@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ColumnType, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -11,6 +11,8 @@ import { DataService } from '../service/data.service';
 
 export class ColumnTypeComponent implements OnInit {
   genderMap = signal({});
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT, label: 'ID (int)' },
     { field: 'name' },
@@ -23,8 +25,6 @@ export class ColumnTypeComponent implements OnInit {
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {

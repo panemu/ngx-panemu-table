@@ -1,41 +1,46 @@
 <div class="panemu-query" [class.disabled]="disabled()">
   <div class="input-panel">
-    <div *ngIf="groupByLabel" class="group chip-panel">
-      <span class="ngx-panemu-table-icon icon-splitscreen_top group-icon"></span>
-      <div class="chip-label">{{groupByLabel}}</div>
-
-      <button class="close-button" (click)="clearGroup()" [disabled]="disabled()">
-        <span class="ngx-panemu-table-icon icon-close"></span>
-      </button>
-    </div>
-    <div *ngFor="let item of _criteria;let i = index" class="filter chip-panel hover-parent">
-      <div class="filter-chip" (click)="disabled() ? $event.stopPropagation() : editQuery(item)">
-        <div class="filter-label hover-child-inverse">
-          {{item.label}}
-        </div>
-        <span class="ngx-panemu-table-icon icon-search filter-icon hover-child"></span>
+    @if (groupByLabel) {
+      <div class="group chip-panel">
+        <span class="ngx-panemu-table-icon icon-splitscreen_top group-icon"></span>
+        <div class="chip-label">{{groupByLabel}}</div>
+        <button class="close-button" (click)="clearGroup()" [disabled]="disabled()">
+          <span class="ngx-panemu-table-icon icon-close"></span>
+        </button>
       </div>
-      <div class="chip-label">{{item.value}}</div>
-      <button class="close-button" (click)="deleteCriteria(i)" [disabled]="disabled()">
-        <span class="ngx-panemu-table-icon icon-close"></span>
-      </button>
-    </div>
-    <input class="input-field" 
-    [placeholder]="labelTranslation.search"
-    [matAutocomplete]="auto" 
-    (dblclick)="forceQueryMenu()"
-    #txtCriteriaElement
-    [formControl]="txtCriteria">
+    }
+    @for (item of _criteria; track item; let i = $index) {
+      <div class="filter chip-panel hover-parent">
+        <div class="filter-chip" (click)="disabled() ? $event.stopPropagation() : editQuery(item)">
+          <div class="filter-label hover-child-inverse">
+            {{item.label}}
+          </div>
+          <span class="ngx-panemu-table-icon icon-search filter-icon hover-child"></span>
+        </div>
+        <div class="chip-label">{{item.value}}</div>
+        <button class="close-button" (click)="deleteCriteria(i)" [disabled]="disabled()">
+          <span class="ngx-panemu-table-icon icon-close"></span>
+        </button>
+      </div>
+    }
+    <input class="input-field"
+      [placeholder]="labelTranslation.search"
+      [matAutocomplete]="auto"
+      (dblclick)="forceQueryMenu()"
+      #txtCriteriaElement
+      [formControl]="txtCriteria">
     <mat-autocomplete #auto="matAutocomplete" class="panemu-query-menu">
       <mat-optgroup [label]="searchTitle"></mat-optgroup>
       @for (option of _searchableColumn; track option) {
         <mat-option class="panemu-query-field" [value]="option.field" >{{option.label}}</mat-option>
       }
-     </mat-autocomplete>
+    </mat-autocomplete>
   </div>
-  <button *ngIf="hasGroupableColumn" class="group-button" [matMenuTriggerFor]="menu" [disabled]="disabled()">
-    <span class="ngx-panemu-table-icon icon-splitscreen_top"></span>
-  </button>
+  @if (hasGroupableColumn) {
+    <button class="group-button" [matMenuTriggerFor]="menu" [disabled]="disabled()">
+      <span class="ngx-panemu-table-icon icon-splitscreen_top"></span>
+    </button>
+  }
   <mat-menu #menu="matMenu">
     <panemu-groupby [controller]="controller()" (click)="$event.stopPropagation();"></panemu-groupby>
   </mat-menu>

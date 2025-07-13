@@ -4,7 +4,7 @@ import { GroupCellPipe, PanemuPaginationComponent, RowGroup, RowGroupFooterCompo
 
 @Component({
     templateUrl: 'country-row-group-footer.component.html',
-    imports: [CommonModule, GroupCellPipe, PanemuPaginationComponent],
+    imports: [CommonModule, GroupCellPipe],
     styles: `
   :host {
     display: contents;

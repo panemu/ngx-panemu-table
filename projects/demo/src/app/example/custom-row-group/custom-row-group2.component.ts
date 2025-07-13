@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   ColumnType,
-  GroupCellPipe,
   PanemuQueryComponent,
   PanemuTableComponent,
   PanemuTableController,
@@ -18,7 +17,7 @@ import { CountryRowGroupFooter } from './country-row-group-footer.component';
 import { CountryRowGroup } from './country-row-group.component';
 
 @Component({
-    imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe],
+    imports: [PanemuTableComponent, PanemuQueryComponent],
     templateUrl: './custom-row-group2.component.html',
     styleUrl: './custom-row-group.component.scss',
     encapsulation: ViewEncapsulation.None

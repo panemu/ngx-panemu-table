@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, signal, Signal, TemplateRef } from '@angular/core';
 import { CellComponent, CellFormatterPipe, CellRenderer, PropertyColumn } from 'ngx-panemu-table';
 import { HighlightPipe } from './highlight.pipe';
 
 @Component({
-    imports: [CommonModule, HighlightPipe],
+    imports: [HighlightPipe],
     templateUrl: 'highlight-cell-renderer.html'
 })
 export class HighlightCellRenderer implements CellComponent<any>, OnInit {

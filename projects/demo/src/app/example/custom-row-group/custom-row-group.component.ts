@@ -20,7 +20,7 @@ import { CountryRowGroupFooter } from './country-row-group-footer.component';
 
 @Component({
     selector: 'app-custom-row-group',
-    imports: [PanemuTableComponent, PanemuQueryComponent, GroupCellPipe, PanemuPaginationComponent],
+    imports: [PanemuTableComponent, PanemuQueryComponent, PanemuPaginationComponent],
     templateUrl: './custom-row-group.component.html',
     styleUrl: './custom-row-group.component.scss',
     encapsulation: ViewEncapsulation.None

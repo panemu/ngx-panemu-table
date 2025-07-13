@@ -23,7 +23,6 @@ import { preventInitialChildAnimations } from '@ng-doc/ui-kit/animations';
         NgDocRootComponent,
         NgDocNavbarComponent,
         RouterLink,
-        NgDocThemeToggleComponent,
         NgDocButtonIconComponent,
         NgDocTooltipDirective,
         NgDocIconComponent,

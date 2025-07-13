@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { input, AfterViewInit, Component, OnDestroy, OnInit, ViewChild, effect, isSignal, Signal, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -16,7 +16,7 @@ import { Filter } from './filter';
 
 @Component({
     selector: 'panemu-query',
-    imports: [CommonModule, MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
+    imports: [MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
     templateUrl: './panemu-query.component.html'
 })
 export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {

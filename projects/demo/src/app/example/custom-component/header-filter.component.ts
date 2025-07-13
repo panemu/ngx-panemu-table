@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent, HeaderRenderer, PanemuTableController, PropertyColumn } from 'ngx-panemu-table';
@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
     templateUrl: 'header-filter.component.html',
-    imports: [CommonModule, ReactiveFormsModule]
+    imports: [ReactiveFormsModule]
 })
 export class HeaderFilterComponent implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>;

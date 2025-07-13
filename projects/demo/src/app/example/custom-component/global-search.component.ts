@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
@@ -16,7 +16,9 @@ import { HighlightCellRenderer } from './highlight-cell-renderer';
 
 export class GlobalSearchComponent implements OnInit {
   txtSearch = new FormControl('');
-  searchTerm = signal('')
+  searchTerm = signal('');
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -33,8 +35,6 @@ export class GlobalSearchComponent implements OnInit {
   })
   datasource = new GlobalSearchDataSource(this.columns);
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, public pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.maxRows = 10;

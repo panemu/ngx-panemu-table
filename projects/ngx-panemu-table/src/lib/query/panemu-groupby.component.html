@@ -4,42 +4,44 @@
     {{labelTranslation.groupBy}}
   </div>
   <div class="body">
-    <div *ngFor="let item of _columns()">
-      <div *ngIf="item.type != _columnType.DATE && item.type != _columnType.DATETIME else pnlDate"
-        class="menu-item"
-        (click)="toggleGroup(item)">
-        <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
-        {{item.label}}
+    @for (item of _columns(); track item) {
+      <div>
+        @if (item.type != _columnType.DATE && item.type != _columnType.DATETIME) {
+          <div
+            class="menu-item"
+            (click)="toggleGroup(item)">
+            <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
+            {{item.label}}
+          </div>
+        } @else {
+          <div class="menu-item"
+            [matMenuTriggerFor]="pnlDateMenu" [matMenuTriggerData]="{column: item}">
+            <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
+            {{item.label}}
+          </div>
+        }
       </div>
-      <ng-template #pnlDate>
-        <div class="menu-item"
-          [matMenuTriggerFor]="pnlDateMenu" [matMenuTriggerData]="{column: item}">
-          <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(item)"></span>
-          {{item.label}}
-        </div>
-
-      </ng-template>
-    </div>
+    }
   </div>
 </div>
 <mat-menu #pnlDateMenu="matMenu" class="panemu-groupby">
   <ng-template matMenuContent let-column="column" >
 
-    <div 
+    <div
       class="menu-item"
       (click)="toggleGroup(column, 'year')">
       <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'year')"></span>
       {{labelTranslation.year}}
     </div>
 
-    <div 
+    <div
       class="menu-item"
       (click)="toggleGroup(column, 'month')">
       <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'month')"></span>
       {{labelTranslation.month}}
     </div>
 
-    <div 
+    <div
       class="menu-item"
       (click)="toggleGroup(column, 'day')">
       <span class="ngx-panemu-table-icon icon-check" [class.invisible]="!isInGroup(column, 'day')"></span>

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -26,6 +26,8 @@ export class PersistStateComponent implements OnInit {
     cellStyle: (_: string) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
   };
 
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>(),
     { field: 'id', type: ColumnType.INT},
@@ -58,8 +60,6 @@ export class PersistStateComponent implements OnInit {
       states: undefined
     }
   });
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent, PropertyColumn } from 'ngx-panemu-table';
@@ -7,7 +7,7 @@ type TextCase = 'normal' | 'upper' | 'lower'
 
 @Component({
     templateUrl: 'header-text-case.component.html',
-    imports: [CommonModule, ReactiveFormsModule]
+    imports: [ReactiveFormsModule]
 })
 export class HeaderTextCaseComponent implements OnInit, HeaderComponent {
   column!: PropertyColumn<any>;

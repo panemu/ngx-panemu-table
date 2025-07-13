@@ -1,5 +1,5 @@
 
-import { Directive, ElementRef, EventEmitter, Inject, Output, DOCUMENT } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, Inject, Output, DOCUMENT, inject } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { distinctUntilChanged, finalize, map, skip, switchMap, takeUntil, tap, } from 'rxjs/operators';
 
@@ -8,6 +8,8 @@ import { distinctUntilChanged, finalize, map, skip, switchMap, takeUntil, tap, }
   standalone: true
 })
 export class ResizableDirective {
+  private elementRef = inject(ElementRef);
+  private documentRef = inject(DOCUMENT);
   @Output() onStart = new EventEmitter
   @Output() onEnd = new EventEmitter
   @Output()
@@ -34,10 +36,4 @@ export class ResizableDirective {
       );
     })
   );
-
-  constructor(
-    @Inject(DOCUMENT) private readonly documentRef: Document,
-    @Inject(ElementRef)
-    private readonly elementRef: ElementRef<HTMLElement>
-  ) { }
 }

@@ -17,6 +17,7 @@ import { DataService } from '../service/data.service';
 export class VerticalScrollComponent {
   height = 300
   pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -31,7 +32,7 @@ export class VerticalScrollComponent {
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
 
-  constructor(private dataService: DataService) { }
+  constructor() { }
 
   ngOnInit() {
 

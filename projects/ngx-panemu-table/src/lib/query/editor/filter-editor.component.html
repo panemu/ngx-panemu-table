@@ -4,20 +4,22 @@
     <label>{{labelTranslation.column}}</label>
     <select class="select" [formControl]="field">
       @for (clm of columns; track $index) {
-      <option [value]="clm.field"> {{clm.label}} </option>
+        <option [value]="clm.field"> {{clm.label}} </option>
       }
     </select>
 
     <label>{{labelTranslation.searchValue}}</label>
-    <div *ngIf="editorComponent">
-      <ng-template #editor [filterEditor]="editorComponent" [column]="column" [filter]="filter"
-      [value]="value"></ng-template>
-    </div>
-    
-    <ng-container *ngIf="stringFilterComponent != editorComponent" >
+    @if (editorComponent) {
+      <div>
+        <ng-template #editor [filterEditor]="editorComponent" [column]="column" [filter]="filter"
+        [value]="value"></ng-template>
+      </div>
+    }
+
+    @if (stringFilterComponent != editorComponent) {
       <label>{{labelTranslation.stringRepresentation}}</label>
       <string-filter [column]="column" [filter]="filter"[value]="value"></string-filter>
-    </ng-container>
+    }
   </div>
   <div style="display: flex; gap: 1rem; justify-content: flex-end;">
     <button class="btn" (click)="cancel()">{{labelTranslation.cancel}}</button>

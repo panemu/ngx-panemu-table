@@ -3,8 +3,6 @@ import { Overlay } from "@angular/cdk/overlay";
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, signal, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 import { Observable } from 'rxjs';
 import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indicator.component';
 import { CellClassPipe } from "./cell/cell-class.pipe";
@@ -33,9 +31,7 @@ import { initTableWidth } from './util';
 @Component({
     selector: 'panemu-table',
     imports: [
-        MatMenuModule,
         CommonModule,
-        MatButtonModule,
         ResizableComponent,
         CellRendererDirective,
         CellEditorRendererDirective,
@@ -50,7 +46,6 @@ import { initTableWidth } from './util';
         RowGroupFooterRendererDirective,
         TableFooterRendererDirective,
     ],
-    // templateUrl: './panemu-table.component.html',
     templateUrl: './panemu-table.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

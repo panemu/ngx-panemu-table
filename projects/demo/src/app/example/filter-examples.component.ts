@@ -1,16 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, viewChild } from '@angular/core';
+
+import { Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
-    imports: [CommonModule, PanemuTableComponent, PanemuQueryComponent],
+    imports: [PanemuTableComponent, PanemuQueryComponent],
     templateUrl: './filter-examples.component.html'
 })
 export class FilterExamplesComponent {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');
-
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -31,7 +32,6 @@ export class FilterExamplesComponent {
     }
   );
   totalRows = 0;
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {

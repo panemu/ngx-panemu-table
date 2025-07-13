@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -20,6 +20,8 @@ import { DataService } from '../service/data.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ComputedComponent implements OnInit {
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'name' },
     { field: 'gender' },
@@ -41,8 +43,6 @@ export class ComputedComponent implements OnInit {
   private readonly datasource = new PanemuTableDataSource<People>;
 
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {

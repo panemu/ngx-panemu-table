@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit, signal, TemplateRef, Type, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { StringFilterComponent } from './string-filter.component';
 
 @Component({
     selector: 'panemu-filter-editor',
-    imports: [CommonModule, ReactiveFormsModule, FilterEditorDirective, StringFilterComponent],
+    imports: [ReactiveFormsModule, FilterEditorDirective, StringFilterComponent],
     templateUrl: './filter-editor.component.html'
 })
 export class FilterEditorComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -26,7 +26,8 @@ export class AllFeaturesClientComponent implements OnInit {
     resizable: false,
     cellStyle: (_: string) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
   };
-
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     new TickColumnClass<People>({ width: 50 }),
     { field: 'id', type: ColumnType.INT, width: 60},
@@ -58,8 +59,6 @@ export class AllFeaturesClientComponent implements OnInit {
   )
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, public pts: PanemuTableService) { }
 
   ngOnInit() {
     //set initial grouping

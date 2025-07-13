@@ -1,4 +1,4 @@
-import { Component, computed, Input, OnInit, Signal } from "@angular/core";
+import { Component, computed, inject, Input, OnInit, Signal } from "@angular/core";
 import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn, ExpansionRowRenderer, TableQuery } from "ngx-panemu-table";
 import { People } from "../../model/people";
 import { DataService } from "../../service/data.service";
@@ -12,7 +12,8 @@ export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People
   row!: People;
   column!: PropertyColumn<People>;
   close!: Function;
-
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
@@ -28,9 +29,6 @@ export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People
     }
     return 0
   })   
-
-  constructor(private pts: PanemuTableService, private dataService: DataService) { }
-  
 
   ngOnInit() {
     this.dataService.getPeople().subscribe({

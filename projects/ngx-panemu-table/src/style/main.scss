@@ -1,4 +1,4 @@
-@import './icon.scss';
+@use './icon.scss';
 
 :root {
   --pnm-table-cell-padding: 1rem;
@@ -13,6 +13,9 @@
 .panemu-setting-dialog,
 .panemu-query-editor,
 .panemu-pagination {
+  font-family: Roboto, sans-serif;
+  color: rgb(78, 78, 78);
+  font-size: 0.875rem;
 
   * {
     box-sizing: border-box;
@@ -22,9 +25,7 @@
     font-weight: 400;
   }
 
-  font-family: Roboto, sans-serif;
-  color: rgb(78, 78, 78);
-  font-size: 0.875rem;
+
 
 }
 

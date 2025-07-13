@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../../model/people';
 
@@ -19,7 +19,7 @@ const DATA: People[] = [
 })
 
 export class MultilineColumnnComponent implements OnInit {
-
+  pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', width: 50 },
     { field: 'name', width: 300, cellClass: (_) => 'multi-line' },
@@ -33,8 +33,6 @@ export class MultilineColumnnComponent implements OnInit {
   ])
 
   controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
-
-  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.controller.reloadData();

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -12,6 +12,8 @@ import { DataService } from '../../service/data.service';
 })
 
 export class DynamicCellStyleComponent implements OnInit {
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'name', 
       cellClass:(value, row) => row.verified ? 'cell-verified' : '',
@@ -24,8 +26,6 @@ export class DynamicCellStyleComponent implements OnInit {
   datasource = new PanemuTableDataSource<People>;
 
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) {}
 
   ngOnInit() {
     

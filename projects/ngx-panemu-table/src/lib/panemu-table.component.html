@@ -1,6 +1,8 @@
 <div class="panemu-table">
-  <panemu-busy-indicator *ngIf="loading | async"></panemu-busy-indicator>
-  
+  @if (loading | async) {
+    <panemu-busy-indicator></panemu-busy-indicator>
+  }
+
   <div [class.v-scrollable]="!tableOptions.autoHeight" style="overflow: auto;">
     @if (tableOptions.virtualScroll) {
       <cdk-virtual-scroll-viewport [itemSize]="tableOptions.virtualScrollRowHeight" style="height: 100%;">
@@ -28,130 +30,133 @@
 
     <ng-template #tableHeadTemplate>
       <colgroup>
-        @for (column of _visibleColumns; track column) {
-          <col #colEl [attr.data-col]="column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
-        }
-      </colgroup>
-      <thead [style.top]="headerTop()">
-        @for (header of columnDefinition.header; track header) {
-          <tr>
-            @for (cell of header.cells; track cell.__key; let idx = $index) {
-              <ng-container *ngIf="cell.resizable; else notResizable">
-                <th class="default-header"
-                  [attr.data-col]="cell.__key!"
-                  [attr.group]="cell.__isGroup"
-                  [attr.rowspan]="cell.__rowSpan"
-                  [attr.colspan]="cell.__colSpan"
-                  [resizable]="cell.width!"
-                  (afterResize)="afterColumnResize()"
-                  [column]="cell"
-                  [class.sticky]="!!cell.sticky"
-                  [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
-                  [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
-                  [table]="matTable!">
-                  <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
-                </th>
-              </ng-container>
-              <ng-template #notResizable>
-                <th class="default-header"
-                  [attr.data-col]="cell.__key!"
-                  [attr.group]="cell.__isGroup"
-                  [attr.rowspan]="cell.__rowSpan"
-                  [attr.colspan]="cell.__colSpan"
-                  [class.sticky]="!!cell.sticky"
-                  [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
-                  [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
-                  >
-                  <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
-                </th>
-              </ng-template>
-            }
-          </tr>
-        }
-      </thead>
-    </ng-template>
-
-    <ng-template #rowTemplate let-row="row">
-      @if (isGroup(row)) {
-        <tr [class]="'row-group ' + row.column.__key">
-          <ng-template [rowGroupRenderer]="row.column.rowGroupRenderer" [rowGroup]="row" [colSpan]="_displayedColumns.length" [expandAction]="expandAction"></ng-template>
-        </tr>
-      } @else if (isGroupFooter(row)) {
-        <tr [class]="'row-group-footer ' + row.rowGroup.column.__key">
-          <ng-template [rowGroupFooterRenderer]="row.rowGroup.column.rowGroupRenderer" [rowGroup]="row.rowGroup" [colSpan]="_displayedColumns.length"></ng-template>
-        </tr>
-      } @else if (isExpansionRow(row)) {
+      @for (column of _visibleColumns; track column) {
+        <col #colEl [attr.data-col]="column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
+      }
+    </colgroup>
+    <thead [style.top]="headerTop()">
+      @for (header of columnDefinition.header; track header) {
         <tr>
-          <td [attr.colspan]="_displayedColumns.length">
-            @if(row.isTemplateRef()) {
-              <ng-container
+          @for (cell of header.cells; track cell.__key; let idx = $index) {
+            @if (cell.resizable) {
+              <th class="default-header"
+                [attr.data-col]="cell.__key!"
+                [attr.group]="cell.__isGroup"
+                [attr.rowspan]="cell.__rowSpan"
+                [attr.colspan]="cell.__colSpan"
+                [resizable]="cell.width!"
+                (afterResize)="afterColumnResize()"
+                [column]="cell"
+                [class.sticky]="!!cell.sticky"
+                [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
+                [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
+                [table]="matTable!">
+                <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column : cell}"></ng-container>
+              </th>
+            } @else {
+              <th class="default-header"
+                [attr.data-col]="cell.__key!"
+                [attr.group]="cell.__isGroup"
+                [attr.rowspan]="cell.__rowSpan"
+                [attr.colspan]="cell.__colSpan"
+                [class.sticky]="!!cell.sticky"
+                [style.left.px]="cell.sticky == 'start' ? cell.__leftStyle : null"
+                [style.right.px]="cell.sticky == 'end' ? cell.__rightStyle : null"
+                >
+                <ng-container [ngTemplateOutlet]="columnHeader" [ngTemplateOutletContext]="{column: cell}"></ng-container>
+              </th>
+            }
+          }
+        </tr>
+      }
+    </thead>
+  </ng-template>
+
+  <ng-template #rowTemplate let-row="row">
+    @if (isGroup(row)) {
+      <tr [class]="'row-group ' + row.column.__key">
+        <ng-template [rowGroupRenderer]="row.column.rowGroupRenderer" [rowGroup]="row" [colSpan]="_displayedColumns.length" [expandAction]="expandAction"></ng-template>
+      </tr>
+    } @else if (isGroupFooter(row)) {
+      <tr [class]="'row-group-footer ' + row.rowGroup.column.__key">
+        <ng-template [rowGroupFooterRenderer]="row.rowGroup.column.rowGroupRenderer" [rowGroup]="row.rowGroup" [colSpan]="_displayedColumns.length"></ng-template>
+      </tr>
+    } @else if (isExpansionRow(row)) {
+      <tr>
+        <td [attr.colspan]="_displayedColumns.length">
+          @if(row.isTemplateRef()) {
+            <ng-container
               [ngTemplateOutlet]="$any(row).component()"
               [ngTemplateOutletContext]="{row: row.row, column: row.column, close: row.close.bind(row)}">
-              </ng-container>
-            } @else {
-              <ng-template
-                [expansionRowRenderer]="$any(row).component"
-                [row]="row.row"
-                [column]="row.column"
-                [close]="row.close.bind(row)">
-              </ng-template>
-            }
-          </td>
+            </ng-container>
+          } @else {
+            <ng-template
+              [expansionRowRenderer]="$any(row).component"
+              [row]="row.row"
+              [column]="row.column"
+              [close]="row.close.bind(row)">
+            </ng-template>
+          }
+        </td>
+      </tr>
+    } @else if (tableOptions.rowOptions.rowRenderer?.()) {
+      <ng-container [ngTemplateOutlet]="tableOptions.rowOptions.rowRenderer!()!"
+      [ngTemplateOutletContext]="{row, visibleColumns: _visibleColumns, rowOptions: tableOptions.rowOptions, selectedRow: _controllerSelectedRowSignal, selectRow: this.selectRow.bind(this)}"></ng-container>
+    } @else {
+      <ng-container [ngTemplateOutlet]="defaultRowRenderer" [ngTemplateOutletContext]="{row}"></ng-container>
+    }
+  </ng-template>
+
+  <ng-template #footerComponent>
+    @if (tableOptions.footer) {
+      <tfoot [style.bottom]="footerBottom()">
+        <tr>
+          <ng-template [tableFooterRenderer]="tableOptions.footer.component" [parameter]="tableOptions.footer.parameter" [colSpan]="_displayedColumns.length"></ng-template>
         </tr>
-      } @else if (tableOptions.rowOptions.rowRenderer?.()) {
-        <ng-container [ngTemplateOutlet]="tableOptions.rowOptions.rowRenderer!()!" 
-        [ngTemplateOutletContext]="{row, visibleColumns: _visibleColumns, rowOptions: tableOptions.rowOptions, selectedRow: _controllerSelectedRowSignal, selectRow: this.selectRow.bind(this)}"></ng-container>
-      } @else {
-        <ng-container [ngTemplateOutlet]="defaultRowRenderer" [ngTemplateOutletContext]="{row}"></ng-container>
-      }
-    </ng-template>
+      </tfoot>
+    }
+  </ng-template>
 
-    <ng-template #footerComponent>
-      @if (tableOptions.footer) {
-        <tfoot [style.bottom]="footerBottom()">
-          <tr>
-            <ng-template [tableFooterRenderer]="tableOptions.footer.component" [parameter]="tableOptions.footer.parameter" [colSpan]="_displayedColumns.length"></ng-template>
-          </tr>
-        </tfoot>
-      }
-    </ng-template>
-
-  </div>
-  <div class="no-data" *ngIf="controller && !dataSource?.length && !(loading | async)"> {{labelTranslation.noData}} </div>
+</div>
+@if (controller && !dataSource?.length && !(loading | async)) {
+  <div class="no-data"> {{labelTranslation.noData}} </div>
+}
 </div>
 
 <ng-template #columnHeader let-column="column">
   <div class="column-header" [class.sortable]="column.sortable" (click)="sort(column)" [style]="column.__contentStyle">
     <ng-template [headerRenderer]="column" ></ng-template>
-    <span *ngIf="controller.sortedColumn[column.field]"
-    class="ngx-panemu-table-icon"
-    [ngClass]="controller.sortedColumn[column.field] == 'asc' ? 'arrow_upward_alt' : 'arrow_downward_alt'">
-    </span>
+    @if (controller.sortedColumn[column.field]) {
+      <span
+        class="ngx-panemu-table-icon"
+        [ngClass]="controller.sortedColumn[column.field] == 'asc' ? 'arrow_upward_alt' : 'arrow_downward_alt'">
+      </span>
+    }
   </div>
 </ng-template>
 
 <ng-template #defaultRowRenderer let-row="row">
 
   <tr class="row {{row | rowStyling:tableOptions.rowOptions.rowClass}}"
-  [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
-  [class.selected-row]="_controllerSelectedRowSignal() == row"
-  (click)="selectRow(row)"
-  (dblclick)="onDoubleClick(row)"
-  >
+    [style]="row | rowStyling:tableOptions.rowOptions.rowStyle"
+    [class.selected-row]="_controllerSelectedRowSignal() == row"
+    (click)="selectRow(row)"
+    (dblclick)="onDoubleClick(row)"
+    >
     @for (column of _visibleColumns; track column) {
       <td
-      class="default-cell {{column.__key!}} {{row[column.field] | cellClass:row:_controllerSelectedRowSignal() == row:column.__key!:controller.mode():controller.editingController:column.cellClass}}"
-      [style]="row[column.field] | cellStyling:row:column.cellStyle"
-      [class.sticky]="!!column.sticky"
-      [style.left.px]="column.sticky == 'start' ? column.__leftStyle : null"
-      [style.right.px]="column.sticky == 'end' ? column.__rightStyle : null"
-      >
+        class="default-cell {{column.__key!}} {{row[column.field] | cellClass:row:_controllerSelectedRowSignal() == row:column.__key!:controller.mode():controller.editingController:column.cellClass}}"
+        [style]="row[column.field] | cellStyling:row:column.cellStyle"
+        [class.sticky]="!!column.sticky"
+        [style.left.px]="column.sticky == 'start' ? column.__leftStyle : null"
+        [style.right.px]="column.sticky == 'end' ? column.__rightStyle : null"
+        >
 
-      @if(_controllerSelectedRowSignal() == row && controller.mode() != 'browse' && editingInfo) {
-        <ng-template [cellEditorRenderer]="column" [row]="row" [editor]="editingInfo.editor[column.__key!]" ></ng-template>
-      } @else {
-        <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
-      }
+        @if(_controllerSelectedRowSignal() == row && controller.mode() != 'browse' && editingInfo) {
+          <ng-template [cellEditorRenderer]="column" [row]="row" [editor]="editingInfo.editor[column.__key!]" ></ng-template>
+        } @else {
+          <ng-template [cellRenderer]="column" [row]="row" ></ng-template>
+        }
       </td>
     }
   </tr>

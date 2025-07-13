@@ -21,18 +21,31 @@ import { HeaderRenderer } from '../public-api';
 
 const GROUP_KEY_PREFIX = 'group_';
 
+/**
+ * The main purpose of this class is to [build columns](/api/classes/panemu/PanemuTableService#buildcolumns)
+ * to be rendered in the table. It provide various default setting such as label translation, pagination
+ * setting, default format for number or date etc. Those setting can be overriden globally so within one app,
+ * all tables will use the same setting.
+ * 
+ * It also provide [editing](/api/classes/panemu/PanemuTableEditingController) and [query](/api/classes/panemu/PanemuQueryComponent)
+ * functionality.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class PanemuTableService {
 
+  /**
+   * The locale parameter is used by default number and date format.
+   * @param locale injected LOCALE_ID from angular framework. It is used for default number and date format.
+   */
   constructor(@Inject(LOCALE_ID) protected locale: string) {}
 
   /**
    * Build columns for the table. This method handle column initialization. The `options` argument is by default
    * taken from `PanemuTableService.getColumnOptions`
    * 
-   * @param columns 
+   * @param columns columns to be displayed in table
    * @param options any specified value will override `PanemuTableService.getColumnOptions`.
    * @returns 
    */
@@ -372,7 +385,7 @@ export class PanemuTableService {
   }
 
   /**
-   * Unspecified properties in `BaseColumn` use values returned by this method.
+   * Unspecified properties in `BaseColumn` when calling `PanemuTableService.buildColumns` use values returned by this method.
    * @returns 
    */
   getColumnOptions(): Required<DefaultColumnOptions> {
@@ -502,9 +515,9 @@ export class PanemuTableService {
   }
 
   /**
-   * Delete table state.
+   * Delete [table state](/usages/persist-states).
    * If you override it, ensure to also override `PanemuTableService.saveTableState` and `PanemuTableService.getTableState`.
-   * @param stateKey 
+   * @param stateKey
    */
   deleteTableState(stateKey: string) {
     localStorage.removeItem(stateKey);

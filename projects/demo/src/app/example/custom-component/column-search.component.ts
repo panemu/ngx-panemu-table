@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../model/people';
@@ -26,6 +26,8 @@ import { HeaderFilterComponent } from './header-filter.component';
 
 export class ColumnSearchComponent implements OnInit {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name', },
@@ -43,8 +45,6 @@ export class ColumnSearchComponent implements OnInit {
       component: this.footerTemplate
     }
   });
-
-  constructor(private dataService: DataService, public pts: PanemuTableService) { }
 
   ngOnInit() {
     this.columns.body.forEach(item => item.headerRenderer = HeaderFilterComponent.create(this.controller))

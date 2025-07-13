@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { CustomPanemuTableService } from '../../../service/custom-panemu-table.service';
 
@@ -20,6 +20,7 @@ const DATA: Data[] = [
 
 export class DateColumnComponent implements OnInit {
 
+  pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<Data>([
     { field: 'enrolled', label: 'Regular Column' },
     { field: 'enrolled', type: ColumnType.DATE, label: 'Default Format' },
@@ -31,8 +32,6 @@ export class DateColumnComponent implements OnInit {
   ])
 
   controller = PanemuTableController.create(this.columns, new PanemuTableDataSource(DATA), {autoHeight: true});
-
-  constructor(private pts: PanemuTableService) {}
 
   ngOnInit() {
     console.log('translation', this.pts.getLabelTranslation());

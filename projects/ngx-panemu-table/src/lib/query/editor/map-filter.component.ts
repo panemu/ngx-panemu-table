@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, isSignal, OnChanges, OnInit, SimpleChanges, WritableSignal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MapColumn } from '../../column/column';
@@ -6,7 +6,7 @@ import { FilterEditor } from './filter-editor';
 import { TableCriteria } from '../../table-query';
 
 @Component({
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     templateUrl: './map-filter.component.html'
 })
 export class MapFilterComponent implements OnInit, FilterEditor, OnChanges {

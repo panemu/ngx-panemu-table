@@ -11,6 +11,7 @@ import { CustomTableFooter } from './custom-table-footer.component';
 })
 export class VirtualScrollComponent {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');
+  pts: PanemuTableService = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', type: ColumnType.INT },
     { field: 'name' },
@@ -35,7 +36,6 @@ export class VirtualScrollComponent {
   );
   cdr = inject(ChangeDetectorRef);
   dataService = inject(DataService);
-  constructor(private pts: PanemuTableService) { }
 
   ngOnInit() {
     const data: People[] = [];

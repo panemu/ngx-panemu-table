@@ -7,6 +7,10 @@
 </div>
 <div mat-dialog-actions class="mat-dialog-actions">
   <button (click)="close('yes')" cdkFocusInitial class="btn mr-2">{{data.yesLabel}}</button>
-  <button *ngIf="data.noLabel" (click)="close('no')" class="btn btn-subtle mr-2">{{data.noLabel}}</button>
-  <button *ngIf="data.cancelLabel" (click)="close('cancel')" class="btn btn-subtle">{{data.cancelLabel}}</button>
+  @if (data.noLabel) {
+    <button (click)="close('no')" class="btn btn-subtle mr-2">{{data.noLabel}}</button>
+  }
+  @if (data.cancelLabel) {
+    <button (click)="close('cancel')" class="btn btn-subtle">{{data.cancelLabel}}</button>
+  }
 </div>

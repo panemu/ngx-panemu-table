@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, Input, OnInit } from '@angular/core';
 import { RowGroup, RowGroupContentComponent } from 'ngx-panemu-table';
 
@@ -17,7 +17,6 @@ import { RowGroup, RowGroupContentComponent } from 'ngx-panemu-table';
     }
   </div>
   `,
-    imports: [NgIf]
 })
 export class BooleanRowGroupContentComponent implements RowGroupContentComponent {
   rowGroup!: RowGroup;

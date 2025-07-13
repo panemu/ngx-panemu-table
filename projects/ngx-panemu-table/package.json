@@ -14,9 +14,9 @@
   },
   "homepage": "https://ngx-panemu-table.panemu.com/",
   "peerDependencies": {
-    "@angular/common": "18 - 20",
-    "@angular/core": "18 - 20",
-    "@angular/material": "18 - 20"
+    "@angular/common": "19 - 20",
+    "@angular/core": "19 - 20",
+    "@angular/material": "19 - 20"
   },
   "dependencies": {
     "tslib": "^2.3.0"

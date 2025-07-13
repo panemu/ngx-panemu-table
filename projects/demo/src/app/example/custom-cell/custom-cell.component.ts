@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, viewChild } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -14,6 +14,8 @@ import { FilterCountryCellComponent } from './filter-country-cell.component';
 export class CustomCellComponent implements OnInit {
   genderCellTemplate = viewChild<TemplateRef<any>>('genderCellTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
+  pts = inject(PanemuTableService);
+  dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
     { field: 'id'},
     { field: 'name' },
@@ -38,8 +40,6 @@ export class CustomCellComponent implements OnInit {
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     // this.controller.groupByColumns = [{field: 'country'}]

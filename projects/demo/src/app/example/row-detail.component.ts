@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, TemplateRef, viewChild } from '@angular/core';
+
+import { Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { ColumnType, ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -8,7 +8,7 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
     selector: 'app-row-detail',
-    imports: [PanemuTableComponent, CommonModule],
+    imports: [PanemuTableComponent],
     templateUrl: 'row-detail.component.html',
     styleUrl: 'row-detail.component.scss'
 })
@@ -17,6 +17,7 @@ export class RowDetailComponent {
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   deleteExpansionRow = viewChild<TemplateRef<any>>('deleteExpansionRow');
 
+  pts = inject(PanemuTableService);
   private readonly clmEditInExpansion: ComputedColumn = {
     type: ColumnType.COMPUTED,
     formatter: (val: any) => '',
@@ -26,6 +27,7 @@ export class RowDetailComponent {
     cellStyle: (_) => 'border-left-color: rgba(0,0,0, .12); border-left-width: 1px; border-left-style: solid;'
   };
 
+  dataService = inject(DataService);  
   columns = this.pts.buildColumns<People>([
     { field: 'id', },
     { field: 'name', },
@@ -49,10 +51,6 @@ export class RowDetailComponent {
   datasource = new PanemuTableDataSource<People>();
 
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private pts: PanemuTableService,
-    private dataService: DataService,
-  ) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe({
