@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -11,7 +11,8 @@ import { DataService } from '../service/data.service';
 })
 
 export class ColumnWidthComponent implements OnInit {
-
+  private dataService = inject(DataService);
+  private pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
     { field: 'id', width: 300 },
     { field: 'name', width: 300 },
@@ -24,8 +25,6 @@ export class ColumnWidthComponent implements OnInit {
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);
-
-  constructor(private dataService: DataService, private pts: PanemuTableService) { }
 
   ngOnInit() {
     this.dataService.getPeople().subscribe(result => {
