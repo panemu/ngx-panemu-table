@@ -40,7 +40,8 @@ export class HighlightPipe implements PipeTransform {
       return value;
     }
     
-    const regex = new RegExp(searchTerm, 'gi');
+    const escapedSearchTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedSearchTerm, 'gi');
     try {
 
       const match = value.match(regex);
