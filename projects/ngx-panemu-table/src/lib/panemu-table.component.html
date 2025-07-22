@@ -124,7 +124,7 @@
 </div>
 
 <ng-template #columnHeader let-column="column">
-  <div class="column-header" [class.sortable]="column.sortable" (click)="sort(column)" [style]="column.__contentStyle">
+  <div class="column-header" [class.sortable]="column.sortable" (click)="sort(column, $event)" [style]="column.__contentStyle">
     <ng-template [headerRenderer]="column" ></ng-template>
     @if (controller.sortedColumn[column.field]) {
       <span

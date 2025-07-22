@@ -2,7 +2,7 @@ import { Dialog, DialogRef } from "@angular/cdk/dialog";
 import { Overlay } from "@angular/cdk/overlay";
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, inject, Input, OnChanges, OnDestroy, signal, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, ElementRef, HostListener, inject, Input, OnChanges, OnDestroy, signal, Signal, SimpleChanges, TemplateRef, Type, ViewChild, viewChildren, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PanemuBusyIndicatorComponent } from './busy-indicator/panemu-busy-indicator.component';
 import { CellClassPipe } from "./cell/cell-class.pipe";
@@ -525,17 +525,23 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     return item instanceof RowGroupFooter;
   }
 
-  sort(column: PropertyColumn<T>) {
+  sort(column: PropertyColumn<T>, event: MouseEvent) {
     if (!column.sortable) return;
     if (this.controller.mode() != 'browse') return;
-    
-    let initialDirection = this.controller.sortedColumn[column.field.toString()] || '';
-    if (initialDirection == 'asc') {
-      this.controller.sortedColumn[column.field.toString()] = 'desc';
-    } else if (initialDirection == 'desc') {
-      delete this.controller.sortedColumn[column.field.toString()];
+
+    const field = column.field.toString();
+    const currentDirection = this.controller.sortedColumn[field] as 'asc' | 'desc' | undefined;
+
+    if (!event.ctrlKey) {
+      this.controller.sortedColumn = {};
+    }
+
+    if (!currentDirection) {
+      this.controller.sortedColumn[field] = 'asc';
+    } else if (currentDirection === 'asc') {
+      this.controller.sortedColumn[field] = 'desc';
     } else {
-      this.controller.sortedColumn[column.field.toString()] = 'asc';
+      delete this.controller.sortedColumn[field];
     }
 
     this.controller.reloadCurrentPage();
