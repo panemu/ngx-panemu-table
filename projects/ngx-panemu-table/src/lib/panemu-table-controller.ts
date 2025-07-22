@@ -72,6 +72,9 @@ export class PanemuTableController<T> {
   private isGroupController = false;
   private stateInitialized = false;
   tableOptions: TableOptions<T>;
+  /**
+   * For multi-column sorting, hold the CTRL key while clicking column headers.
+   */
   sortedColumn: { [key: string]: 'asc' | 'desc' } = {};
 
   private hasPagination = false;
