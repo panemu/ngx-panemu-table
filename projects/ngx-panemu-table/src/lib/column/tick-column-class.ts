@@ -15,7 +15,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
   headerRenderer?: HeaderRenderer;
   field!: any;
   __data!: Signal<T[]>;
-  selections = signal<T[]>([]);
+  __selections = signal<T[]>([]);
   visible?: boolean;
   cellClass?: (value: any, row?: T) => string;
   __key?: string;
@@ -37,13 +37,13 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
     this.headerRenderer = this.headerRenderer ? this.headerRenderer : showCheckboxHeader ? {component: TickHeaderRenderer} : undefined;
     afterRenderEffect(() => {
       if (this.__data()) {
-        this.selections.set([]);
+        this.__selections.set([]);
       }
     })
   }
 
   isAllSelected() {
-    const selectedCount = this.selections().length;
+    const selectedCount = this.__selections().length;
     const rowCount = this.__data()?.filter(item => isDataRow(item)).length;
     return selectedCount == rowCount;
   }
@@ -56,10 +56,10 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
    */
   setTicked(ticked: boolean, row: T) {
 
-    if (ticked && !this.selections().includes(row)) {
-      this.selections.update(vals => [...vals, row])
-    } else if (!ticked && this.selections().includes(row)) {
-      this.selections.update(vals => vals.filter(item => item != row))
+    if (ticked && !this.__selections().includes(row)) {
+      this.__selections.update(vals => [...vals, row])
+    } else if (!ticked && this.__selections().includes(row)) {
+      this.__selections.update(vals => vals.filter(item => item != row))
     }
   }
 
@@ -95,9 +95,9 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
           indexes.push(item);
         }
       }
-      this.selections.set(indexes);
+      this.__selections.set(indexes);
     } else {
-      this.selections.set([]);
+      this.__selections.set([]);
     }
   }
 
@@ -108,7 +108,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
    * @returns
    */
   isTicked(row: T) {
-    return this.selections().includes(row);
+    return this.__selections().includes(row);
   }
 
   /**
@@ -117,7 +117,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
    * @returns
    */
   getTickedRowsAsSignal() {
-    return this.selections.asReadonly()
+    return this.__selections.asReadonly()
   }
 
   /**
@@ -125,6 +125,6 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
    * @returns
    */
   getTickedRows() {
-    return this.selections();
+    return this.__selections();
   }
 }

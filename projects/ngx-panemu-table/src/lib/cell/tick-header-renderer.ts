@@ -28,7 +28,7 @@ export class TickHeaderRenderer implements HeaderComponent {
   constructor() {
     effect(() => {
       const asTickColumn = this.column as TickColumnClass<any>;
-      const selectedCount = asTickColumn.selections?.().length;
+      const selectedCount = asTickColumn.__selections?.().length;
       this.allChecked = asTickColumn.isAllSelected();
       this.partialChecked.set(selectedCount > 0 && !this.allChecked);
       if (this.checkbox()) {
