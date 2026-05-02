@@ -1,0 +1,86 @@
+@let n = node();
+<div class="group" [class.is-or]="n.logical === 'or'">
+  <div class="group-header">
+    <div class="logical-toggle" role="group">
+      <button
+        type="button"
+        [class.active]="n.logical === 'and'"
+        (click)="setLogical('and')">AND</button>
+      <button
+        type="button"
+        [class.active]="n.logical === 'or'"
+        (click)="setLogical('or')">OR</button>
+    </div>
+    <div class="group-actions">
+      <button type="button" class="btn" (click)="addCondition()">+ condition</button>
+      <button type="button" class="btn" (click)="addGroup()">+ group</button>
+      @if (canRemove()) {
+        <button type="button" class="btn btn-danger" (click)="remove.emit()" title="Remove group">×</button>
+      }
+    </div>
+  </div>
+
+  <div
+    class="children"
+    [class.dragging]="isDragging()"
+    [class.cant-accept]="isDragging() && !canAccept()">
+    @if (n.children.length === 0) {
+      <div
+        class="drop-zone empty"
+        [class.active]="hoverIndex() === 0"
+        (dragenter)="onDragOver($event, 0)"
+        (dragover)="onDragOver($event, 0)"
+        (dragleave)="onDragLeave(0)"
+        (drop)="onDrop($event, 0)">
+        no rules — add a condition or group
+      </div>
+    } @else {
+      <div
+        class="drop-zone"
+        [class.active]="hoverIndex() === 0"
+        (dragenter)="onDragOver($event, 0)"
+        (dragover)="onDragOver($event, 0)"
+        (dragleave)="onDragLeave(0)"
+        (drop)="onDrop($event, 0)"></div>
+
+      @for (child of n.children; track $index) {
+        <div class="row">
+          <button
+            type="button"
+            class="drag-handle"
+            draggable="true"
+            aria-label="Drag to rearrange"
+            title="Drag to rearrange"
+            (dragstart)="onDragStart($event, $index)"
+            (dragend)="onDragEnd()">⠿</button>
+          <div class="row-body">
+            @if (asCondition(child); as c) {
+              <app-query-condition
+                [node]="c"
+                [fields]="fields()"
+                (remove)="removeChild($index)"
+                (changed)="bubble()" />
+            }
+            @if (asGroup(child); as g) {
+              <app-query-group
+                [node]="g"
+                [fields]="fields()"
+                [canRemove]="true"
+                (remove)="removeChild($index)"
+                (changed)="bubble()" />
+            }
+          </div>
+        </div>
+
+        <div
+          class="drop-zone"
+          [class.active]="hoverIndex() === $index + 1"
+          (dragenter)="onDragOver($event, $index + 1)"
+          (dragover)="onDragOver($event, $index + 1)"
+          (dragleave)="onDragLeave($index + 1)"
+          (drop)="onDrop($event, $index + 1)"></div>
+      }
+    }
+  </div>
+
+</div>

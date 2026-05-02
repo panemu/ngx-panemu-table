@@ -1,5 +1,5 @@
 import { Component, inject, input, OnInit, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuSettingComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuTableComponent, PanemuSettingComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 const DATA: People[] = [
@@ -27,12 +27,12 @@ export class BasicComponent implements OnInit {
     { field: 'country' },
     { field: 'amount' },
     {
-      type: ColumnType.GROUP, label: 'Date Info', children: [
+      type: 'group', label: 'Date Info', children: [
         { field: 'enrolled'},
         { field: 'last_login' },
       ]
     },
-    { field: 'verified' }
+    { field: 'verified', type: 'boolean' }
   ]);
   
   datasource = new PanemuTableDataSource([...DATA]);

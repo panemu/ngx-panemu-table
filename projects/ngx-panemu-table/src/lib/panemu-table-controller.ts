@@ -1,6 +1,6 @@
 import { Signal, signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { BehaviorSubject, catchError, finalize, Observable, of, skip, Subject, switchMap } from "rxjs";
-import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, NonGroupColumn } from "./column/column";
+import { BaseColumn, ColumnDefinition, ComputedColumn, GroupedColumn, LeafColumn, PropertyColumn, TickColumn } from "./column/column";
 import { PanemuTableDataSource } from "./datasource/panemu-table-datasource";
 import { TABLE_MODE } from "./editing/table-mode";
 import { TableOptions } from "./option/options";
@@ -10,9 +10,10 @@ import { RowGroup, RowGroupData, RowGroupFooter } from "./row/row-group";
 import { TableStateManager } from "./state/table-state-manager";
 import { ColumnState, TableState } from "./state/table-states";
 import { TableData } from "./table-data";
-import { GroupBy, TableCriteria, TableQuery } from "./table-query";
+import { GroupBy, TableQuery } from "./table-query";
 import { formatDateToIso, isDataRow, mergeDeep, toDate } from "./util";
 import { PanemuTableEditingController } from "./editing/panemu-table-editing-controller";
+import { AndPredicate, EqPredicate, Predicate } from "./query/query-builder/types";
 
 /**
  * Function to retrieve data based on pagination, sorting, filtering and grouping setting.
@@ -49,7 +50,7 @@ export class PanemuTableController<T> {
 
   private selectedRow = signal<T | null>(null)
   groupByColumns: GroupBy[] = [];
-  criteria: TableCriteria[] = [];
+  criteria?: Predicate | null = null;
   private _mode = signal<TABLE_MODE>('browse');
 
   private _loading = new BehaviorSubject<boolean>(false);
@@ -101,6 +102,11 @@ export class PanemuTableController<T> {
     tableOptions?: Partial<TableOptions<T>>) {
 
     this.pts = columnDefinition.__tableService;
+
+    this.columnDefinition.body.forEach(item => {
+      item.getTableController = () => this;
+    })
+
     this._errorHandler = tableOptions?.errorHandler ?? this.pts.handleError.bind(this.pts);
     this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
     this.tableOptions = this.pts.getTableOptions();
@@ -109,6 +115,14 @@ export class PanemuTableController<T> {
     this.tableOptions.rowOptions.rowSelection = this.tableOptions.rowOptions.rowSelection ?? true;
     this.tableOptions.autoHeight = this.tableOptions.virtualScroll ? false : this.tableOptions.autoHeight;
     this.initReloadCueListener();
+  }
+
+  private resetState() {
+    this._startIndex = 0;
+    this._maxRows = Math.min(this.pts.getPaginationMaxRows(), this.pts.getPaginationMaxRowsLimit());
+    this.criteria = null;
+    this.groupByColumns = [];
+    this.sortedColumn = {};
   }
 
   /**
@@ -143,19 +157,21 @@ export class PanemuTableController<T> {
       tq.groupBy = this.groupByColumns[0];
     }
     this.createSortingInfos(tq);
-    tq.tableCriteria = [...this.criteria];
+    if (this.criteria) {
+      tq.where = JSON.parse(JSON.stringify(this.criteria)) as Predicate;
+    }
     return tq;
   }
 
   private createSortingInfos(tq: TableQuery) {
     for (const key in this.sortedColumn) {
-      tq.sortingInfos.push({ field: key, direction: this.sortedColumn[key] });
+      tq.orderBy.push({ field: key, direction: this.sortedColumn[key] });
     }
     if (tq.groupBy) {
       /**
        * Only include sorting info that match with group field because the other isn't relevant
        */
-      tq.sortingInfos = tq.sortingInfos?.filter(item => item.field == tq.groupBy!.field);
+      tq.orderBy = tq.orderBy?.filter(item => item.field == tq.groupBy!.field);
     }
   }
 
@@ -350,7 +366,8 @@ export class PanemuTableController<T> {
         delete tq.groupBy;
       }
       this.createSortingInfos(tq);
-      tq.tableCriteria.push(...this.buildCriteriaRecursively(group, []));
+
+      tq.where = this.buildCriteriaRecursively(group, tq.where ?? null);
       return tq;
     }
 
@@ -366,26 +383,53 @@ export class PanemuTableController<T> {
     return groupController;
   }
 
-  private buildCriteriaRecursively(group: RowGroup, tableCriteria: TableCriteria[]) {
+  private buildCriteriaRecursively(group: RowGroup, tableCriteria: Predicate | null): Predicate {
+
+    if (tableCriteria == null || tableCriteria.type != 'and') {
+      let andCriteria: AndPredicate = { type: 'and', operands: [] }
+      if (tableCriteria != null) {
+        andCriteria.operands = [tableCriteria];
+      }
+      tableCriteria = andCriteria;
+    }
+
     if (group.parent) {
       this.buildCriteriaRecursively(group.parent, tableCriteria);
     }
-    let val;
-    if (group.data.value === null || group.data.value === undefined || group.data.value == '') {
-      val = 'NULL'
+    
+    let newCriteria: Predicate;
+    if (group.data.value === null || group.data.value === undefined || group.data.value === '') {
+      newCriteria = { type: 'isNull', field: group.column.field.toString()}
     } else {
-      val = group.column.type != null && group.column.type != undefined && group.column.type != ColumnType.STRING ? group.data.value : `"${group.data.value}"`;
+      // let val = group.column.type != null && group.column.type != undefined && group.column.type != 'string' ? group.data.value : `"${group.data.value}"`;
       if (group.modifier == 'year') {
         let nextYear = +(group.data.value) + 1;
-        val = `${group.data.value}-01-01.,${nextYear}-01-01`;
+        newCriteria = {
+          type: 'and',
+          operands: [
+            { type: 'gte', field: group.column.field.toString(), value: `${group.data.value}-01-01` },
+            { type: 'lt', field: group.column.field.toString(), value: `${nextYear}-01-01` }
+          ]
+        }
+
       } else if (group.modifier == 'month') {
         let endMonth = toDate(group.data.value + '-01');
         endMonth.setMonth(endMonth.getMonth() + 1);
-        val = group.data.value + '-01' + '.,' + formatDateToIso(endMonth);
+        newCriteria = {
+          type: 'and',
+          operands: [
+            { type: 'gte', field: group.column.field.toString(), value: group.data.value + '-01' },
+            { type: 'lt', field: group.column.field.toString(), value: formatDateToIso(endMonth)! }
+          ]
+        }
 
+      } else {
+        newCriteria = { type: 'eq', field: group.column.field.toString(), value: group.data.value }
       }
     }
-    tableCriteria.push({ field: group.field, value: val });
+
+
+    tableCriteria.operands.push(newCriteria);
     return tableCriteria;
   }
 
@@ -551,7 +595,7 @@ export class PanemuTableController<T> {
     }
     const csv: string[] = [];
 
-    const visibleCols = this.columnDefinition.body.filter(item => item.visible && item.type != ColumnType.TICK);
+    const visibleCols = this.columnDefinition.body.filter(item => item.visible);
 
     if (csvOption.includeHeader) {
       csv.push(visibleCols.map(item => this.escapeCsvText(item.label || '')).join(','));
@@ -570,6 +614,7 @@ export class PanemuTableController<T> {
       } else if (isDataRow(row)) {
         const dataRow = row as T;
         for (const col of visibleCols) {
+          
           if (col.formatter) {
             csvRow.push(this.escapeCsvText(col.formatter(dataRow[col.field], dataRow) ?? ''))
           } else {
@@ -637,7 +682,7 @@ export class PanemuTableController<T> {
   private restoreState(state: TableState) {
     const saveState = this.tableOptions.saveState;
     if (saveState?.states?.includes('criteria') ?? true) {
-      this.criteria = state.criteria || [];
+      this.criteria = state.criteria;
     }
     if (saveState?.states?.includes('groupByColumns') ?? true) {
       this.groupByColumns = state.groupByColumns || [];
@@ -653,7 +698,7 @@ export class PanemuTableController<T> {
     }
     if ((saveState?.states?.includes('columns') ?? true) && state.columns) {
       const flattenStructure = this.getFlattenColumns(this.columnDefinition.mutatedStructure, []);
-      const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
+      const newStructure: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[] = [];
       for (const clmState of state.columns) {
         const actualColumn = flattenStructure.find(item => item.__key == clmState.key);
         if (!actualColumn) {
@@ -663,7 +708,7 @@ export class PanemuTableController<T> {
         newStructure.push(actualColumn);
         if (clmState.children?.length) {
           const childStructure = this.restoreGroupState(clmState, flattenStructure);
-          (actualColumn as GroupedColumn).children = childStructure;
+          (actualColumn as GroupedColumn<T>).children = childStructure;
         } else {
           this.copyState(clmState, actualColumn);
         }
@@ -680,8 +725,8 @@ export class PanemuTableController<T> {
     actualColumn.sticky = clmState.sticky;
   }
 
-  private restoreGroupState(groupState: ColumnState, flattenStructure: (NonGroupColumn<any> | GroupedColumn)[]) {
-    const newStructure: (NonGroupColumn<T> | GroupedColumn)[] = [];
+  private restoreGroupState(groupState: ColumnState, flattenStructure: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[]) {
+    const newStructure: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[] = [];
     for (const child of groupState.children!) {
       const actualColumn = flattenStructure.find(item => item.__key == child.key);
       if (!actualColumn) {
@@ -691,7 +736,7 @@ export class PanemuTableController<T> {
       newStructure.push(actualColumn);
       if (child.children?.length) {
         const childStructure = this.restoreGroupState(child, flattenStructure);
-        (actualColumn as GroupedColumn).children = childStructure;
+        (actualColumn as GroupedColumn<T>).children = childStructure;
       } else {
         this.copyState(child, actualColumn);
       }
@@ -699,11 +744,11 @@ export class PanemuTableController<T> {
     return newStructure;
   }
 
-  private getFlattenColumns(columns: (NonGroupColumn<any> | GroupedColumn)[], result: (NonGroupColumn<any> | GroupedColumn)[]) {
+  private getFlattenColumns(columns: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[], result: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[]) {
     for (const clm of columns) {
       result.push(clm);
-      if (clm.type == ColumnType.GROUP) {
-        this.getFlattenColumns((clm as GroupedColumn).children, result);
+      if (clm.type == 'group') {
+        this.getFlattenColumns((clm as GroupedColumn<T>).children, result);
       }
     }
     return result;

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 
@@ -20,8 +20,8 @@ export class DynamicCellStyleComponent implements OnInit {
       cellStyle:(value, row) => row.gender == 'M' ? 'color:red;' : ''
     },
     { field: 'email' , },
-    { field: 'gender', type: ColumnType.MAP, valueMap: {F: 'Female', M: 'Male'} },
-    { field: 'verified', type: ColumnType.MAP, valueMap: {true: 'Yes', false: 'No'}}
+    { field: 'gender', type: 'map', valueMap: {F: 'Female', M: 'Male'} },
+    { field: 'verified', type: 'boolean'}
   ])
   datasource = new PanemuTableDataSource<People>;
 

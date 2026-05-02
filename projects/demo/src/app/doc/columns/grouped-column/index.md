@@ -2,11 +2,11 @@
 keyword: GroupedColumnPage
 ---
 
-To group multiple columns under one cell header, use `ColumnType.GROUP` type. It also requires `labels` and `children` properties to be specified. Nested groups is supported.
+To group multiple columns under one cell header, use `'group'` type. It also requires `labels` and `children` properties to be specified. Nested groups is supported.
 
 ```typescript
 {
-   type: ColumnType.GROUP, label: 'Biodata', children: [
+   type: 'group', label: 'Biodata', children: [
       { field: 'name' },
       { field: 'gender' },
       { field: 'email' },
@@ -18,15 +18,15 @@ Nested group is supported. For example:
 
 ```typescript
 {
-   type: ColumnType.GROUP, label: 'Other Data', children: [
+   type: 'group', label: 'Other Data', children: [
       { field: 'country' },
       {
-      type: ColumnType.GROUP, label: 'Date Info', children: [
+      type: 'group', label: 'Date Info', children: [
          { field: 'enrolled' },
          { field: 'last_login' },
       ]
       },
-      { field: 'verified' },
+      { field: 'verified', type: 'boolean' },
    ]
 }
 ```

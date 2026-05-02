@@ -1,0 +1,26 @@
+<div class="panemu-query-builder">
+  <div class="header">
+    <div class="title">
+      {{labelTranslation.queryBuilder}}
+    </div>
+  </div>
+
+  <div class="close" (click)="onCancel()">
+    <span class="ngx-panemu-table-icon icon-close icon-big"></span>
+  </div>
+
+  <div class="body">
+    <app-query-group
+      [node]="root()"
+      [fields]="fields()"
+      [canRemove]="false"
+      (changed)="onChanged()" />
+  </div>
+
+    <div class="query-builder-footer">
+    
+      <button class="btn apply" (click)="onApply()">{{labelTranslation.apply}}</button>
+      <button class="btn reset" (click)="onReset()">{{labelTranslation.reset}}</button>
+      <button class="btn cancel" (click)="onCancel()">{{labelTranslation.cancel}}</button>
+    </div>
+</div>

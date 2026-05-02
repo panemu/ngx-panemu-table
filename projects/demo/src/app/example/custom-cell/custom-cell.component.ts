@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, Predicate } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { FilterCountryCellComponent } from './filter-country-cell.component';
@@ -23,15 +23,15 @@ export class CustomCellComponent implements OnInit {
     { 
       field: 'country', 
       cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
-      type: ColumnType.MAP,
+      type: 'map',
       valueMap: this.dataService.getCountryMap()
     },
-    { field: 'amount', type: ColumnType.DECIMAL },
+    { field: 'amount', type: 'decimal' },
     { field: 'email' },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
     {
-      type: ColumnType.COMPUTED,
+      type: 'computed',
       formatter: (val: any) => '',
       cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
       sticky: 'end',
@@ -50,7 +50,7 @@ export class CustomCellComponent implements OnInit {
   }
 
   onCountryFilterClick(value: any, propName: string) {
-    this.controller.criteria = [{ field: propName, value: value }]
+    this.controller.criteria = { field: propName, value: value, type: 'eq' } as Predicate;
     this.controller.reloadData();
   }
 

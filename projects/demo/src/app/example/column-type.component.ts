@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ColumnType, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
@@ -14,14 +14,14 @@ export class ColumnTypeComponent implements OnInit {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT, label: 'ID (int)' },
+    { field: 'id', type: 'int', label: 'ID (int)' },
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: this.genderMap, label: 'Gender (map)' },
+    { field: 'gender', type: 'map', valueMap: this.genderMap, label: 'Gender (map)' },
     { field: 'country' },
-    { field: 'amount', type: ColumnType.DECIMAL, label: 'Amount (decimal)' },
-    { field: 'enrolled', type: ColumnType.DATE, label: 'Enrolled (date)' },
-    { field: 'last_login', type: ColumnType.DATETIME, label: 'Last Login (datetime)' },
+    { field: 'amount', type: 'decimal', label: 'Amount (decimal)' },
+    { field: 'enrolled', type: 'date', label: 'Enrolled (date)' },
+    { field: 'last_login', type: 'datetime', label: 'Last Login (datetime)' },
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);

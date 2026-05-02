@@ -14,6 +14,12 @@ implementing `RowGroupContentComponent` interface. It is more reusable than usin
 ```typescript file="../../example/custom-row-group/boolean-row-group-content.component.ts" name="boolean-row-group-content.component.ts"
 ```
 
+> **Note**
+> `rowGroup.data.value` keeps the original data type of the grouped column.
+> If you group by a boolean or numeric field, compare `value` against the
+> matching type (e.g. `value === true`) — not against a string literal.
+
+
 4. Custom Component: It uses custom component implements `RowGroupComponent`. You have total control to the
 `td` elements and what to show in them. However, it is required to set the display css property to `contents`.
 

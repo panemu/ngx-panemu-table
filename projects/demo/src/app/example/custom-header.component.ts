@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
-import { BaseColumn, ColumnType, ComputedColumn, DefaultHeaderRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn } from 'ngx-panemu-table';
+import { BaseColumn, ComputedColumn, DefaultHeaderRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -22,14 +22,14 @@ export class CustomHeaderComponent implements OnInit {
   customHeader = viewChild<TemplateRef<any>>('customHeader');
   customColumns = this.pts.buildColumns<People>([
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: {F: 'Girl', M: 'Boy'} },
+    { field: 'gender', type: 'map', valueMap: {F: 'Girl', M: 'Boy'} },
     { field: 'country' },
     { field: 'amount' },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
     { field: 'verified'}
   ]);
-  clmCustom: ComputedColumn = { type: ColumnType.COMPUTED, formatter: (_) => '', headerRenderer: DefaultHeaderRenderer.create(this.customHeader) };
+  clmCustom: ComputedColumn<People> = { type: 'computed', formatter: (_) => '', headerRenderer: DefaultHeaderRenderer.create(this.customHeader) };
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name', headerRenderer: {component: HeaderTextCaseComponent} },

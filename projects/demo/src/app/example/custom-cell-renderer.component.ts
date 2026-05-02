@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, PLATFORM_ID, signal, TemplateRef, viewChild, ViewEncapsulation, WritableSignal } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { DefaultCellRenderer, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { ChartCellComponent } from './custom-cell/chart-cell.component';
@@ -19,12 +19,12 @@ export class CustomCellRendererComponent {
   pts = inject(PanemuTableService);
   amountTemplate = viewChild<TemplateRef<any>>('amountTemplate');
   columns = this.pts.buildColumns<People2>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'amount' },
     { field: 'amount', cellRenderer: DefaultCellRenderer.create(this.amountTemplate), width: 150 },
     {
-      type: ColumnType.COMPUTED, 
+      type: 'computed', 
       formatter: (val: any, rowData?: any) => {
         return rowData.amountHistory?.().join(',')
       }, 
@@ -35,7 +35,7 @@ export class CustomCellRendererComponent {
     { field: 'email' },
     { field: 'enrolled' },
     { field: 'last_login' },
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } }
+    { field: 'verified', type: 'boolean'}
   ])
   datasource = new PanemuTableDataSource<People2>;
   controller = PanemuTableController.create<People2>(this.columns,

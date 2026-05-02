@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ColumnType, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableService, TableQuery } from 'ngx-panemu-table';
+import { DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableService, TableQuery } from 'ngx-panemu-table';
 import { throwError } from 'rxjs';
 import { CountryCode } from '../../model/country-code';
 import { People } from '../../model/people';
@@ -30,15 +30,15 @@ private pts = inject(PanemuTableService)
   cmbErrorHandler = new FormControl('controller')
   countryMap = signal({});
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT},
+    { field: 'id', type: 'int'},
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country', type: ColumnType.MAP, valueMap :  this.countryMap},
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: {true: 'Yes', false: 'No'}}
+    { field: 'gender', type: 'map', valueMap: { F: "Female", M: "Male" } },
+    { field: 'country', type: 'map', valueMap :  this.countryMap},
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean'}
   ])
   controller = PanemuTableController.createWithCustomDataSource<People>(
     this.columns, 

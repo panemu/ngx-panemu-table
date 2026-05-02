@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
 import {
-  ColumnType,
+  
   PanemuQueryComponent,
   DefaultRowGroupRenderer,
   PanemuTableComponent,
@@ -36,7 +36,7 @@ export class CustomRowGroupComponent implements OnInit {
     { field: 'id', width: 60 },
     { field: 'name', width: 200 },
     {
-      field: 'gender', type: ColumnType.MAP, valueMap: {M: 'Male', F: 'Female'}, width: 100,
+      field: 'gender', type: 'map', valueMap: {M: 'Male', F: 'Female'}, width: 100,
       rowGroupRenderer: DefaultRowGroupRenderer.create(
         { 
           header: { contentRenderer: this.genderGroupTemplate, showPagination: false },
@@ -45,16 +45,16 @@ export class CustomRowGroupComponent implements OnInit {
       })
     },
     {
-      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), width: 100,
+      field: 'country', type: 'map', valueMap: this.dataService.getCountryMap(), width: 100,
       rowGroupRenderer: { component: CountryRowGroup, footerComponent: CountryRowGroupFooter }
     },
     {
-      field: 'verified',
+      field: 'verified', type: 'boolean',
       rowGroupRenderer: DefaultRowGroupRenderer.create({ header: { contentRenderer: BooleanRowGroupContentComponent } })
     },
-    { field: 'amount', type: ColumnType.DECIMAL, width: 100 },
-    { field: 'enrolled', type: ColumnType.DATE, width: 200 },
-    { field: 'last_login', type: ColumnType.DATETIME, width: 200 },
+    { field: 'amount', type: 'decimal', width: 100 },
+    { field: 'enrolled', type: 'date', width: 200 },
+    { field: 'last_login', type: 'datetime', width: 200 },
     { field: 'email', width: 250 },
   ])
 

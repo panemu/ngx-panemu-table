@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { CellEditorRenderer, ColumnType, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, PropertyColumn, RetrieveDataFunction, TABLE_MODE, TableQuery } from 'ngx-panemu-table';
+import { CellEditorRenderer, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, PropertyColumn, RetrieveDataFunction, TABLE_MODE, TableQuery } from 'ngx-panemu-table';
 import { delay, map, Observable, of } from 'rxjs';
 import { DataService } from '../../service/data.service';
 import { ToolbarComponent } from './toolbar.component';
@@ -87,7 +87,7 @@ export class InlineEditing2Component implements OnInit {
   dataService = inject(DataService);
 
   columns = this.pts.buildColumns<any>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     {
       field: 'address', formatter: (val: any, rowData?: any) => {

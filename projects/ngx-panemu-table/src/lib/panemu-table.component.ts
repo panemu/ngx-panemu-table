@@ -9,7 +9,7 @@ import { CellClassPipe } from "./cell/cell-class.pipe";
 import { CellRendererDirective } from './cell/cell-renderer.directive';
 import { CellStylingPipe } from './cell/cell-styling.pipe';
 import { HeaderRendererDirective } from './cell/header-renderer.directive';
-import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, PropertyColumn } from './column/column';
+import { BaseColumn, ColumnDefinition, GroupedColumn, HeaderRow, PropertyColumn } from './column/column';
 import { CellEditorRendererDirective } from "./editing/cell-editor-renderer.directive";
 import { EditingInfo } from "./editing/editing-info";
 import { TableOptions } from './option/options';
@@ -55,7 +55,6 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
   _visibleColumns!: PropertyColumn<T>[];
   _displayedColumns!: string[];
   loading!: Observable<boolean>
-  _columnType = ColumnType;
   _controllerSelectedRowSignal!: Signal<T | null>;
   tableOptions!: TableOptions<T>;
   headers!:HeaderRow[];
@@ -190,7 +189,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     this.columnDefinition.header.forEach(headerRow => {
       headerRow.cells.forEach(aCell => {
         if (aCell.__isGroup) {
-          const si2 = this.calculateStickyInfoRecursively((aCell as GroupedColumn).children)
+          const si2 = this.calculateStickyInfoRecursively((aCell as GroupedColumn<T>).children)
 
           let left = 0;
           let contentLeft = 0;
@@ -256,8 +255,8 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
       return {leftWidth, minLeft, stickyLeft, rightWidth, minRight, stickyRight, totalWidth}
     }
     for (const child of groupChildren) {
-      if ((child as GroupedColumn).children?.length) {
-        let result = this.calculateStickyInfoRecursively((child as GroupedColumn).children)
+      if ((child as GroupedColumn<T>).children?.length) {
+        let result = this.calculateStickyInfoRecursively((child as GroupedColumn<T>).children)
         
         leftWidth += result.leftWidth;
         minLeft = Math.min(minLeft, result.minLeft)
@@ -317,7 +316,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
       
       this.headers = this.columnDefinition.header;
       this.columnDefinition.body.forEach(item => {
-        item.__data = this.controller['data'].asReadonly();
+        item.getTableController = () => this.controller;
         item.__expandHook = this.expandCell.bind(this)
       })
       this.relayout(false);

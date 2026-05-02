@@ -1,5 +1,5 @@
-import { ComponentRef, Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewContainerRef } from '@angular/core';
-import { PropertyColumn } from '../column/column';
+import { ComponentRef, Directive, Input, OnChanges, OnDestroy, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { LeafColumn } from '../column/column';
 import { CellComponent } from './cell';
 
 @Directive({
@@ -7,7 +7,7 @@ import { CellComponent } from './cell';
   standalone: true
 })
 export class CellRendererDirective implements OnChanges, OnDestroy {
-  @Input({alias: 'cellRenderer'}) column!: PropertyColumn<any>;
+  @Input({alias: 'cellRenderer'}) column!: LeafColumn<any>;
   @Input() row: any;
   componentRef?: ComponentRef<CellComponent<any>> | null;
   constructor(private container: ViewContainerRef) { }

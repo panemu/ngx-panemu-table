@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, Predicate, TickColumnController } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.component';
@@ -16,8 +16,8 @@ export class AllFeaturesClientComponent implements OnInit {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   countryFooter = viewChild<TemplateRef<any>>('countryFooter');
-  clmAction: ComputedColumn = {
-    type: ColumnType.COMPUTED,
+  clmAction: ComputedColumn<People> = {
+    type: 'computed',
     formatter: (val: any) => '',
     cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
     expansion: { component: PeopleFormComponent },
@@ -29,8 +29,8 @@ export class AllFeaturesClientComponent implements OnInit {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    new TickColumnClass<People>({ width: 50 }),
-    { field: 'id', type: ColumnType.INT, width: 60},
+    { type:'tick', width: 50, controller: new TickColumnController() },
+    { field: 'id', type: 'int', width: 60},
     { field: 'name', width: 150 },
     {
       field: 'email', width: 230, expansion: {
@@ -40,20 +40,20 @@ export class AllFeaturesClientComponent implements OnInit {
         },
       }
     },
-    { field: 'gender', width: 80, type: ColumnType.MAP, valueMap: this.genderMap },
+    { field: 'gender', width: 80, type: 'map', valueMap: this.genderMap },
     {
-      field: 'country', width: 150, type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(),
+      field: 'country', width: 150, type: 'map', valueMap: this.dataService.getCountryMap(),
       cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
       rowGroupRenderer: DefaultRowGroupRenderer.create({ footerComponent: this.countryFooter })
     },
-    { field: 'amount', width: 100, type: ColumnType.DECIMAL },
+    { field: 'amount', width: 100, type: 'decimal' },
     {
-      type: ColumnType.GROUP, label: 'Date Info', children: [
-        { field: 'enrolled', width: 150, type: ColumnType.DATE },
-        { field: 'last_login', width: 180, type: ColumnType.DATETIME },
+      type: 'group', label: 'Date Info', children: [
+        { field: 'enrolled', width: 150, type: 'date' },
+        { field: 'last_login', width: 180, type: 'datetime' },
       ]
     },
-    { field: 'verified', width: 80, type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
+    { field: 'verified', width: 80, type: 'boolean' },
     this.clmAction,
   ]
   )
@@ -65,7 +65,7 @@ export class AllFeaturesClientComponent implements OnInit {
     this.controller.groupByColumns = [{ field: 'country' }]
 
     //set inital filtering
-    this.controller.criteria = [{ field: 'verified', value: 'true' }]
+    this.controller.criteria = { field: 'verified', value: true, type: 'eq' } as Predicate;
 
     this.dataService.getPeople().subscribe(result => {
       this.datasource.setData(result);
@@ -79,7 +79,7 @@ export class AllFeaturesClientComponent implements OnInit {
   }
 
   onCountryFilterClick(value: any, propName: string) {
-    this.controller.criteria = [{ field: propName, value: value }]
+    this.controller.criteria = { field: propName, value: value, type: 'eq' } as Predicate;
     this.controller.reloadData();
   }
 

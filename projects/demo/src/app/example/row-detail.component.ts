@@ -1,6 +1,6 @@
 
 import { Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { NestedTableComponent } from './custom-cell/nested-table.component';
@@ -18,8 +18,8 @@ export class RowDetailComponent {
   deleteExpansionRow = viewChild<TemplateRef<any>>('deleteExpansionRow');
 
   pts = inject(PanemuTableService);
-  private readonly clmEditInExpansion: ComputedColumn = {
-    type: ColumnType.COMPUTED,
+  private readonly clmEditInExpansion: ComputedColumn<any> = {
+    type: 'computed',
     formatter: (val: any) => '',
     expansion: { component: PeopleFormComponent },
     cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
@@ -41,7 +41,7 @@ export class RowDetailComponent {
       }
     },
     {
-      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), expansion: {
+      field: 'country', type: 'map', valueMap: this.dataService.getCountryMap(), expansion: {
         component: NestedTableComponent,
       }
     },

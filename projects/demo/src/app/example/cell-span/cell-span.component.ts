@@ -1,5 +1,5 @@
 import { Component, inject, TemplateRef, viewChild, ViewEncapsulation } from '@angular/core';
-import { CellFormatterPipe, CellStylingPipe, ColumnType, RowRenderer, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, RowStylingPipe, TableData, TableQuery } from 'ngx-panemu-table';
+import { CellFormatterPipe, CellStylingPipe, RowRenderer, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, RowStylingPipe, TableData, TableQuery } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { map, Observable } from 'rxjs';
@@ -23,17 +23,17 @@ export class CellSpanComponent {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People2>([
-    { field: 'id', type: ColumnType.INT },
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
+    { field: 'id', type: 'int' },
+    { field: 'country', type: 'map', valueMap: this.dataService.getCountryMap() },
     { field: 'name', 
       cellStyle: (value, row) => row.name_col_span > 1 ? 'background-color: rgba(255,255,0, 0.5);' : '', 
     },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } }
+    { field: 'gender', type: 'map', valueMap: { F: "Female", M: "Male" } },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean'}
   ], {
     sortable: false
   })
@@ -51,7 +51,7 @@ export class CellSpanComponent {
   }
 
   getData(start: number, maxRows: number, tableQuery: TableQuery): Observable<TableData<People2>> {
-    tableQuery.sortingInfos = [{field: 'country', direction: 'asc'}];
+    tableQuery.orderBy = [{field: 'country', direction: 'asc'}];
     return this.datasource.getData(start, maxRows, tableQuery).pipe(
       map(tableData => {
         const countryMap: { [key: string]: People[] } = {};

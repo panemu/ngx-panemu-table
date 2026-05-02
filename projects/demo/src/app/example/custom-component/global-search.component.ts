@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuTableComponent, PanemuTableController, PanemuTableService } from 'ngx-panemu-table';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -20,15 +20,15 @@ export class GlobalSearchComponent implements OnInit {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: {F: 'Female', M: 'Male'} },
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
+    { field: 'gender', type: 'map', valueMap: {F: 'Female', M: 'Male'} },
+    { field: 'country', type: 'map', valueMap: this.dataService.getCountryMap() },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean'},
   ], {
     //use this custom cell renderer for all columns above
     cellRenderer: HighlightCellRenderer.create(this.searchTerm)
@@ -46,7 +46,7 @@ export class GlobalSearchComponent implements OnInit {
       debounceTime(250),
       distinctUntilChanged()
     ).subscribe(val => {
-      this.controller.criteria = [{ field: '', value: val }];
+      this.controller.criteria = { field: '', value: val!, type: 'eq' };
       this.controller.reloadData();
       this.searchTerm.set(val?.trim() ?? '')
     })

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Signal, TemplateRef, viewChild } from '@angular/core';
-import { PropertyColumn } from '../column/column';
+import { LeafColumn } from '../column/column';
 import { CellComponent, CellRenderer } from './cell';
 import { CellFormatterPipe } from './cell-formatter.pipe';
 
@@ -10,7 +10,7 @@ import { CellFormatterPipe } from './cell-formatter.pipe';
 })
 export class DefaultCellRenderer implements CellComponent<any>, OnInit {
   row!: any;
-  column!: PropertyColumn<any>
+  column!: LeafColumn<any>
   parameter?: any;
   templateRef = viewChild.required<TemplateRef<any>>('defaultDescriptionTemplate');
 

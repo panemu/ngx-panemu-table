@@ -1,11 +1,11 @@
 import { Type } from "@angular/core";
-import { PropertyColumn } from "../column/column";
+import { LeafColumn } from "../column/column";
 
 /**
  * Interface for header component. 
  */
 export interface HeaderComponent {
-  column: PropertyColumn<any>
+  column: LeafColumn<any>
   parameter?: any;
 }
 

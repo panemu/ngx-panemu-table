@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Signal, TemplateRef } from '@angular/core';
-import { PropertyColumn } from '../column/column';
+import { LeafColumn, PropertyColumn } from '../column/column';
 import { HeaderComponent, HeaderRenderer } from './header';
 import { CommonModule } from '@angular/common';
 
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule]
 })
 export class DefaultHeaderRenderer implements OnInit, HeaderComponent {
-  column!: PropertyColumn<any>
+  column!: LeafColumn<any>
   parameter: any;
   templateRef?: Signal<TemplateRef<any>>;
 

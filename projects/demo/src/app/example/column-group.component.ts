@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColumnType, ColumnDefinition, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PanemuSettingComponent } from 'ngx-panemu-table';
+import { ColumnDefinition, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PanemuSettingComponent } from 'ngx-panemu-table';
 import { People } from '../model/people';
 
 const DATA: People[] = [
@@ -66,14 +66,14 @@ export class ColumnGroupComponent {
 
       { field: 'country' },
       {
-        type: ColumnType.GROUP, label: 'Date Info', children: [
+        type: 'group', label: 'Date Info', children: [
           { field: 'enrolled' },
           { field: 'last_login' },
         ]
       },
       { field: 'verified' },
       {
-        type: ColumnType.GROUP, label: 'Biodata', children: [
+        type: 'group', label: 'Biodata', children: [
           { field: 'name' },
           { field: 'gender' },
           { field: 'email' },
@@ -90,10 +90,10 @@ export class ColumnGroupComponent {
     this.columns = this.pts.buildColumns<People>([
       { field: 'id' },
       {
-        type: ColumnType.GROUP, label: 'Other Data', children: [
+        type: 'group', label: 'Other Data', children: [
           { field: 'country' },
           {
-            type: ColumnType.GROUP, label: 'Date Info', children: [
+            type: 'group', label: 'Date Info', children: [
               { field: 'enrolled' },
               { field: 'last_login' },
             ]
@@ -102,7 +102,7 @@ export class ColumnGroupComponent {
         ]
       },
       {
-        type: ColumnType.GROUP, label: 'Biodata', children: [
+        type: 'group', label: 'Biodata', children: [
           { field: 'name' },
           { field: 'gender' },
           { field: 'email' },

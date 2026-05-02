@@ -15,7 +15,6 @@ export class CustomPanemuTableService extends PanemuTableService {
     super(locale)
     
     this.labelTranslation = super.getLabelTranslation();
-    this.labelTranslation.searcForValueInColumn = 'Filter "{par0}" on column:';
     this.labelTranslation.validationError.required = 'Please specify value for this field.';
   }
 
@@ -23,7 +22,7 @@ export class CustomPanemuTableService extends PanemuTableService {
     return this.labelTranslation;
   }
 
-  override getDateCellFormatter(): CellFormatter {
+  override getDateCellFormatter<T>(): CellFormatter<T> {
     return (val) => {
       return formatDate(val, 'd MMM yyyy', this.locale) || ''
     }

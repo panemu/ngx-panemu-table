@@ -1,6 +1,6 @@
 import { RowGroup, RowGroupFooter } from "./row/row-group";
 import { ExpansionRow } from "./row/expansion-row";
-import { NonGroupColumn, GroupedColumn, ColumnType } from "./column/column";
+import { GroupedColumn, LeafColumn } from "./column/column";
 
 /**
  * Function to check if passed row is a data row. There are 4 object types that can be displayed
@@ -115,11 +115,11 @@ export function mergeDeep(target: any, ...sources: any) {
   return mergeDeep(target, ...sources);
 }
 
-export function generateStructureKey(columns: (NonGroupColumn<any> | GroupedColumn)[]) {
+export function generateStructureKey(columns: (LeafColumn<any> | GroupedColumn<any>)[]) {
   let key = '';
   for (const clm of columns) {
-    if (clm.type == ColumnType.GROUP) {
-      key += getColumnKey(clm as GroupedColumn);
+    if (clm.type == 'group') {
+      key += getColumnKey(clm as GroupedColumn<any>);
     } else {
       key += clm.__key;
     }
@@ -127,11 +127,11 @@ export function generateStructureKey(columns: (NonGroupColumn<any> | GroupedColu
   return key;
 }
 
-function getColumnKey(clm: GroupedColumn) {
+function getColumnKey(clm: GroupedColumn<any>) {
   let key = clm.__key!;
   for (const child of clm.children) {
-    if (child.type == ColumnType.GROUP) {
-      key += getColumnKey(child as GroupedColumn);
+    if (child.type == 'group') {
+      key += getColumnKey(child as GroupedColumn<any>);
     } else {
       key += child.__key;
     }

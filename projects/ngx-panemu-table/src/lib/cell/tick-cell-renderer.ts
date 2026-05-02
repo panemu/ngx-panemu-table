@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, effect, OnInit } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PropertyColumn, TickColumn } from '../column/column';
-import { TickColumnClass } from '../column/tick-column-class';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { LeafColumn, TickColumn } from '../column/column';
 import { CellComponent } from './cell';
 
 @Component({
@@ -11,13 +10,13 @@ import { CellComponent } from './cell';
 
 export class TickCellComponent implements CellComponent<any>, OnInit {
   row!: any;
-  column!: PropertyColumn<any>
+  column!: LeafColumn<any>
   disabled = false;
   chkControl = new FormControl(false);
   
   constructor(cdr: ChangeDetectorRef) {
     effect(() => {
-      let ticked = (this.column as TickColumnClass<any>).getTickedRowsAsSignal()().includes(this.row);
+      let ticked = (this.column as TickColumn<any>).controller.tickedRowsSignal().includes(this.row);
       if (ticked !== this.chkControl.getRawValue()) {
         this.chkControl.setValue(ticked);
         cdr.markForCheck();
@@ -30,7 +29,7 @@ export class TickCellComponent implements CellComponent<any>, OnInit {
     if (disabled) {
       this.chkControl.disable();
     }
-    this.chkControl.valueChanges.subscribe(val => (this.column as TickColumnClass<any>).setTicked(val ?? false, this.row))
+    this.chkControl.valueChanges.subscribe(val => (this.column as TickColumn<any>).controller.setTicked(val ?? false, this.row))
   }
 
 }

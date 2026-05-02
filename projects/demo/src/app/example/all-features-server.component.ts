@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
+import { DefaultCellRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableService, RowGroup, TableQuery } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { tap } from 'rxjs';
@@ -16,15 +16,15 @@ export class AllFeaturesServerComponent implements OnInit {
   countryMap = signal({});
   countryCell = viewChild<TemplateRef<any>>('countryCell')
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT},
+    { field: 'id', type: 'int'},
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country', type: ColumnType.MAP, valueMap :  this.countryMap, cellRenderer: DefaultCellRenderer.create(this.countryCell)},
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: {true: 'Yes', false: 'No'}}
+    { field: 'gender', type: 'map', valueMap: { F: "Female", M: "Male" } },
+    { field: 'country', type: 'map', valueMap :  this.countryMap, cellRenderer: DefaultCellRenderer.create(this.countryCell)},
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean'}
   ])
   controller = PanemuTableController.createWithCustomDataSource<People>(this.columns, this.retrieveData.bind(this));
 
@@ -68,17 +68,13 @@ export class AllFeaturesServerComponent implements OnInit {
       delete cloneTableQuery.groupBy;
     }
 
-    if (!cloneTableQuery.sortingInfos?.length) {
-      delete cloneTableQuery.sortingInfos;
-    }
-    if (!cloneTableQuery.sortingInfos?.length) {
-      delete cloneTableQuery.sortingInfos;
+    if (!cloneTableQuery.orderBy?.length) {
+      delete cloneTableQuery.orderBy;
     }
 
-    if (!cloneTableQuery.tableCriteria?.length) {
-      delete cloneTableQuery.tableCriteria;
+    if (!cloneTableQuery.where) {
+      delete cloneTableQuery.where;
     }
-    delete cloneTableQuery.utcMinuteOffset;
 
     this.tableQuery = JSON.stringify(cloneTableQuery);
   }

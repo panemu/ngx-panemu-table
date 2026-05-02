@@ -1,12 +1,12 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
 @Component({
     selector: 'pnm-computed',
     templateUrl: 'computed.component.html',
-    imports: [PanemuTableComponent],
+    imports: [PanemuTableComponent, PanemuSettingComponent],
     styles: `
     .panemu-table .computed2 {
       background-color: rgba(165, 42, 42, 0.7);
@@ -26,14 +26,14 @@ export class ComputedComponent implements OnInit {
     { field: 'name' },
     { field: 'gender' },
     {
-      type: ColumnType.COMPUTED,
+      type: 'computed',
       label: 'Gender - Country',
-      formatter: (val: any, rowData?: any) => rowData['gender'] + ' - ' + rowData['country'],
+      formatter: (val: any, rowData?: People) => rowData ? rowData.gender + ' - ' + rowData.country : '',
       cellStyle: () => 'background-color: rgba(50,65,65, 0.7); color: white;'
     },
     { field: 'amount' },
     {
-      type: ColumnType.COMPUTED,
+      type: 'computed',
       label: 'Computed (Amount / 2)',
       formatter: this.getCustomValue2.bind(this),
       cellClass: () => 'computed2 center'

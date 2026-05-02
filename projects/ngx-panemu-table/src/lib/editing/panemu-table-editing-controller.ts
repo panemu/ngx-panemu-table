@@ -1,7 +1,7 @@
 import { isSignal, signal, Type } from "@angular/core";
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } from "@angular/forms";
-import { Observable, pairwise, Subscription, throwError } from "rxjs";
-import { ColumnType, MapColumn, PropertyColumn } from "../column/column";
+import { map, Observable, pairwise, Subscription, throwError } from "rxjs";
+import { MapColumn, PropertyColumn } from "../column/column";
 import { DateCellEditor } from "./date-cell-editor";
 import { CellEditorComponent, CellEditorRenderer, CellValidationError, EditingInfo } from "./editing-info";
 import { MapCellEditor, MapOption } from "./map-cell-editor";
@@ -10,6 +10,7 @@ import { StringCellEditor } from "./string-cell-editor";
 import { TABLE_MODE } from "./table-mode";
 import { DateTimeCellEditor } from "./date-time-cell-editor";
 import { PanemuTableService } from "../panemu-table.service";
+import { BooleanCellEditor } from "./boolean-cell-editor";
 
 interface EditingInfoMap<T> {
   rowData: T
@@ -166,13 +167,13 @@ export class PanemuTableEditingController<T> {
   protected _createCellEditorRenderer(column: PropertyColumn<T>, formControl: AbstractControl): CellEditorRenderer<T> | null {
     let columnType = column.type!;
     let result: CellEditorRenderer<T> | null;
-    if (columnType == ColumnType.INT || columnType == ColumnType.DECIMAL) {
+    if (columnType == 'int' || columnType == 'decimal') {
       result = this.createRenderer(NumberCellEditor, formControl, column.field)
-    } else if (columnType == ColumnType.DATE) {
+    } else if (columnType == 'date') {
       result = this.createRenderer(DateCellEditor, formControl, column.field)
-    } else if (columnType == ColumnType.DATETIME) {
+    } else if (columnType == 'datetime') {
       result = this.createRenderer(DateTimeCellEditor, formControl, column.field)
-    } else if (columnType == ColumnType.MAP) {
+    } else if (columnType == 'map') {
       let mapColumn = column as MapColumn<T>;
       let renderer = this.createRenderer(MapCellEditor, formControl, column.field);
       const valueMap = isSignal(mapColumn.valueMap) ? mapColumn.valueMap() : mapColumn.valueMap;
@@ -180,6 +181,12 @@ export class PanemuTableEditingController<T> {
         const options = Object.keys(valueMap as Object).map(key => ({value: key.toString(), label: (valueMap as any)[key]}) )
         renderer.parameter = { options: signal(options), loading: signal(false) }
       }
+      result = renderer;
+    } else if (columnType == 'boolean') {
+      let renderer = this.createRenderer(BooleanCellEditor, formControl, column.field);
+      
+      renderer.parameter = { formatter: column.formatter }
+      
       result = renderer;
     } else {
       result = this.createRenderer(StringCellEditor, formControl, column.field)
@@ -447,7 +454,7 @@ export class PanemuTableEditingController<T> {
    * in what column the field is editable (optional).
    * 
    * This method should always return new instance of FormControl, FormGroup, FormArray or null.
-   * Do not reusea FormControl instance for mutiple fields/rows.
+   * Do not reuse a FormControl instance for mutiple fields/rows.
    * 
    * @param field 
    * @param rowData 

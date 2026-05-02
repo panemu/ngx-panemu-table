@@ -1,4 +1,5 @@
-import { GroupBy, TableCriteria } from "../table-query";
+import { Predicate } from "../query/query-builder/types";
+import { GroupBy } from "../table-query";
 
 /**
  * Column states
@@ -26,7 +27,7 @@ export interface TableState {
   /**
    * Generated key to ensure the column structure doesn't change. It is concatenated
    * BaseColumn.__key of the columns. If a column is added or removed, or children of
-   * `ColumnType.GROUP` column is changed, the generated structureKey will be different
+   * `'group'` column is changed, the generated structureKey will be different
    * thus saved state is ignored.
    */
   structureKey: string;
@@ -39,7 +40,7 @@ export interface TableState {
   /**
    * State from `PanemuTableController.criteria`.
    */
-  criteria?: TableCriteria[];
+  criteria?: Predicate | null;
 
   /**
    * State of pagination start index.

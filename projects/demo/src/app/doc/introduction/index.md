@@ -28,11 +28,10 @@ the html file only needs to have a very simple `panemu-table` tag.
   allowfullscreen>
 </iframe>
 
-[See on Stackblitz](https://stackblitz.com/edit/stackblitz-starters-krause?file=src%2Fmain.ts)
 
 ## Features
 
-- [NEW] [inline editing](../usages/inline-editing).
+- [Inline editing](../usages/inline-editing).
 - Declarative table definition in typescript. Very little code in html needed.
 - Sane defaults that can be overriden app-wide and per table basis.
 - Pagination. More flexible than common pagination.
@@ -41,16 +40,9 @@ the html file only needs to have a very simple `panemu-table` tag.
     - Client or server side. Client side pagination is provided, server side implementation is up to you.
     - Developer can create custom pagination component. See `*CustomPaginationPage`.
 - Filtering.
-    - Provided filter editors for string, date, datetime and key-value pair.
-    - You can create custom filter editor.
+    - Query builder supports nested AND/OR predicates.
+    - Provided ready to use client-side sorting, filtering, pagination and grouping
     - Filter behavior can be customized. See `*GlobalSearchPage`.
-    - Support `between` operator using dot and comma. Dot represent `greater/less and equal`. Comma represent `greater/less` whithout equal.
-
-```
-amount: 1.,10 is translated to `amount >= 1 and amount < 10`
-amount: 1,.10 is translated to `amount > 1 and amount <= 10`
-```
-
 - Row Grouping.
    - Support group level pagination.
    - Customizable row group header and footer. See `*CustomRowGroupPage`.
@@ -71,7 +63,7 @@ For more advanced, see `*CellRendererPage`.
   - `*CellExpansionPage`. 
 - Sticky column, header and footer. The footer usage example can be seen in `*VirtualScrollPage`.
 - Cell colspan and rowspan. See `*CellSpanningPage`.
-- Export to CSV. See `PanemuTableController.getcsvdata` .
+- Export to CSV. See `PanemuTableController.getCsvData`.
 - Handle huge data using [virtual scroll](usages/virtual-scroll). Now it doesn't support variable row height. But it will in the future.
 
 This is a quick demo of `PanemuTableComponent`, `PanemuPaginationComponent`, `PanemuQueryComponent` and `PanemuSettingComponent`.
@@ -85,6 +77,38 @@ These features are not developed yet. Please create a ticket in [our repository]
 - Virtual scroll with variable row height.
 
 ## Releases:
+
+### v.0.7.0
+
+* **[New]** Query builder component supports AND/OR nested predicates.
+* **[Breaking Change]** Tick column API overhaul. `TickColumnClass` is removed.
+  Create tick columns with `{ type: 'tick', controller: new TickColumnController<T>() }`
+  and read the selection via `controller.tickedRowsSignal` (now a getter property,
+  not the old `getTickedRowsAsSignal()` method). See `*TickColumnPage`.
+* **[Breaking Change]** `CellFormatter` is now generic — `CellFormatter<T>` —
+  so the `rowData` and `column` parameters are typed.
+* **[Breaking Change]** `ComputedColumn` and `GroupedColumn` are now generic
+  (`ComputedColumn<T>`, `GroupedColumn<T>`). The internal `NonGroupColumn<T>`
+  union type was removed.
+* **[Breaking Change]** New `LeafColumn<T>` interface. `CellComponent<T>` and
+  `HeaderComponent` now declare `column: LeafColumn<T>` (was `PropertyColumn<T>`).
+  Custom cell/header renderers should update their `column` field type to
+  `LeafColumn<T>` so they also work with computed, tick and map columns.
+* **[Breaking Change]** `MapColumn.type: 'map'` is now required (was optional).
+* **[Breaking Change]** Row grouping now keeps the original data type of the
+  grouped value. `RowGroupData.value` is no longer always coerced to `string`.
+  If you were comparing `rowGroup.data.value === 'someString'` against a
+  boolean or numeric field, update the comparison.
+
+
+### v.0.6.6
+
+* Support Angular 21.
+
+### v.0.6.4
+
+* Multi-column sorting with Ctrl key.
+* Escape special characters in search highlight regex.
 
 ### v.0.6.0
 

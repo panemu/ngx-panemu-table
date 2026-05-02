@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ColumnType, PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn } from 'ngx-panemu-table';
+import { PanemuPaginationComponent, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn } from 'ngx-panemu-table';
 import { delay, forkJoin, of } from 'rxjs';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
@@ -31,14 +31,14 @@ export class DelayedComponent implements OnInit {
   private getColumnDefinition() {
     return of(
       [
-        { field: 'id', type: ColumnType.INT },
+        { field: 'id', type: 'int' },
         { field: 'name' },
         { field: 'email' },
         { field: 'gender' },
         { field: 'country' },
-        { field: 'amount', type: ColumnType.DECIMAL },
-        { field: 'enrolled', type: ColumnType.DATE },
-        { field: 'last_login', type: ColumnType.DATETIME },
+        { field: 'amount', type: 'decimal' },
+        { field: 'enrolled', type: 'date' },
+        { field: 'last_login', type: 'datetime' },
       ] as PropertyColumn<People>[]
     ).pipe(
       delay(2000)

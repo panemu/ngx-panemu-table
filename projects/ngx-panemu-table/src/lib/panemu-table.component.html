@@ -118,7 +118,7 @@
   </ng-template>
 
 </div>
-@if (controller && !dataSource?.length && !(loading | async)) {
+@if (controller && !dataSource.length && !(loading | async)) {
   <div class="no-data"> {{labelTranslation.noData}} </div>
 }
 </div>

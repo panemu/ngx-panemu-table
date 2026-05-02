@@ -32,7 +32,7 @@ Then go to other page and back. The last states should be restored.
 {{ NgDocActions.demo("PersistStateComponent") }}
 
 > **Warning**
-> If columns structure changes (columns added, removed or there is a change in `ColumnType.GROUP` children)
+> If columns structure changes (columns added, removed or there is a change in `'group'` children)
 the saved state is ignored. See `TableState.structureKey`.
 
 By default the states are stored in browser's local storage. If you want to store it in database server,

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
-import { ColumnType, PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuPaginationComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
@@ -19,15 +19,15 @@ export class VerticalScrollComponent {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: "Female", M: "Male" } },
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } }
+    { field: 'gender', type: 'map', valueMap: { F: "Female", M: "Male" } },
+    { field: 'country', type: 'map', valueMap: this.dataService.getCountryMap() },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean'}
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);

@@ -36,22 +36,20 @@ describe('AllFeaturesClientComponent', () => {
     //======== Check initial grouping and filtering
     const de: DebugElement = fixture.debugElement;
     const componentEl: HTMLElement = de.nativeElement;
-    let groupChip = componentEl.querySelector('.panemu-query .group .chip-label');
-    const filterChip = componentEl.querySelector('.panemu-query .filter .chip-label');
+    let groupChip = componentEl.querySelector('.panemu-query .group-label');
 
 
     expect(groupChip?.textContent).toBe('Country');
-    expect(filterChip?.textContent).toBe('true');
     const countries = new Set(data.filter(item => item.verified).map(item => item.country));
     expect(component.controller.getAllData().length).toBe(countries.size);
 
     //=== Remove grouping
-    const button = componentEl.querySelector('.panemu-query .group.chip-panel button') as HTMLElement;
+    const button = componentEl.querySelector('.panemu-query .groupby .close-button') as HTMLElement;
     button!.click();
     fixture.detectChanges();
 
     //group chip should be gone
-    groupChip = componentEl.querySelector('.panemu-query .group .chip-label');
+    groupChip = componentEl.querySelector('.panemu-query .group-label');
     expect(groupChip).toBeFalsy();
 
     //displayed data should be 100
@@ -64,7 +62,7 @@ describe('AllFeaturesClientComponent', () => {
     const oriMaxRows = component.controller.maxRows;
     const paginationSize = 5;
     component.controller.maxRows = paginationSize;
-    component.controller.criteria = [];
+    component.controller.criteria = null;
     component.controller.reloadData();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -94,7 +92,7 @@ describe('AllFeaturesClientComponent', () => {
   })
 
   it('2 level grouping. first level with month modifier', async () => {
-    component.controller.criteria = [];
+    component.controller.criteria = null;
     component.controller.groupByColumns = [{ field: 'enrolled', modifier: 'month' }, { field: 'gender' }];
     component.controller.reloadData();
     await fixture.whenStable();

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {
-  ColumnType,
+  
   PanemuQueryComponent,
   PanemuTableComponent,
   PanemuTableController,
@@ -30,15 +30,15 @@ export class CustomRowGroup2Component implements OnInit {
   columns = this.pts.buildColumns<People>([
     { field: 'id' },
     { field: 'name' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: {M: 'Male', F: 'Female'} },
+    { field: 'gender', type: 'map', valueMap: {M: 'Male', F: 'Female'} },
     {
-      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(), visible: false,
+      field: 'country', type: 'map', valueMap: this.dataService.getCountryMap(), visible: false,
       rowGroupRenderer: { component: CountryRowGroup, footerComponent: CountryRowGroupFooter, parameter: { alwaysExpanded: true } }
     },
     { field: 'verified' },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
     { field: 'email' },
   ],
     //disable grouping for all columns

@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
+import { ComputedColumn, DefaultCellRenderer, DefaultRowGroupRenderer, PanemuPaginationComponent, PanemuQueryComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnController } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { FilterCountryCellComponent } from './custom-cell/filter-country-cell.component';
@@ -15,8 +15,8 @@ export class PersistStateComponent implements OnInit {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   countryFooter = viewChild<TemplateRef<any>>('countryFooter');
-  clmAction: ComputedColumn = {
-    type: ColumnType.COMPUTED,
+  clmAction: ComputedColumn<People> = {
+    type: 'computed',
     formatter: (val: any) => '',
     cellRenderer: DefaultCellRenderer.create(this.actionCellTemplate),
     expansion: { component: PeopleFormComponent },
@@ -29,8 +29,8 @@ export class PersistStateComponent implements OnInit {
   pts = inject(PanemuTableService);
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    new TickColumnClass<People>(),
-    { field: 'id', type: ColumnType.INT},
+    { type: 'tick', controller: new TickColumnController()},
+    { field: 'id', type: 'int'},
     { field: 'name' },
     {
       field: 'email', expansion: {
@@ -40,16 +40,16 @@ export class PersistStateComponent implements OnInit {
         },
       }
     },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: 'Female', M: 'Male' } },
+    { field: 'gender', type: 'map', valueMap: { F: 'Female', M: 'Male' } },
     {
-      field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap(),
+      field: 'country', type: 'map', valueMap: this.dataService.getCountryMap(),
       cellRenderer: FilterCountryCellComponent.create(this.onCountryFilterClick.bind(this)),
       rowGroupRenderer: DefaultRowGroupRenderer.create({ footerComponent: this.countryFooter })
     },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
+    { field: 'verified', type: 'boolean', formatter: (val) => val === null || val === undefined ? '-' : val ? 'Yes' : 'No'},
     this.clmAction,
   ]
   )
@@ -70,7 +70,7 @@ export class PersistStateComponent implements OnInit {
   }
 
   onCountryFilterClick(value: any, propName: string) {
-    this.controller.criteria = [{ field: propName, value: value }]
+    this.controller.criteria = { field: propName, value: value, type: 'eq' }
     this.controller.reloadData();
     this.controller.saveState();
   }

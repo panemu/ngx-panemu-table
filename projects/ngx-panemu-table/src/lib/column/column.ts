@@ -1,12 +1,11 @@
 import { Signal, TemplateRef, Type, WritableSignal } from "@angular/core";
 import { CellFormatter, CellRenderer } from "../cell/cell";
 import { HeaderRenderer } from "../cell/header";
-import { ExpansionRow, ExpansionRowRenderer } from "../row/expansion-row";
-import { RowGroup, RowGroupFooter } from "../row/row-group";
-import { TickColumnClass } from "./tick-column-class";
-import { FilterEditor } from "../query/editor/filter-editor";
-import { RowGroupRenderer } from "../row/default-row-group-renderer";
 import { PanemuTableService } from "../panemu-table.service";
+import { RowGroupRenderer } from "../row/default-row-group-renderer";
+import { ExpansionRowRenderer } from "../row/expansion-row";
+import { TickColumnController } from "./tick-column-controller";
+import { PanemuTableController } from "../panemu-table-controller";
 
 /**
  * Interface for expanding cell to `ExpansionRow`. The generic T type is the data of row
@@ -32,53 +31,32 @@ export interface Expansion<T> {
   buttonPosition?: 'start' | 'end'
 }
 
-export enum ColumnType {
-  /**
-   * Default type. Value is displayed as is.
-   */
-  STRING,
-
-  /**
-   * Value is displayed right-aligned 
-   */
-  INT,
-
-  /**
-   * Value is displayed right-aligned and formatted as local number incorporating angular LOCALE_ID
-   */
-  DECIMAL,
-
-  /**
-   * Value is displayed in 'EEE, d MMM yyyy' format.
-   */
-  DATE,
-
-  /**
-   * Value is displayed in 'd MMM yyyy H:mm:ss' format.
-   */
-  DATETIME,
-
-  /**
-   * Used specifically by `MapColumn`. The value is displayed as configured in `valueMap` parameter.
-   */
-  MAP,
-
-  /**
-   * Used specifically by `TickColumnClass`
-   */
-  TICK,
-
-  /**
-   * Used specifically by `ComputedColumn`. It doesn't have field parameter. The value to render
-   * is specified by the `formatter` argument.
-   */
-  COMPUTED,
-
-  /**
-   * Groups several columns. Used by `GroupedColumn`.
-   */
-  GROUP,
-}
+/**
+ * Column type discriminator. Drives default formatter, alignment,
+ * filter editor and cell editor behaviour.
+ *
+ * - `'string'`   Default. Value displayed as is.
+ * - `'int'`      Value is displayed right-aligned.
+ * - `'decimal'`  Value is displayed right-aligned and formatted as local number incorporating angular LOCALE_ID.
+ * - `'date'`     Value is displayed in 'EEE, d MMM yyyy' format.
+ * - `'datetime'` Value is displayed in 'd MMM yyyy H:mm:ss' format.
+ * - `'boolean'`  Boolean value.
+ * - `'map'`      Used specifically by `MapColumn`. The value is displayed as configured in `valueMap` parameter.
+ * - `'tick'`     Used specifically by `TickColumn`. Renders a checkbox cell driven by a `TickColumnController`.
+ * - `'computed'` Used specifically by `ComputedColumn`. It doesn't have field parameter. The value to render is specified by the `formatter` argument.
+ * - `'group'`    Groups several columns. Used by `GroupedColumn`.
+ */
+export type ColumnType =
+  | 'string'
+  | 'int'
+  | 'decimal'
+  | 'date'
+  | 'datetime'
+  | 'boolean'
+  | 'map'
+  | 'tick'
+  | 'computed'
+  | 'group';
 
 export type StickyType = 'start' | 'end' | null;
 
@@ -121,12 +99,6 @@ export interface BaseColumn<T> {
    * @see https://ngx-panemu-table.panemu.com/usages/custom-column-header
    */
   headerRenderer?: HeaderRenderer;
-
-  /**
-   * For internal use
-   * @internal
-   */
-  __data?: Signal<(T | RowGroup | RowGroupFooter | ExpansionRow<T>)[]>
 
   /**
    * Allow the column to be resized. Default true
@@ -207,7 +179,7 @@ export interface BaseColumn<T> {
   ) => void
 }
 
-export interface PropertyColumn<T> extends BaseColumn<T> {
+export interface PropertyColumn<T> extends LeafColumn<T> {
   field: keyof T
 
   /**
@@ -221,11 +193,6 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
   sortable?: boolean;
 
   /**
-   * Cell value formatter. If undefined, it will follow default setting based on `ColumnType`.
-   */
-  formatter?: CellFormatter;
-
-  /**
    * Allow the column to be filtered. Default true. This property is read by `PanemuQueryComponent`.
    */
   filterable?: boolean;
@@ -235,7 +202,7 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
    * 
    * @see https://ngx-panemu-table.panemu.com/usages/custom-filter-editor
    */
-  filterEditor?: Type<FilterEditor>
+  // filterEditor?: Type<FilterEditor>
 
   /**
    * Consider to use `DefaultRowGroupRenderer.create` static method to customize it.
@@ -243,14 +210,15 @@ export interface PropertyColumn<T> extends BaseColumn<T> {
    * @see https://ngx-panemu-table.panemu.com/usages/custom-row-group
    */
   rowGroupRenderer?: RowGroupRenderer
+
 }
 
 export interface Column<T> extends PropertyColumn<T> {
-  type?: ColumnType.STRING | ColumnType.INT | ColumnType.DECIMAL | ColumnType.DATE | ColumnType.DATETIME
+  type?: 'string' | 'int' | 'decimal' | 'date' | 'datetime' | 'boolean'
 }
 
 export interface MapColumn<T> extends PropertyColumn<T> {
-  type?: ColumnType.MAP,
+  type: 'map',
 
   /**
    * Key-Value pair to format the cell value as key, into it's corresponding value.
@@ -260,30 +228,42 @@ export interface MapColumn<T> extends PropertyColumn<T> {
   valueMap: WritableSignal<{ [key: string]: any }> | { [key: string]: any }
 }
 
-export interface ComputedColumn extends BaseColumn<any> {
-  type: ColumnType.COMPUTED,
-  formatter: CellFormatter,
+export interface ComputedColumn<T> extends LeafColumn<T> {
+  type: 'computed',
+  formatter: CellFormatter<T>,
 }
 
-export interface TickColumn<T> extends BaseColumn<T> {
+export interface TickColumn<T> extends LeafColumn<T> {
 
+  type: 'tick',
   /**
    * Flag to show/hide checkbox in column header. Default true.
    */
   checkBoxHeader?: boolean
 
   isDisabled?: (row: T) => boolean
+
+  controller: TickColumnController<T>
 }
 
-export type NonGroupColumn<T> = Column<T> | MapColumn<T> | TickColumnClass<T> | ComputedColumn;
+export interface LeafColumn<T> extends BaseColumn<T> {
+
+  /**
+   * Cell value formatter. If undefined, it will follow default setting based on `ColumnType`.
+   */
+  formatter?: CellFormatter<T>;
+
+  getTableController?: () => PanemuTableController<T>
+
+}
 
 /**
  * Group several column headers. It works by incorporating `rowspan` and `colspan` th element attributes.
  */
-export interface GroupedColumn extends Pick<BaseColumn<any>, 'type' | 'label' | '__key'> {
-  type: ColumnType.GROUP
+export interface GroupedColumn<T> extends Pick<BaseColumn<any>, 'type' | 'label' | '__key'> {
+  type: 'group'
   label: string
-  children: (GroupedColumn | NonGroupColumn<any>)[]
+  children: (GroupedColumn<T> | ComputedColumn<T> | TickColumn<T> | PropertyColumn<T>)[]
   headerRenderer?: HeaderRenderer
 }
 
@@ -310,7 +290,7 @@ export interface ColumnDefinition<T> {
   header: HeaderRow[];
   body: PropertyColumn<T>[];
   structureKey: string;
-  mutatedStructure: (NonGroupColumn<T> | GroupedColumn)[];
+  mutatedStructure: (ComputedColumn<T> | TickColumn<T> | PropertyColumn<T> | GroupedColumn<T>)[];
 
   /**
    * This is a hack to transfer `PanemuTableService` to `PanemuTableController`.

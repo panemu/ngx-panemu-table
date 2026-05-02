@@ -1,48 +1,16 @@
-import { afterNextRender, afterRenderEffect, ChangeDetectorRef, effect, inject, Injector, Signal, signal } from "@angular/core";
-import { ColumnType, PropertyColumn, TickColumn } from "./column";
-import { CellRenderer } from "../cell/cell";
-import { TickCellComponent } from "../cell/tick-cell-renderer";
-import { HeaderRenderer } from "../cell/header";
-import { TickHeaderRenderer } from "../cell/tick-header-renderer";
+import { signal } from "@angular/core";
 import { isDataRow } from "../util";
 
 /**
  *
  */
-export class TickColumnClass<T> implements PropertyColumn<T> {
-  type = ColumnType.TICK;
-  cellRenderer!: CellRenderer;
-  headerRenderer?: HeaderRenderer;
-  field!: any;
-  __data!: Signal<T[]>;
-  __selections = signal<T[]>([]);
-  visible?: boolean;
-  cellClass?: (value: any, row?: T) => string;
-  __key?: string;
-  label?: string;
+export class TickColumnController<T>  {
+  private __data = signal<T[]>([]);
+  private __selections = signal<T[]>([]);
   
-  constructor(tickColumn?: TickColumn<T>) {
-    if (tickColumn) {
-      Object.assign(this, tickColumn);
-    }
-    this.type = ColumnType.TICK;
-    this.cellRenderer = tickColumn?.cellRenderer ||  {
-      component: TickCellComponent,
-    };
-
-    if (!this.cellClass) {
-      this.cellClass = (_) => 'tick-cell'
-    }
-    const showCheckboxHeader = tickColumn?.checkBoxHeader === undefined ? true : tickColumn?.checkBoxHeader;
-    this.headerRenderer = this.headerRenderer ? this.headerRenderer : showCheckboxHeader ? {component: TickHeaderRenderer} : undefined;
-    afterRenderEffect(() => {
-      if (this.__data()) {
-        this.__selections.set([]);
-      }
-    })
-  }
 
   isAllSelected() {
+    if (!this.__data().length) return false;
     const selectedCount = this.__selections().length;
     const rowCount = this.__data()?.filter(item => isDataRow(item)).length;
     return selectedCount == rowCount;
@@ -116,7 +84,7 @@ export class TickColumnClass<T> implements PropertyColumn<T> {
    *
    * @returns
    */
-  getTickedRowsAsSignal() {
+  get tickedRowsSignal() {
     return this.__selections.asReadonly()
   }
 

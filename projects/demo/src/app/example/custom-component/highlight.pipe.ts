@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CellFormatter, PropertyColumn } from 'ngx-panemu-table';
+import { CellFormatter, LeafColumn } from 'ngx-panemu-table';
 
 const tagsToReplace: any = {
   '&': '&amp;',
@@ -24,7 +24,7 @@ export class HighlightPipe implements PipeTransform {
    * @param searchTerm 
    * @returns 
    */
-  transform(value: any, row?: any, column?: PropertyColumn<any>, formatter?:CellFormatter, valueMap?: any, searchTerm?: string): any {
+  transform(value: any, row?: any, column?: LeafColumn<any>, formatter?:CellFormatter<any>, valueMap?: any, searchTerm?: string): any {
     if (column?.formatter) {
       value = column.formatter!(value, row, column)
     }

@@ -1,5 +1,5 @@
 import { Component, computed, inject, Input, OnInit, Signal } from "@angular/core";
-import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn, ExpansionRowRenderer, TableQuery } from "ngx-panemu-table";
+import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, PropertyColumn, ExpansionRowRenderer, TableQuery, Predicate } from "ngx-panemu-table";
 import { People } from "../../model/people";
 import { DataService } from "../../service/data.service";
 
@@ -41,7 +41,7 @@ export class NestedTableComponent implements OnInit, ExpansionRowRenderer<People
   }
 
   private loadData(startIndex: number, maxRows: number, tableQuery: TableQuery) {
-    tableQuery.tableCriteria = [{field: 'country', value: this.row.country}];
+    tableQuery.where = {field: 'country', value: this.row.country ?? '', type: 'eq'};
     return this.datasource.getData(startIndex, maxRows, tableQuery);
   }
 }

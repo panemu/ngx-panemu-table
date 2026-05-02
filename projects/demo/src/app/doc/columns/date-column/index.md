@@ -2,12 +2,12 @@
 keyword: DateColumnPage
 ---
 
-Specify type to `ColumnType.DATE`.
+Specify type to `'date'`.
 
 ```typescript {3}
 columns = this.pts.buildColumns<Data>([
   
-  { field: 'enrolled', type: ColumnType.DATE },
+  { field: 'enrolled', type: 'date' },
   
 ])
 ```

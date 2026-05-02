@@ -2,12 +2,12 @@
 keyword: DateTimeColumnPage
 ---
 
-Specify type to `ColumnType.DATETIME`.
+Specify type to `'datetime'`.
 
 ```typescript {3}
 columns = this.pts.buildColumns<Data>([
   
-  { field: 'last_login', type: ColumnType.DATETIME},
+  { field: 'last_login', type: 'datetime'},
   
 ])
 ```

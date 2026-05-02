@@ -6,8 +6,6 @@ export interface LabelTranslation {
   year: string,
   groupBy: string,
   noData: string
-  searcForValueInColumn: string
-  selectColumnToSearchOn: string
   columns: string
   visibility_position_stickiness: string
   stickyStart: string
@@ -16,6 +14,7 @@ export interface LabelTranslation {
   setting: string
   export: string
   transpose: string
+  queryBuilder: string
   transposeSearch: string
   pleaseSelectARowToDisplay: string
   validationError: {
@@ -27,10 +26,7 @@ export interface LabelTranslation {
     max: string
     pattern: string
   },
-  queryEditor: string
   column: string
-  searchValue: string
-  stringRepresentation: string
   cancel: string
   apply: string
   yesterday: string

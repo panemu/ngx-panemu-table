@@ -4,7 +4,6 @@ import { Overlay } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ColumnType } from '../column/column';
 import { PanemuTableController } from '../panemu-table-controller';
 import { StickySelectorComponent } from './sticky-selector.component';
 import { PanemuTableService } from '../panemu-table.service';
@@ -19,7 +18,7 @@ export class SettingDialogComponent implements OnInit {
   dialogRef = inject<DialogRef<string>>(DialogRef<string>);
   pts = inject(PanemuTableService)
   labelTranslation = this.pts.getLabelTranslation()
-  GROUP_COLUMN = ColumnType.GROUP;
+  GROUP_COLUMN = 'group' as const;
   constructor() { }
 
   ngOnInit() { }

@@ -6,7 +6,7 @@
   <div class="body">
     @for (item of _columns(); track item) {
       <div>
-        @if (item.type != _columnType.DATE && item.type != _columnType.DATETIME) {
+        @if (item.type != 'date' && item.type != 'datetime') {
           <div
             class="menu-item"
             (click)="toggleGroup(item)">

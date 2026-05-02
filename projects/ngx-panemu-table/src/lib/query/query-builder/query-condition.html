@@ -1,0 +1,70 @@
+@let n = node();
+<div class="condition">
+  <select
+    class="field-select"
+    [ngModel]="n.field"
+    (ngModelChange)="onFieldChange($event)">
+    @for (f of fields(); track f.field) {
+      <option [value]="f.field">{{ f.label }}</option>
+    }
+  </select>
+
+  <select
+    class="op-select"
+    [ngModel]="n.op"
+    (ngModelChange)="onOpChange($event)">
+    @for (op of availableOps(); track op) {
+      <option [value]="op">{{ opLabels[op] }}</option>
+    }
+  </select>
+
+  @if (needsValue()) {
+    @if (fieldDef()?.type === 'map') {
+      <select
+        class="value-input"
+        [(ngModel)]="n.value"
+        (ngModelChange)="onValueChange()">
+        <option value=""></option>
+        @for (k of enumKeys(); track k) {
+          <option [value]="k">{{ enumMap()[k] }}</option>
+        }
+      </select>
+    } @else if (fieldDef()?.type === 'boolean') {
+      <select
+        class="value-input"
+        [(ngModel)]="n.value"
+        (ngModelChange)="onValueChange()">
+        <option value=""></option>
+        <option value="true">{{fieldDef()!.formatter!(true)}}</option>
+        <option value="false">{{fieldDef()!.formatter!(false)}}</option>
+      </select>
+    } @else {
+      <input
+        class="value-input"
+        [type]="inputType()"
+        [(ngModel)]="n.value"
+        (ngModelChange)="onValueChange()" />
+    }
+  }
+
+  @if (needsList()) {
+    <input
+      class="value-input wide"
+      type="text"
+      placeholder="comma-separated"
+      [(ngModel)]="n.values"
+      (ngModelChange)="onValueChange()" />
+  }
+
+  @if (canCaseInsensitive()) {
+    <label class="ci-toggle" title="Case insensitive">
+      <input
+        type="checkbox"
+        [(ngModel)]="n.caseInsensitive"
+        (ngModelChange)="onValueChange()" />
+      Aa
+    </label>
+  }
+
+  <button type="button" class="btn-icon" (click)="remove.emit()" title="Remove">×</button>
+</div>

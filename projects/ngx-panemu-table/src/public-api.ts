@@ -20,7 +20,7 @@ export * from './lib/cell/cell-styling.pipe';
 export * from './lib/cell/group-cell.pipe';
 export * from './lib/cell/header';
 export * from './lib/table-query';
-export * from './lib/column/tick-column-class';
+export * from './lib/column/tick-column-controller';
 export * from './lib/option/label-translation';
 export * from './lib/option/default-label-translation';
 export * from './lib/option/options';
@@ -31,8 +31,8 @@ export * from './lib/row/expansion-row';
 export * from './lib/column/default-column-options';
 export * from './lib/busy-indicator/panemu-busy-indicator.component';
 export {isDataRow} from './lib/util';
-export * from './lib/query/editor/filter-editor';
 export * from './lib/query/panemu-groupby.component'
+export * from './lib/query/query-builder/types';
 
 
 export * from './lib/setting/panemu-setting.component';

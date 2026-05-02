@@ -8,7 +8,7 @@ import { PanemuTableController } from "../panemu-table-controller";
  * This data will be converted to `RowGroup` and be displayed in table.
  */
 export interface RowGroupData {
-  value: string
+  value: any
   count?: number
 }
 
@@ -22,7 +22,7 @@ export class RowGroup {
   parent?: RowGroup;
   expanded = signal(false);
   controller?: PanemuTableController<any>;
-  formatter!: CellFormatter;
+  formatter!: CellFormatter<any>;
   modifier?: string;
   
   constructor(public column: PropertyColumn<any>, public data: RowGroupData) {

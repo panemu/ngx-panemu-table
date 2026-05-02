@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, Validators } from '@angular/forms';
-import { ColumnType, EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
+import { EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
 import { DataService } from '../../service/data.service';
 import { ToolbarComponent } from './toolbar.component';
 import { Observable, of } from 'rxjs';
@@ -73,8 +73,8 @@ export class InlineEditing4Component implements OnInit {
   dataService = inject(DataService);
 
   columns = this.pts.buildColumns<CustomData>([
-    { field: 'registered', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } },
-    { field: 'verified_at', type: ColumnType.DATETIME },
+    { field: 'registered', type: 'map', valueMap: { true: 'Yes', false: 'No' } },
+    { field: 'verified_at', type: 'datetime' },
   ])
 
   datasource = new PanemuTableDataSource(DATA);

@@ -1,23 +1,20 @@
 import { formatDate, formatNumber } from '@angular/common';
-import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, Type, WritableSignal } from '@angular/core';
+import { Inject, Injectable, isSignal, LOCALE_ID, signal, Signal, WritableSignal } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HeaderRenderer } from '../public-api';
 import { CellFormatter } from './cell/cell';
 import { DefaultCellRenderer } from "./cell/default-cell-renderer";
 import { DefaultHeaderRenderer } from './cell/default-header-renderer';
 import { ExpansionCellRenderer } from './cell/expansion-cell-renderer';
-import { BaseColumn, ColumnDefinition, ColumnType, GroupedColumn, HeaderRow, MapColumn, NonGroupColumn, PropertyColumn } from './column/column';
+import { TickCellComponent } from './cell/tick-cell-renderer';
+import { TickHeaderRenderer } from './cell/tick-header-renderer';
+import { BaseColumn, Column, ColumnDefinition, ComputedColumn, GroupedColumn, HeaderRow, LeafColumn, MapColumn, PropertyColumn, TickColumn } from './column/column';
 import { DefaultColumnOptions } from './column/default-column-options';
+import { DEFAULT_LABEL_TRANSLATION } from './option/default-label-translation';
 import { LabelTranslation } from './option/label-translation';
 import { TableOptions } from './option/options';
 import { TableState } from './state/table-states';
-import { DateFilterComponent } from './query/editor/date-filter.component';
-import { FilterEditor } from './query/editor/filter-editor';
-import { MapFilterComponent } from './query/editor/map-filter.component';
-import { StringFilterComponent } from './query/editor/string-filter.component';
 import { generateStructureKey, mergeDeep } from './util';
-import { Observable, of } from 'rxjs';
-import { DEFAULT_LABEL_TRANSLATION } from './option/default-label-translation';
-import { DateTimeFilterComponent } from './query/editor/date-time-filter.component';
-import { HeaderRenderer } from '../public-api';
 
 const GROUP_KEY_PREFIX = 'group_';
 
@@ -39,7 +36,8 @@ export class PanemuTableService {
    * The locale parameter is used by default number and date format.
    * @param locale injected LOCALE_ID from angular framework. It is used for default number and date format.
    */
-  constructor(@Inject(LOCALE_ID) protected locale: string) {}
+  constructor(@Inject(LOCALE_ID) protected locale: string) { }
+
 
   /**
    * Build columns for the table. This method handle column initialization. The `options` argument is by default
@@ -49,19 +47,19 @@ export class PanemuTableService {
    * @param options any specified value will override `PanemuTableService.getColumnOptions`.
    * @returns 
    */
-  buildColumns<T>(columns: (NonGroupColumn<T> | GroupedColumn)[], options?: DefaultColumnOptions): ColumnDefinition<T> {
+  buildColumns<T>(columns: (GroupedColumn<T> | Column<T> | MapColumn<T> | TickColumn<T> | ComputedColumn<T>)[], options?: DefaultColumnOptions): ColumnDefinition<T> {
     const defaultOptions = this.getColumnOptions();
     if (options) {
       mergeDeep(defaultOptions, options);
     } else {
       options = defaultOptions;
     }
-    
+
     let bodyColumns = this.buildBody(columns);
     this.initColumns(bodyColumns, defaultOptions);
     let headerRows: HeaderRow[] = [];
     this.buildHeaders(headerRows, columns, 0, this.getDepth(columns, 0), signal(0));
-    
+
     return {
       structureKey: generateStructureKey(columns),
       header: headerRows,
@@ -83,20 +81,20 @@ export class PanemuTableService {
     columnDef.body = bodyColumns as PropertyColumn<any>[];
   }
 
-  private buildBody<T>(headers: (GroupedColumn | NonGroupColumn<T>)[]) {
+  private buildBody<T>(headers: (GroupedColumn<T> | LeafColumn<T>)[]) {
     let columns: BaseColumn<T>[] = [];
     for (const h of headers) {
-      if (h.type !== ColumnType.GROUP) {
+      if (h.type !== 'group') {
         columns.push(h)
       } else {
-        columns = columns.concat(this.buildBody((h as GroupedColumn).children))
+        columns = columns.concat(this.buildBody((h as GroupedColumn<T>).children))
       }
     }
 
     return columns;
   }
 
-  private buildHeaders<T>(wholeResult: HeaderRow[], headers: (GroupedColumn | NonGroupColumn<T>)[],
+  private buildHeaders<T>(wholeResult: HeaderRow[], headers: (GroupedColumn<T> | LeafColumn<T>)[],
     level: number,
     totalDepth: number,
     groupIndex: WritableSignal<number>,
@@ -109,8 +107,8 @@ export class PanemuTableService {
     let colSpan = 0;
 
     for (const h of headers) {
-      if (h.type == ColumnType.GROUP) {
-        const clmGroup = h as GroupedColumn;
+      if (h.type == 'group') {
+        const clmGroup = h as GroupedColumn<T>;
         clmGroup.headerRenderer = clmGroup.headerRenderer ?? defaultOptions?.headerRenderer ?? this.getDefaultHeaderRenderer();
         let groupDepth = this.getDepth(clmGroup.children, 0);
         let groupRowSpan = totalDepth - groupDepth - level;
@@ -148,11 +146,11 @@ export class PanemuTableService {
     // return result;
   }
 
-  private getDepth<T>(headers: (GroupedColumn | NonGroupColumn<T>)[], level: number) {
+  private getDepth<T>(headers: (GroupedColumn<T> | LeafColumn<T>)[], level: number) {
     let depth = level + 1;
     for (const h of headers) {
-      if (h.type == ColumnType.GROUP) {
-        depth = Math.max(this.getDepth((h as GroupedColumn).children, level + 1), depth);
+      if (h.type == 'group') {
+        depth = Math.max(this.getDepth((h as GroupedColumn<T>).children, level + 1), depth);
       }
     }
     return depth;
@@ -160,7 +158,7 @@ export class PanemuTableService {
 
 
   private initColumns<T>(columns: BaseColumn<T>[], defaultOptions: Required<DefaultColumnOptions>): BaseColumn<T>[] {
-    
+
 
     columns.forEach((item, index) => this.initColumn(item, index, defaultOptions))
 
@@ -184,24 +182,27 @@ export class PanemuTableService {
       column.groupable = column.groupable === undefined ? defaultOptions.groupable : column.groupable;
       column.sortable = column.sortable === undefined ? defaultOptions.sortable : column.sortable;
       column.filterable = column.filterable === undefined ? defaultOptions.filterable : column.filterable;
-      column.type = column.type ?? ColumnType.STRING;
+      column.type = column.type ?? 'string';
 
       //Set default formatter
       if (!column.formatter) {
         switch (column.type) {
-          case ColumnType.INT:
+          case 'int':
             column.formatter = this.getIntCellFormatter();
             break;
-          case ColumnType.DECIMAL:
+          case 'decimal':
             column.formatter = this.getDecimalCellFormatter();
             break;
-          case ColumnType.DATETIME:
+          case 'datetime':
             column.formatter = this.getDateTimeCellFormatter();
             break;
-          case ColumnType.DATE:
+          case 'date':
             column.formatter = this.getDateCellFormatter();
             break;
-          case ColumnType.MAP:
+          case 'boolean':
+            column.formatter = this.getBooleanCellFormatter();
+            break;
+          case 'map':
             const mapColumn = (<MapColumn<any>>column);
             if (!isSignal(mapColumn.valueMap)) {
               mapColumn.valueMap = signal(mapColumn.valueMap);
@@ -214,27 +215,36 @@ export class PanemuTableService {
       }
 
       // Set default cellClass
-      if (!column.cellClass && (column.type == ColumnType.INT || column.type == ColumnType.DECIMAL)) {
+      if (!column.cellClass && (column.type == 'int' || column.type == 'decimal')) {
         column.cellClass = (() => 'number-cell')
       }
 
       // Set default filterEditor
-      if (!column.filterEditor) {
-        if (column.type == ColumnType.DATETIME) {
-          column.filterEditor = this.getDateTimeFilterComponent();
-        } else if (column.type == ColumnType.DATE) {
-          column.filterEditor = this.getDateFilterComponent();
-        } else if (column.type == ColumnType.MAP) {
-          column.filterEditor = this.getMapFilterComponent();
-        }
-      }
+      // if (!column.filterEditor) {
+      //   if (column.type == 'datetime') {
+      //     column.filterEditor = this.getDateTimeFilterComponent();
+      //   } else if (column.type == 'date') {
+      //     column.filterEditor = this.getDateFilterComponent();
+      //   } else if (column.type == 'map') {
+      //     column.filterEditor = this.getMapFilterComponent();
+      //   }
+      // }
 
-    } else if (baseColumn.type == ColumnType.TICK) {
+    } else if (baseColumn.type == 'tick') {
 
 
       (baseColumn as any).field = '__tick_' + index;
       baseColumn.sticky = baseColumn.sticky === undefined ? 'start' : null;
-    } else if (baseColumn.type == ColumnType.COMPUTED) {
+
+
+      const tickColumn = baseColumn as TickColumn<any>;
+      tickColumn.cellRenderer = tickColumn.cellRenderer || { component: TickCellComponent };
+      tickColumn.checkBoxHeader = tickColumn.checkBoxHeader !== false;
+      tickColumn.headerRenderer = tickColumn.headerRenderer ? tickColumn.headerRenderer : tickColumn.checkBoxHeader ? {component: TickHeaderRenderer} : undefined;
+      if (!tickColumn.cellClass) {
+        tickColumn.cellClass = (_) => 'tick-cell'
+      }
+    } else if (baseColumn.type == 'computed') {
       (baseColumn as any).field = '__computed_' + index;
     }
     baseColumn.resizable = baseColumn.resizable === undefined ? defaultOptions.resizable : baseColumn.resizable;
@@ -264,17 +274,17 @@ export class PanemuTableService {
    * Get default cell formatter. It does nothing beside changing null or undefined to empty string.
    * @returns 
    */
-  getDefaultCellFormatter(): CellFormatter {
+  getDefaultCellFormatter<T>(): CellFormatter<T> {
     return (val: any) => {
       return val ?? '';
     }
   }
 
   /**
-   * Get default formatter for ColumnType.DECIMAL
+   * Get default formatter for 'decimal'
    * @returns 
    */
-  getDecimalCellFormatter(): CellFormatter {
+  getDecimalCellFormatter<T>(): CellFormatter<T> {
     return (val) => {
       if (val === undefined || val == null || val == '') {
         return '';
@@ -284,18 +294,34 @@ export class PanemuTableService {
   }
 
   /**
-   * Get default formatter for ColumnType.INT
+   * Get default formatter for 'int'
    * @returns 
    */
-  getIntCellFormatter(): CellFormatter {
+  getIntCellFormatter<T>(): CellFormatter<T> {
     return (val: any) => val ?? '';
   }
 
   /**
-   * Get default formatter for ColumnType.DATETIME. Default is `d MMM yyyy H:mm:ss`
+   * Default formatter for 'boolean'
    * @returns 
    */
-  getDateTimeCellFormatter(): CellFormatter {
+  getBooleanCellFormatter<T>(): CellFormatter<T> {
+    return (val: any) => {
+      if (val === true) {
+        return 'True';
+      } else if (val === false) {
+        return 'False';
+      } else {
+        return val ?? '';
+      }
+    }
+  }
+
+  /**
+   * Get default formatter for 'datetime'. Default is `d MMM yyyy H:mm:ss`
+   * @returns 
+   */
+  getDateTimeCellFormatter<T>(): CellFormatter<T> {
     return (val) => {
       if (val) {
         return formatDate(val, 'd MMM yyyy H:mm:ss', this.locale) ?? ''
@@ -305,10 +331,10 @@ export class PanemuTableService {
   }
 
   /**
-   * Get default formatter for ColumnType.DATE. Default is `EEE, d MMM yyyy`
+   * Get default formatter for 'date'. Default is `EEE, d MMM yyyy`
    * @returns 
    */
-  getDateCellFormatter(): CellFormatter {
+  getDateCellFormatter<T>(): CellFormatter<T> {
     return (val) => {
       if (val) {
         return formatDate(val, 'EEE, d MMM yyyy', this.locale) ?? ''
@@ -318,22 +344,22 @@ export class PanemuTableService {
   }
 
   /**
-   * Default formatter for MapColumn (ColumnType.MAP)
+   * Default formatter for MapColumn ('map')
    * @param map 
    * @returns 
    */
-  getMapFormatter(map: Signal<{ [key: string]: any }>): CellFormatter {
+  getMapFormatter<T>(map: Signal<{ [key: string]: any }>): CellFormatter<T> {
     return (val: any) => {
       return (map as any)()[val] ?? val;
     }
   }
 
   /**
-   * Get default formatter for GroupBy functionality where the column type is ColumnType.DATE or ColumnType.DATETIME
+   * Get default formatter for GroupBy functionality where the column type is 'date' or 'datetime'
    * and the modifier is 'month'
    * @returns 
    */
-  getMonthCellFormatter(): CellFormatter {
+  getMonthCellFormatter<T>(): CellFormatter<T> {
     return (val: any) => {
       if (!val) {
         return '';
@@ -346,11 +372,11 @@ export class PanemuTableService {
   }
 
   /**
-   * Get default formatter for GroupBy functionality where the column type is ColumnType.DATE or ColumnType.DATETIME
+   * Get default formatter for GroupBy functionality where the column type is 'date' or 'datetime'
    * and the modifier is 'year'
    * @returns 
    */
-  getYearCellFormatter(): CellFormatter {
+  getYearCellFormatter<T>(): CellFormatter<T> {
     return (val: any) => {
       if (!val) {
         return '';
@@ -439,37 +465,37 @@ export class PanemuTableService {
     return 500;
   }
 
-  /**
-   * Default `ColumnType.Date` filter component used by `PanemuQueryComponent`.
-   * @returns 
-   */
-  getDateFilterComponent(): Type<FilterEditor> {
-    return DateFilterComponent
-  }
+  // /**
+  //  * Default `ColumnType.Date` filter component used by `PanemuQueryComponent`.
+  //  * @returns 
+  //  */
+  // getDateFilterComponent(): Type<FilterEditor> {
+  //   return DateFilterComponent
+  // }
 
-  /**
-   * Default `ColumnType.DateTime` filter component used by `PanemuQueryComponent`.
-   * @returns 
-   */
-  getDateTimeFilterComponent(): Type<FilterEditor> {
-    return DateTimeFilterComponent
-  }
+  // /**
+  //  * Default `ColumnType.DateTime` filter component used by `PanemuQueryComponent`.
+  //  * @returns 
+  //  */
+  // getDateTimeFilterComponent(): Type<FilterEditor> {
+  //   return DateTimeFilterComponent
+  // }
 
-  /**
-   * Default `ColumnType.Map` filter component used by `PanemuQueryComponent`.
-   * @returns 
-   */
-  getMapFilterComponent(): Type<FilterEditor> {
-    return MapFilterComponent
-  }
+  // /**
+  //  * Default `ColumnType.Map` filter component used by `PanemuQueryComponent`.
+  //  * @returns 
+  //  */
+  // getMapFilterComponent(): Type<FilterEditor> {
+  //   return MapFilterComponent
+  // }
 
-  /**
-   * Default filter component used by `PanemuQueryComponent`.
-   * @returns 
-   */
-  getDefaultFilterComponent(): Type<FilterEditor> {
-    return StringFilterComponent;
-  }
+  // /**
+  //  * Default filter component used by `PanemuQueryComponent`.
+  //  * @returns 
+  //  */
+  // getDefaultFilterComponent(): Type<FilterEditor> {
+  //   return StringFilterComponent;
+  // }
 
   /**
    * Function to handle error globally. Override this method to have your own error handler.

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { CustomPanemuTableService } from '../../../service/custom-panemu-table.service';
 
 interface Data { enrolled: string }
@@ -23,10 +23,10 @@ export class DateColumnComponent implements OnInit {
   pts = inject(PanemuTableService);
   columns = this.pts.buildColumns<Data>([
     { field: 'enrolled', label: 'Regular Column' },
-    { field: 'enrolled', type: ColumnType.DATE, label: 'Default Format' },
+    { field: 'enrolled', type: 'date', label: 'Default Format' },
     {
       field: 'enrolled',
-      type: ColumnType.DATE,
+      type: 'date',
       label: 'Custom Format', formatter: (val) => new Date(val).toLocaleDateString()
     },
   ])

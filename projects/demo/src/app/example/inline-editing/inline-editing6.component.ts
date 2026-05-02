@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, TemplateRef, viewChild } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { CellEditorRenderer, ColumnType, DefaultCellRenderer, EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, PropertyColumn, TABLE_MODE } from 'ngx-panemu-table';
+import { CellEditorRenderer, DefaultCellRenderer, EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, PropertyColumn, TABLE_MODE } from 'ngx-panemu-table';
 import { DataService } from '../../service/data.service';
 import { ToolbarComponent } from './toolbar.component';
 import { CustomAmountEditor } from './custom-amount-editor';
@@ -75,10 +75,10 @@ export class InlineEditing6Component implements OnInit {
   dataService = inject(DataService);
   amountTemplate = viewChild<TemplateRef<any>>('amountTemplate');
   columns = this.pts.buildColumns<CustomData>([
-    { field: 'id', type: ColumnType.INT },
-    { field: 'amount', type: ColumnType.INT, label: 'Amount (Default Editor)' },
+    { field: 'id', type: 'int' },
+    { field: 'amount', type: 'int', label: 'Amount (Default Editor)' },
     { field: 'amount', cellRenderer: DefaultCellRenderer.create(this.amountTemplate), width: 150, label: 'Amount (No Editor)' },
-    { field: 'amount', type: ColumnType.INT, label: 'Amount (Custom Editor)' },
+    { field: 'amount', type: 'int', label: 'Amount (Custom Editor)' },
   ])
 
   datasource = new PanemuTableDataSource(DATA);

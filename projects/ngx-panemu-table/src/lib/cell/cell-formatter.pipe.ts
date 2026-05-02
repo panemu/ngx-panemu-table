@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { PropertyColumn } from '../column/column';
+import { LeafColumn } from '../column/column';
 import { CellFormatter } from './cell';
 
 /**
@@ -26,7 +26,7 @@ export class CellFormatterPipe implements PipeTransform {
    * @param formatter formatter from `PropertyColumn.formatter`. It is included to trigger cell refresh when formatter is changed.
    * @returns 
    */
-  transform(val: any, row?: any, column?: PropertyColumn<any>, formatter?:CellFormatter, valueMap?: any): any {
+  transform(val: any, row?: any, column?: LeafColumn<any>, formatter?:CellFormatter<any>, valueMap?: any): any {
     if (column?.formatter) {
       return column.formatter!(val, row, column);
     }

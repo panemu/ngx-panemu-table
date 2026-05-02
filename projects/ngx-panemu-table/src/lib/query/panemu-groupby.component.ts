@@ -1,7 +1,7 @@
 import { Component, computed, input, Input, OnInit } from '@angular/core';
 import { PanemuTableController } from '../panemu-table-controller';
 
-import { PropertyColumn, ColumnType } from '../column/column';
+import { PropertyColumn } from '../column/column';
 import {MatMenuModule} from '@angular/material/menu';
 import { PanemuTableService } from '../panemu-table.service';
 import { LabelTranslation } from '../option/label-translation';
@@ -21,8 +21,7 @@ export class PanemuGroupbyComponent {
     }
     return []
   });
-  _columnType = ColumnType;
-  constructor(public service: PanemuTableService) { 
+  constructor(public service: PanemuTableService) {
     this.labelTranslation = service.getLabelTranslation();
   }
 

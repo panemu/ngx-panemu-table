@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
+import { DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
 import { SampleEditingController } from './sample-editing-controller';
@@ -35,7 +35,7 @@ export class InlineEditing5Component {
   pts = inject(PanemuTableService);
 
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'email'},
     { field: 'gender'},
@@ -43,7 +43,7 @@ export class InlineEditing5Component {
     { field: 'amount'},
     { field: 'enrolled'},
     { field: 'last_login'},
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } }
+    { field: 'verified', type: 'boolean'}
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, 

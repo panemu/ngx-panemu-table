@@ -10,7 +10,7 @@ import { CellFormatter } from './cell';
   standalone: true
 })
 export class GroupCellPipe implements PipeTransform {
-  transform(val: any, formatter: CellFormatter): any {
+  transform(val: any, formatter: CellFormatter<any>): any {
     return formatter(val)
   }
 }

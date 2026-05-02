@@ -1,5 +1,5 @@
 import { map, of } from "rxjs";
-import { BaseColumn, ColumnType, GroupedColumn, NonGroupColumn } from "../column/column";
+import { BaseColumn, GroupedColumn, LeafColumn } from "../column/column";
 import { PanemuTableController } from "../panemu-table-controller";
 import { PanemuTableService } from "../panemu-table.service";
 import { ColumnState, TableState } from "./table-states";
@@ -8,14 +8,14 @@ export class TableStateManager {
 
   constructor(private pts: PanemuTableService){}
 
-  private convertColumnToTemplateColumn(clm: (GroupedColumn | NonGroupColumn<any>)) {
-    if (clm.type == ColumnType.GROUP) {
+  private convertColumnToTemplateColumn(clm: (GroupedColumn<any> | LeafColumn<any>)) {
+    if (clm.type == 'group') {
       let result: ColumnState = {
         key: (clm as any)['__key'],
         children: [],
         visible: true
       };
-      (clm as GroupedColumn).children.forEach(item => {
+      (clm as GroupedColumn<any>).children.forEach(item => {
         result.children?.push(this.convertColumnToTemplateColumn(item as any));
       })
       return result;

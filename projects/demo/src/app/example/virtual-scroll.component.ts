@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ColumnType, DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { DefaultRowGroupRenderer, PanemuQueryComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { CustomTableFooter } from './custom-table-footer.component';
@@ -13,7 +13,7 @@ export class VirtualScrollComponent {
   footerTemplate = viewChild<TemplateRef<any>>('footerTemplate');
   pts: PanemuTableService = inject(PanemuTableService);
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'email'},
     { field: 'gender'},
@@ -21,7 +21,7 @@ export class VirtualScrollComponent {
     { field: 'amount'},
     { field: 'enrolled'},
     { field: 'last_login'},
-    { field: 'verified', type: ColumnType.MAP, valueMap: { true: 'Yes', false: 'No' } }
+    { field: 'verified', type: 'boolean'}
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, 

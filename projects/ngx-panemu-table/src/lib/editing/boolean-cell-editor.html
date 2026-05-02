@@ -1,0 +1,7 @@
+<div class="map-cell-editor">
+  <select [formControl]="__internalFormControl" class="editor-select" [title]="errorMessage() || ''">
+    <option></option>
+    <option value="true">{{formatter(true)}}</option>
+    <option value="false">{{formatter(false)}}</option>
+  </select>
+</div>

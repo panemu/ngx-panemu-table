@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { ColumnType, PanemuPaginationComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnClass } from 'ngx-panemu-table';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { PanemuPaginationComponent, PanemuSettingComponent, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, TickColumnController } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
@@ -13,19 +13,18 @@ import { DataService } from '../service/data.service';
 export class 
 FullBorderComponent {
   pts = inject(PanemuTableService);
-  clmTick = new TickColumnClass<People>()
   dataService = inject(DataService);
   columns = this.pts.buildColumns<People>([
-    this.clmTick,
+    {type: 'tick', controller: new TickColumnController()},
     { field: 'id', sticky: 'start' },
     { field: 'name', width: 300 },
     { field: 'email', width: 300 },
     { field: 'gender'},
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
-    { field: 'amount', type: ColumnType.DECIMAL },
-    { field: 'enrolled', type: ColumnType.DATE },
+    { field: 'country', type: 'map', valueMap: this.dataService.getCountryMap() },
+    { field: 'amount', type: 'decimal' },
+    { field: 'enrolled', type: 'date' },
     { field: 'verified', sticky: 'end'},
-    { field: 'last_login', type: ColumnType.DATETIME, sticky: 'end' },
+    { field: 'last_login', type: 'datetime', sticky: 'end' },
   ])
   datasource = new PanemuTableDataSource<People>();
   controller = PanemuTableController.create<People>(this.columns, this.datasource, {autoHeight: true});

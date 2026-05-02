@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, RetrieveDataFunction, TABLE_MODE, TableQuery } from 'ngx-panemu-table';
+import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService, RetrieveDataFunction, TABLE_MODE, TableQuery } from 'ngx-panemu-table';
 import { delay, map, Observable, of, tap } from 'rxjs';
 import { People } from '../../model/people';
 import { DataService } from '../../service/data.service';
@@ -85,19 +85,19 @@ export class InlineEditing1Component implements OnInit {
   dataService = inject(DataService);
 
   columns = this.pts.buildColumns<People>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'name' },
     { field: 'email' },
-    { field: 'gender', type: ColumnType.MAP, valueMap: { F: 'Female', M: 'Male' } },
-    { field: 'country', type: ColumnType.MAP, valueMap: this.dataService.getCountryMap() },
-    { field: 'amount', type: ColumnType.DECIMAL },
+    { field: 'gender', type: 'map', valueMap: { F: 'Female', M: 'Male' } },
+    { field: 'country', type: 'map', valueMap: this.dataService.getCountryMap() },
+    { field: 'amount', type: 'decimal' },
     {
-      type: ColumnType.GROUP, label: 'Date Info', children: [
-        { field: 'enrolled', type: ColumnType.DATE, label: 'Updated On' },
-        { field: 'last_login', type: ColumnType.DATETIME },
+      type: 'group', label: 'Date Info', children: [
+        { field: 'enrolled', type: 'date', label: 'Updated On' },
+        { field: 'last_login', type: 'datetime' },
       ]
     },
-    { field: 'verified' }
+    { field: 'verified', type: 'boolean', formatter: (val) => val === null || val === undefined ? '-' : val ? 'Yes' : 'No'},
   ])
   docService = inject(DocumentationService);
 

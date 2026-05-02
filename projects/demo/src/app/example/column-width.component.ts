@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ColumnType, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 
@@ -19,9 +19,9 @@ export class ColumnWidthComponent implements OnInit {
     { field: 'email', width: 300 },
     { field: 'gender', width: 300 },
     { field: 'country', width: 300 },
-    { field: 'amount', type: ColumnType.DECIMAL, width: 300 },
-    { field: 'enrolled', type: ColumnType.DATE },
-    { field: 'last_login', type: ColumnType.DATETIME },
+    { field: 'amount', type: 'decimal', width: 300 },
+    { field: 'enrolled', type: 'date' },
+    { field: 'last_login', type: 'datetime' },
   ])
   datasource = new PanemuTableDataSource<People>;
   controller = PanemuTableController.create<People>(this.columns, this.datasource);

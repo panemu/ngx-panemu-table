@@ -5,10 +5,11 @@
     <button class="btn" (click)="toggleFirstRow()">Toggle 1st Row</button>
     <button class="btn" (click)="getTickedRows()">Get Ticked Rows</button>
   </div>
-  <div class="flex relative justify-center">
+  <div class="flex relative justify-between">
     <panemu-query [controller]="controller"/>
-    <div class="absolute right-4">
+    <div class="flex items-center gap-4">
       <panemu-pagination [controller]="controller"/>
+      <panemu-setting [controller]="controller"></panemu-setting>
     </div>
   </div>
   <div class="flex-grow overflow-auto">

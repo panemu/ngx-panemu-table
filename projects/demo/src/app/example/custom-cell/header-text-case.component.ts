@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { HeaderComponent, PropertyColumn } from 'ngx-panemu-table';
+import { HeaderComponent, LeafColumn } from 'ngx-panemu-table';
 
 type TextCase = 'normal' | 'upper' | 'lower'
 
@@ -10,7 +10,7 @@ type TextCase = 'normal' | 'upper' | 'lower'
     imports: [ReactiveFormsModule]
 })
 export class HeaderTextCaseComponent implements OnInit, HeaderComponent {
-  column!: PropertyColumn<any>;
+  column!: LeafColumn<any>;
   rdbCase = new FormControl('upper' as TextCase)
   constructor() { }
   parameter?: any;

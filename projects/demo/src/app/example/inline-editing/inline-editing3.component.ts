@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { ColumnType, EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
+import { EditingInfo, MapOption, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableEditingController, PanemuTableService, TABLE_MODE } from 'ngx-panemu-table';
 import { DataService } from '../../service/data.service';
 import { ToolbarComponent } from './toolbar.component';
 import { take } from 'rxjs';
@@ -112,10 +112,10 @@ export class InlineEditing3Component implements OnInit {
   dataService = inject(DataService);
 
   columns = this.pts.buildColumns<CustomData>([
-    { field: 'id', type: ColumnType.INT },
+    { field: 'id', type: 'int' },
     { field: 'description' },
-    { field: 'country', type: ColumnType.MAP, valueMap: this.createCountryList() },
-    { field: 'city', type: ColumnType.MAP, valueMap: this.createCityList() },
+    { field: 'country', type: 'map', valueMap: this.createCountryList() },
+    { field: 'city', type: 'map', valueMap: this.createCityList() },
   ])
 
   datasource = new PanemuTableDataSource(DATA);

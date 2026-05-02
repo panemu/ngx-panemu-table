@@ -1,6 +1,6 @@
 import { Component, effect, OnInit, Signal, viewChild } from '@angular/core';
 import { ChartistComponent, ChartistModule, Configuration } from 'ng-chartist';
-import { CellComponent, CellRenderer, PropertyColumn } from 'ngx-panemu-table';
+import { CellComponent, CellRenderer, LeafColumn } from 'ngx-panemu-table';
 
 @Component({
     template: `
@@ -39,7 +39,7 @@ export class ChartCellComponent implements CellComponent<any> {
     }
   }
   row: any;
-  column!: PropertyColumn<any>;
+  column!: LeafColumn<any>;
   parameter?: { signalProperty: string };
   chart = viewChild(ChartistComponent);
 

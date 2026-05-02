@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
-import { BaseColumn, PropertyColumn } from "../column/column";
+import { BaseColumn, LeafColumn } from "../column/column";
 
-export type CellFormatter = (val: any, rowData?: any, column?: BaseColumn<any>) => string;
+export type CellFormatter<T> = (val: any, rowData?: T, column?: BaseColumn<T>) => string;
 
 /**
  * Interface for custom cell renderer component.
@@ -16,7 +16,7 @@ export interface CellComponent<T> {
   /**
    * This property contains column data.
    */
-  column: PropertyColumn<T>
+  column: LeafColumn<T>
 
   /**
    * This property contains custom parameter.

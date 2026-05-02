@@ -1,3 +1,5 @@
+import { Predicate } from "./query/query-builder/types";
+
 export type SortingDirection = 'asc' | 'desc';
 
 /**
@@ -34,28 +36,6 @@ export interface SortingInfo {
 }
 
 /**
- * Interface for filtering functionality
- */
-export interface TableCriteria {
-
-  /**
-   * Field to filter on.
-   */
-  field: string;
-
-  /**
-   * Filter predicate.
-   */
-  value: any;
-
-  /**
-   * Support for other scenario of filter where operator such as =, <, > etc
-   * is separated from value.
-   */
-  operator?: string;
-}
-
-/**
  * Wrapper of grouping, sorting and filtering information. This class instance if sent
  * to `PanemuTableDataSource` or `RetrieveDataFunction` when loading table data, sorting,
  * grouping, filtering or changing page.
@@ -69,15 +49,15 @@ export class TableQuery {
   /**
    * Filtering info
    */
-  tableCriteria: TableCriteria[] = [];
+  where?: Predicate | null= null;
 
   /**
    * Sorting info
    */
-  sortingInfos: SortingInfo[] = [];
+  orderBy: SortingInfo[] = [];
 
   /**
-   * UTC minute offset. Useful for handling timezone in server side query
+   * Timezone info, in IANA timezone format, e.g. "America/New_York". This is useful when the table has date/datetime column and the data source is in different timezone than the user interface. With this information, the data source can convert the date/datetime value to correct timezone before doing grouping, sorting or filtering.
    */
-  utcMinuteOffset = (new Date).getTimezoneOffset();
+  zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
