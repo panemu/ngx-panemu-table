@@ -531,7 +531,7 @@ export class PanemuTableComponent<T> implements AfterViewInit, OnChanges, OnDest
     const field = column.field.toString();
     const currentDirection = this.controller.sortedColumn[field] as 'asc' | 'desc' | undefined;
 
-    if (!event.ctrlKey) {
+    if (!event.ctrlKey && !event.metaKey) {
       this.controller.sortedColumn = {};
     }
 
