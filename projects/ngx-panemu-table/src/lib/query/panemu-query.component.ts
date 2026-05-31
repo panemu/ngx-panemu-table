@@ -1,5 +1,7 @@
 
-import { AfterViewInit, Component, computed, effect, inject, input, isSignal, OnDestroy, OnInit, output, signal, Signal } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
@@ -10,9 +12,8 @@ import { PanemuTableController } from '../panemu-table-controller';
 import { PanemuTableService } from '../panemu-table.service';
 import { PanemuGroupbyComponent } from './panemu-groupby.component';
 import { QueryBuilder } from './query-builder/query-builder';
-import { Overlay } from '@angular/cdk/overlay';
-import { Dialog } from '@angular/cdk/dialog';
 import { Predicate, SearchableColumn } from './query-builder/types';
+
 
 @Component({
     selector: 'panemu-query',
@@ -21,6 +22,10 @@ import { Predicate, SearchableColumn } from './query-builder/types';
 })
 export class PanemuQueryComponent implements OnDestroy {
   controller = input.required<PanemuTableController<any>>();
+  /**
+   * If provided, this handler will be called when the user applies the query builder. If not provided, the component will set the criteria on the controller and reload the data automatically.
+   */
+  applyHandler = input<(predicate: Predicate | null) => void>();
   disabled = computed(() => this.controller().mode() != 'browse')
   groupByLabel = '';
   _filterableColumns = signal<PropertyColumn<any>[]>([]);
@@ -90,8 +95,13 @@ export class PanemuQueryComponent implements OnDestroy {
 
     QueryBuilder.show(this.dialog, this.overlay, fieldDefs, this.controller().criteria).then(result => {
       if (result?.apply) {
-        this.controller().criteria = result.predicate;
-        this.reload();
+        const handler = this.applyHandler();
+        if (handler) {
+          handler(result.predicate);
+        } else {
+          this.controller().criteria = result.predicate;
+          this.reload();
+        }
       }
     });
   }
