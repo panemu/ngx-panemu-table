@@ -1,5 +1,5 @@
 
-import { AfterViewInit, Component, computed, effect, inject, input, isSignal, OnDestroy, OnInit, signal, Signal } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, input, isSignal, OnDestroy, OnInit, output, signal, Signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,14 +12,14 @@ import { PanemuGroupbyComponent } from './panemu-groupby.component';
 import { QueryBuilder } from './query-builder/query-builder';
 import { Overlay } from '@angular/cdk/overlay';
 import { Dialog } from '@angular/cdk/dialog';
-import { SearchableColumn } from './query-builder/types';
+import { Predicate, SearchableColumn } from './query-builder/types';
 
 @Component({
     selector: 'panemu-query',
     imports: [MatMenuModule, PanemuGroupbyComponent, MatAutocompleteModule, ReactiveFormsModule],
     templateUrl: './panemu-query.component.html'
 })
-export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PanemuQueryComponent implements OnDestroy {
   controller = input.required<PanemuTableController<any>>();
   disabled = computed(() => this.controller().mode() != 'browse')
   groupByLabel = '';
@@ -36,20 +36,13 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
     
   }
 
-  ngOnInit(): void {
-    
-  }
-
-  ngAfterViewInit(): void {
-    
-  }
-
-
   private onControllerChange(): void {
     if (!this.controller()) return;
     this.hasGroupableColumn.set(!!this.controller().columnDefinition.body.find(item => !!item.groupable));
     let _columns = (this.controller().columnDefinition.body).filter(item => !!item.field);
     this._filterableColumns.set(_columns.filter(item => item.filterable));
+    this.$subscription?.unsubscribe();
+    this.$subscription = new Subscription();
     this.$subscription.add(
       this.controller().beforeReloadEvent.subscribe({
         next: _ => {
@@ -87,9 +80,9 @@ export class PanemuQueryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.controller().saveState();
   }
 
-  private $subscription = new Subscription();
+  private $subscription?: Subscription;
   ngOnDestroy(): void {
-    this.$subscription.unsubscribe();
+    this.$subscription?.unsubscribe();
   }
 
   showQueryBuilder() {
