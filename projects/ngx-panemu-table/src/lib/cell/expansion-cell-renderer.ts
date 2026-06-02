@@ -1,39 +1,41 @@
-import { Component, Input, OnInit, signal, Signal, TemplateRef, Type } from '@angular/core';
-import { CellComponent } from './cell';
+import { Component, OnInit, signal, Signal, TemplateRef, Type } from '@angular/core';
+import { CellComponent, CellRenderer } from './cell';
 import { PropertyColumn } from '../column/column';
-import { CellFormatterPipe } from './cell-formatter.pipe';
 import { ExpansionRowRenderer } from '../row/expansion-row';
-import { NgClass } from '@angular/common';
+import { NgClass, NgComponentOutlet } from '@angular/common';
 
 @Component({
-    template: `
-   <div class="detail-cell {{position}}">
-     <button (click)="click()" [disabled]="disabled" class="">
+  template: `
+    <div class="detail-cell {{position}}">
+      <button (click)="click()" [disabled]="disabled" class="">
         <span class="ngx-panemu-table-icon" [ngClass]="expanded() ? 'icon-expand_more' : 'icon-chevron_right'"></span>
-     </button>
-      <span>{{row[column.field] | cellFormatter:row:column:column.formatter}}</span>
-   </div>
+      </button>
+      <ng-container
+        *ngComponentOutlet="parameter!.cellRenderer.component; inputs:{column, row, parameter: parameter!.cellRenderer.parameter}">
+      </ng-container>
+    </div>
    `,
-    imports: [CellFormatterPipe, NgClass]
+  imports: [NgComponentOutlet, NgClass]
 })
 
 export class ExpansionCellRenderer implements OnInit, CellComponent<any> {
   row!: any;
   column!: PropertyColumn<any>;
 
-  parameter?: { 
-    component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<any>>, 
-    isDisabled?: (row: any) => boolean ,
+  parameter?: {
+    component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<any>>,
+    isDisabled?: (row: any) => boolean,
     buttonPosition?: 'start' | 'end'
+    cellRenderer: CellRenderer
   };
-  
+
   disabled = false;
   expanded = signal(false);
   position = '';
 
   ngOnInit() {
     this.disabled = this.parameter!.isDisabled?.(this.row) ?? false;
-    this.position = this.parameter?.buttonPosition ?? ''
+    this.position = this.parameter?.buttonPosition ?? '';
   }
 
   click() {

@@ -254,6 +254,9 @@ export class PanemuTableService {
 
     if (!baseColumn.cellRenderer) {
       if (baseColumn.expansion) {
+
+        baseColumn.expansion.cellRenderer = baseColumn.expansion.cellRenderer ?? defaultOptions.cellRenderer ?? this.getDefaultCellRenderer();
+
         baseColumn.cellRenderer = {
           component: ExpansionCellRenderer,
           parameter: baseColumn.expansion

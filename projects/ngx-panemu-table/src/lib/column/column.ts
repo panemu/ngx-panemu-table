@@ -18,6 +18,8 @@ export interface Expansion<T> {
    */
   component: Signal<TemplateRef<any> | undefined> | Type<ExpansionRowRenderer<T>>,
 
+  cellRenderer?: CellRenderer,
+
   /**
    * Callback to disable expand button. By default the expand button is enabled.
    * @param row 

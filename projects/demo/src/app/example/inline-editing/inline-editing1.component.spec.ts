@@ -59,8 +59,8 @@ describe('InlineEditing1Component', () => {
     
     let lstInput = selectedTr.querySelectorAll('input');
     let lstSelect = selectedTr.querySelectorAll('select');
-    expect(lstInput.length).toBe(6);
-    expect(lstSelect.length).toBe(2);
+    expect(lstInput.length).toBe(5);
+    expect(lstSelect.length).toBe(3);
 
     spyOn(component.controller.editingController!, 'canReload').and.resolveTo(true);
     btnReload.click();
@@ -146,8 +146,8 @@ describe('InlineEditing1Component', () => {
     let selectedTr = componentEl.querySelector('table tr.selected-row') as HTMLTableRowElement;
     let lstInput = selectedTr.querySelectorAll('input');
     let lstSelect = selectedTr.querySelectorAll('select');
-    expect(lstInput.length).toBe(6);
-    expect(lstSelect.length).toBe(2);
+    expect(lstInput.length).toBe(5);
+    expect(lstSelect.length).toBe(3);
 
     //fill in proper values to the input elements above
     lstInput[1].value = 'test@email.com';

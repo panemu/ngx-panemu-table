@@ -1,6 +1,6 @@
 
 import { Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
+import { CellFormatterPipe, ComputedColumn, DefaultCellRenderer, PanemuTableComponent, PanemuTableController, PanemuTableDataSource, PanemuTableService } from 'ngx-panemu-table';
 import { People } from '../model/people';
 import { DataService } from '../service/data.service';
 import { NestedTableComponent } from './custom-cell/nested-table.component';
@@ -8,7 +8,7 @@ import { PeopleFormComponent } from './custom-cell/people-form.component';
 
 @Component({
     selector: 'app-row-detail',
-    imports: [PanemuTableComponent],
+    imports: [PanemuTableComponent, CellFormatterPipe],
     templateUrl: 'row-detail.component.html',
     styleUrl: 'row-detail.component.scss'
 })
@@ -16,6 +16,7 @@ export class RowDetailComponent {
   sendEmailTemplate = viewChild<TemplateRef<any>>('sendEmailTemplate');
   actionCellTemplate = viewChild<TemplateRef<any>>('actionCellTemplate');
   deleteExpansionRow = viewChild<TemplateRef<any>>('deleteExpansionRow');
+  countryCell = viewChild<TemplateRef<any>>('countryCell');
 
   pts = inject(PanemuTableService);
   private readonly clmEditInExpansion: ComputedColumn<any> = {
@@ -43,6 +44,7 @@ export class RowDetailComponent {
     {
       field: 'country', type: 'map', valueMap: this.dataService.getCountryMap(), expansion: {
         component: NestedTableComponent,
+        cellRenderer: DefaultCellRenderer.create(this.countryCell)
       }
     },
     {field: 'last_login'},

@@ -28,8 +28,8 @@
       </table>
     }
 
-    <ng-template #tableHeadTemplate>
-      <colgroup>
+  <ng-template #tableHeadTemplate>
+    <colgroup>
       @for (column of _visibleColumns; track column) {
         <col #colEl [attr.data-col]="column.__key" [style.width]="column.width ? (column.width + 'px') : null"/>
       }
@@ -119,7 +119,7 @@
 
 </div>
 @if (controller && !dataSource.length && !(loading | async)) {
-  <div class="no-data"> {{labelTranslation.noData}} </div>
+  <div class="y"> {{labelTranslation.noData}} </div>
 }
 </div>
 

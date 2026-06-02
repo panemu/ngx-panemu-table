@@ -33,7 +33,7 @@ export type Predicate =
   | LikePredicate
   | IsNullPredicate | IsNotNullPredicate;
 
-export type FieldPredicate = Exclude<Predicate, AndPredicate | OrPredicate | InPredicate | NotInPredicate>;
+//export type FieldPredicate = Exclude<Predicate, AndPredicate | OrPredicate | InPredicate | NotInPredicate>;
 
 export interface GroupNode {
   kind: 'group';

@@ -7,6 +7,14 @@
   </div>
 </div>
 
+<ng-template #countryCell let-row="row" let-column="column">
+  <div class="flex items-center gap-2">
+    <!-- Use a pipe to avoid executing the formatter multiple time. Pipe is only executed when the input change -->
+    <img width="24px" src="assets/flags/{{row[column.field].toLowerCase()}}.svg">
+    <span>{{row[column.field] | cellFormatter:row:column:column.formatter:$any(column).valueMap?.()}}</span>
+  </div>
+</ng-template>
+
 <ng-template #sendEmailTemplate let-row="row" let-column="column" let-close="close">
   <div class="grid grid-cols-[1fr_auto] gap-4 p-4 w-[300px] sticky left-4">
     <div class="col-span-2">Send {{column.label}} to {{row.email}}</div>

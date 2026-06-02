@@ -25,6 +25,7 @@ export class CellRendererDirective implements OnChanges, OnDestroy {
     if (this.componentRef) {
       this.componentRef.destroy();
     }
+
     this.componentRef = this.container.createComponent(this.column.cellRenderer!.component);
     this.componentRef.instance.column = this.column;
     this.componentRef.instance.row = this.row;
